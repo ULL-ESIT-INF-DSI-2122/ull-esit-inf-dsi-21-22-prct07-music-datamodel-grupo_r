@@ -2,3 +2,4 @@
 
 - Marco Antonio Cabrera Hernández
 - Jonay Méndez Márquez
+- Mario Hernández García
