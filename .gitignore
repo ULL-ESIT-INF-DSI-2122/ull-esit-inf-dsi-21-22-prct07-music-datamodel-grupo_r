@@ -1,8 +1,4 @@
-
-# Da problemas con la github page
 node_modules
 .vscode
-package-lock.json
 dist
 dummy
-.coveralls.yml
