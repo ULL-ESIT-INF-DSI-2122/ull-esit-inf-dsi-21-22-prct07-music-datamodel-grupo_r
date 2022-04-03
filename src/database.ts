@@ -61,38 +61,44 @@ export class JsonDatabase implements anyDatabase {
   constructor(private dbDir: string = '') {
     if (dbDir != '') {
       this.database = lowdb(new FileSync(dbDir));
-      this.database.set(`songs`, []).write();
-      this.database.set(`albums`, []).write();
-      this.database.set(`groups`, []).write();
-      this.database.set(`artists`, []).write();
-      this.database.set(`genres`, []).write();
+      // eslint-disable-next-line max-len
+      if (!this.database.has(`genres`).value() && !this.database.has(`songs`).value() && !this.database.has(`albums`).value() && !this.database.has(`groups`).value() && !this.database.has(`artist`).value()) {
+        this.database.set(`songs`, []).write();
+        this.database.set(`albums`, []).write();
+        this.database.set(`groups`, []).write();
+        this.database.set(`artists`, []).write();
+        this.database.set(`genres`, []).write();
+      }
     } else throw new Error('.json dir not specified, cant load db');
   }
   addToDatabase(item: (Song[] | Album[] | Genre[] | Group[] | Artist[])): void {
-    let changesMade: boolean = false;
     item.forEach((item) => {
       if (item instanceof Song) {
-        let a: Song[] = this.database.get(`songs`).value();
         this.database.set(`songs`, [...this.database.get(`songs`).value(), item]).write();
-        a = this.database.get(`songs`).value();
-        changesMade = true;
       }
       if (item instanceof Album) {
-        changesMade = true;
+        this.database.set(`albums`, [...this.database.get(`albums`).value(), item]).write();
       }
       if (item instanceof Genre) {
-        changesMade = true;
+        this.database.set(`genres`, [...this.database.get(`genres`).value(), item]).write();
       }
       if (item instanceof Group) {
-        changesMade = true;
+        this.database.set(`groups`, [...this.database.get(`groups`).value(), item]).write();
       }
       if (item instanceof Artist) {
-        changesMade = true;
+        this.database.set(`artists`, [...this.database.get(`artists`).value(), item]).write();
       }
     });
   }
 
   deleteFromDatabase(item: (Song[] | Album[] | Genre[] | Group[] | Artist[])): void {
+  }
+  purgeDatabase() {
+    this.database.set(`songs`, []).write();
+    this.database.set(`albums`, []).write();
+    this.database.set(`groups`, []).write();
+    this.database.set(`artists`, []).write();
+    this.database.set(`genres`, []).write();
   }
   print() {
     this.database.read();
