@@ -1,10 +1,10 @@
 {
   "name": "ull-esit-inf-dsi-21-22-prct07-music-datamodel-grupo_r",
   "version": "1.0.0",
-  "main": "main.js",
+  "main": "terminal.js",
   "scripts": {
     "coverage": "nyc npm test && nyc report --reporter=text-lcov | coveralls && rm -rf .nyc_output",
-    "start": "tsc-watch --onSuccess \"node dist/main.js\"",
+    "start": "tsc-watch ./src/terminal.ts --outDir ./dist --onSuccess \"node dist/terminal.js\"",
     "docs": "typedoc",
     "test": "mocha"
   },
