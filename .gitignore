@@ -4,3 +4,4 @@ package-lock.json
 dist
 dummy
 .coveralls.yml 
+db.json

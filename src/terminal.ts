@@ -1,4 +1,16 @@
 import * as inquirer from 'inquirer';
+import {JsonDatabase} from './database';
+import { Group } from './Group';
+import { Album } from './Album';
+import { Song } from './Song';
+import { Artist } from './Artist';
+import { Genre } from './Genres';
+export class Terminal {
+  private database: JsonDatabase;
+  constructor(private dbDir: string) {
+    this.database = new JsonDatabase(this.dbDir);
+  }
+}
 
 
 export enum viewCommands {
@@ -126,5 +138,9 @@ function promptManagement(): void {
     }
   });
 }
-
-promptStart();
+let newDB: JsonDatabase = new JsonDatabase('db.json');
+let song1: Song = new Song('hola', [], 10, [], 50, false);
+let song2: Song = new Song('holaaaa', [], 12, [], 55, true);
+newDB.addToDatabase([song1, song2]);
+newDB.print();
+//promptStart();
