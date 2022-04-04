@@ -1,10 +1,10 @@
 import * as inquirer from 'inquirer';
-import {JsonDatabase} from './database';
+import { JsonDatabase } from './database';
 import { Group } from './Group';
 import { Album } from './Album';
 import { Song } from './Song';
 import { Artist } from './Artist';
-import { Genre } from './Genres';
+import { Genre } from './Genre';
 
 
 

@@ -1,4 +1,4 @@
-import { Genre } from './Genres';
+import { Genre } from './Genre';
 import { Artist } from './Artist';
 
 /**
