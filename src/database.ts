@@ -1,10 +1,10 @@
-import * as lowdb from "lowdb";
-import * as FileSync from "lowdb/adapters/FileSync";
-import {Group} from './Group';
-import {Artist} from './Artist';
-import {Genre} from './Genres';
-import {Song} from './Song';
-import {Album} from './Album';
+import * as lowdb from 'lowdb';
+import * as FileSync from 'lowdb/adapters/FileSync';
+import { Group } from './Group';
+import { Artist } from './Artist';
+import { Genre } from './Genre';
+import { Song } from './Song';
+import { Album } from './Album';
 
 
 interface anyDatabase {
