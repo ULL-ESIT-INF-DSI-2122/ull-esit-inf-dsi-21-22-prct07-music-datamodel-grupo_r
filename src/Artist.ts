@@ -22,14 +22,14 @@ export class Artist {
     private genres: Genre[],
     private albums: Album[],
     private songs: Song[],
-    private listeners: number
+    private listeners: number,
   ) {
     this.name = name;
     this.groups = groups;
     this.genres = genres;
     this.albums = albums;
     this.songs = songs;
-    this.listeners = this.getListeners();
+    this.listeners = this.calculateListeners();
   }
 
   /**
@@ -118,16 +118,24 @@ export class Artist {
   }
 
   /**
-   * Get the number of monthly listeners
+   * Calculates the number of monthly listeners
    * @returns Listeners
    */
-  public getListeners(): number {
+  private calculateListeners(): number {
     for (let i = 0; i < this.groups.length; i++) {
       this.listeners += this.groups[i].getListeners();
     }
     for (let j = 0; j < this.songs.length; j++) {
       this.listeners += this.songs[j].getPlays();
     }
-    return this.listeners / 12;
+    return Number((this.listeners / 12).toFixed());
+  }
+
+  /**
+   * Get the number of monthly listeners
+   * @returns Listeners
+   */
+  public getListeners(): number {
+    return this.listeners;
   }
 }

@@ -1,7 +1,7 @@
 node_modules
-.vscode
-package-lock.json
 dist
+.nyc_output
+coverage
 dummy
-.coveralls.yml 
 db.json
+.vs_code

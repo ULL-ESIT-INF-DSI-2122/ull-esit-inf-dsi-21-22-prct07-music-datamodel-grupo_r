@@ -18,7 +18,7 @@ export class Genre {
     private name: string,
     private groups: (Group | Artist)[],
     private albums: Album[],
-    private songs: Song[]
+    private songs: Song[],
   ) {
     this.name = name;
     this.groups = groups;
@@ -30,7 +30,7 @@ export class Genre {
    * Get the genre name.
    * @returns genre name
    */
-   public getName(): string {
+  public getName(): string {
     return this.name;
   }
 
@@ -39,7 +39,7 @@ export class Genre {
    * @param name Name
    * @returns genre name
    */
-   public setName(name: string): void {
+  public setName(name: string): void {
     this.name = name;
   }
 
@@ -47,7 +47,7 @@ export class Genre {
    * Get the groups and/or artists produce music of this genre.
    * @returns Groups
    */
-   public getGroups(): (Group | Artist)[] {
+  public getGroups(): (Group | Artist)[] {
     return this.groups;
   }
 
@@ -56,7 +56,7 @@ export class Genre {
    * @param group Group or Artist
    * @returns Groups
    */
-   public setGroups(group: Group | Artist): void {
+  public setGroups(group: Group | Artist): void {
     this.groups.push(group);
   }
 
@@ -64,7 +64,7 @@ export class Genre {
    * Get the albums in the library related to this genre.
    * @returns Albums
    */
-   public getAlbums(): Album[] {
+  public getAlbums(): Album[] {
     return this.albums;
   }
 
@@ -81,7 +81,7 @@ export class Genre {
    * Get the songs in the library of that genre.
    * @returns Songs
    */
-   public getSongs(): Song[] {
+  public getSongs(): Song[] {
     return this.songs;
   }
 
@@ -90,7 +90,7 @@ export class Genre {
    * @param song Song
    * @returns Songs
    */
-   public setSongs(song: Song) {
+  public setSongs(song: Song) {
     this.songs.push(song);
   }
 }
