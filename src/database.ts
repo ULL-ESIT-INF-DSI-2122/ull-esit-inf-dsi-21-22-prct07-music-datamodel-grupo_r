@@ -8,36 +8,39 @@ import { Album } from './Album';
 
 
 interface anyDatabase {
-  addToDatabase(item: (Song[] | Album[] | Genre[] | Group[] | Artist[])): void;
+  addToMemory(item: (Song[] | Album[] | Genre[] | Group[] | Artist[])): void;
   deleteFromDatabase(item: (Song[] | Album[] | Genre[] | Group[] | Artist[])): void;
 }
 export class Database implements anyDatabase {
   // eslint-disable-next-line max-len
   constructor(private songs: Song[] = [], private artists: Artist[] = [], private albums: Album[] = [], private genres: Genre[] = [], private groups: Group[] = []) {
   }
-  addToDatabase(item: (Song[] | Album[] | Genre[] | Group[] | Artist[])): void {
-    item.forEach((item) => {
-      if (item instanceof Song) {
-        this.songs.push(item);
-      }
-      if (item instanceof Album) {
-        this.albums.push(item);
-      }
-      if (item instanceof Genre) {
-        this.genres.push(item);
-      }
-      if (item instanceof Group) {
-        this.groups.push(item);
-      }
-      if (item instanceof Artist) {
-        this.artists.push(item);
-      }
+  addToMemory(item: (Song[] | Album[] | Genre[] | Group[] | Artist[])): Promise<void> {
+    return new Promise((resolve, reject) => {
+      item.forEach((item) => {
+        if (item instanceof Song) {
+          this.songs.push(item);
+        }
+        if (item instanceof Album) {
+          this.albums.push(item);
+        }
+        if (item instanceof Genre) {
+          this.genres.push(item);
+        }
+        if (item instanceof Group) {
+          this.groups.push(item);
+        }
+        if (item instanceof Artist) {
+          this.artists.push(item);
+        }
+      });
+      resolve();
     });
   }
 
   deleteFromDatabase(item: (Song[] | Album[] | Genre[] | Group[] | Artist[])): void {
   }
-  print() {
+  printMemory() {
     console.log(this.albums);
     console.log(this.artists);
     console.log(this.songs);

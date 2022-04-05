@@ -5,6 +5,7 @@ import { Album } from './Album';
 import { Song } from './Song';
 import { Artist } from './Artist';
 import { Genre } from './Genre';
+import { Question } from './Question';
 
 
 export enum viewCommands {
@@ -27,6 +28,14 @@ export enum managementCommands {
   Load = 'Load a database',
   Purge = 'Wipes all database (NO RETURN!)',
   Return = 'Return'
+}
+
+export enum typeCommands {
+  Song = 'Song',
+  Genre = 'Genre',
+  Artist = 'Artist',
+  Album = 'Album',
+  Group = 'Group',
 }
 
 export enum startCommands {
@@ -119,7 +128,7 @@ export class Terminal {
             console.log('Missing ' + answers['command']);
         }
       });
-    } else this.inputPrompt();
+    } else this.loadDbPrompt();
   }
   private async continuePrompt(): Promise<void> {
     return new Promise(async (resolve, reject) => {
@@ -128,13 +137,13 @@ export class Terminal {
         type: 'confirm',
         message: 'Press enter to continue...',
       }).then(async (answers) => {
-        this.promptStart();
+        resolve();
       });
       resolve();
     });
   }
 
-  private async inputPrompt(): Promise<void> {
+  private async loadDbPrompt(): Promise<void> {
     console.clear();
     console.log('------Musitronic360------ \n');
     inquirer.prompt({
@@ -143,10 +152,69 @@ export class Terminal {
       message: 'Write the .json database directory',
     }).then(async (answers) => {
       await this.loadDatabase(answers.dbDir as string);
-      this.continuePrompt();
+      await this.continuePrompt();
+      this.promptStart();
     });
   }
 
+
+  private async selectTypePrompt(): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      console.clear();
+      let result: string = '';
+      console.log('------Musitronic360------ \n');
+      await inquirer.prompt({
+        type: 'list',
+        name: 'command',
+        message: 'Select what do you want to add',
+        choices: Object.values(typeCommands),
+      }).then(async (answers) => {
+        switch (answers['command']) {
+          case typeCommands.Song:
+            result = 'Song';
+            break;
+          case typeCommands.Album:
+            result = 'Album';
+            break;
+          case typeCommands.Genre:
+            result = 'Genre';
+            break;
+          case typeCommands.Artist:
+            result = 'Artist';
+            break;
+          case typeCommands.Group:
+            result = 'Group';
+            break;
+        }
+      });
+      resolve(result);
+    });
+  }
+  private async addPrompt(command: string): Promise<void> {
+    const qName: Question = new Question('input', 'name', 'Write the name');
+    const qArtist: Question = new Question('input', 'artist', 'Write the artist name');
+    const qLength: Question = new Question('input', 'length', 'Write the length of the song');
+    const qGenres: Question = new Question('input', 'genres', 'Write the genres');
+    const qPlays: Question = new Question('input', 'plays', 'Write the number of plays');
+    // eslint-disable-next-line max-len
+    const songQuestions = [qName.returnQuestion(),qArtist.returnQuestion(),qLength.returnQuestion(),qGenres.returnQuestion(),qPlays.returnQuestion()];
+    console.log(qName.returnQuestion());
+    console.log(songQuestions);
+    return new Promise(async (resolve, reject) => {
+      console.log('------Musitronic360------ \n');
+      console.log('Adding '+command+'\n');
+      if (command == 'Song') {
+        inquirer.prompt(songQuestions).then(async (answers) => {
+          console.log(answers);
+          // eslint-disable-next-line max-len
+          await this.database.addToMemory([new Song(answers['name'],answers['artist'],answers['length'],answers['genres'],answers['plays'],false)]);
+          this.database.printMemory();
+          await this.continuePrompt();
+          this.promptStart();
+        });
+      }
+    });
+  }
   private promptManagement() {
     console.clear();
     console.log('------Musitronic360------ \n');
@@ -158,9 +226,8 @@ export class Terminal {
     }).then(async (answers) => {
       switch (answers['command']) {
         case managementCommands.Add:
-          let song1: Song = new Song('hola', [], 10, [], 50, false);
-          let song2: Song = new Song('holaaaa', [], 12, [], 55, true);
-          await this.database.addToDatabase([song1, song2]);
+          await this.addPrompt(await this.selectTypePrompt());
+          await this.continuePrompt();
           this.promptManagement();
           break;
         case managementCommands.Modify:
@@ -171,10 +238,12 @@ export class Terminal {
           break;
         case managementCommands.Preview:
           this.database.print();
+          this.database.printMemory();
           await this.continuePrompt();
+          this.promptManagement();
           break;
         case managementCommands.Load:
-          this.inputPrompt();
+          this.loadDbPrompt();
           break;
         case managementCommands.Purge:
           this.database.purgeDatabase();
@@ -189,4 +258,6 @@ export class Terminal {
 }
 
 const terminal: Terminal = new Terminal('');
+let song2: Song = new Song('holaaaa', [], 12, [], 55, true);
+console.log(Object.getOwnPropertyNames(song2));
 terminal.promptStart();
