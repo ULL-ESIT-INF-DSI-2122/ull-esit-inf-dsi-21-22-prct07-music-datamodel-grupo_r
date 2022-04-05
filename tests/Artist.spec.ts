@@ -21,11 +21,9 @@ describe('Artist class test', () => {
   const Besos = new Song('Besos', [], 4, [], 150, true);
   const Zapatillas = new Album('Zapatillas', elCantoDelLoco, '2000', [Pop], [Besos]);
 
-  describe('Artist Class', () => {
-    it('Artist object creation ', () => {
-      expect(new Artist('Marlon Jackson', [theJackson5], [Funk], [dianaRossPresentsTheJackson5],
-          [blameItOnTheBoogie], 1290000)).not.to.be.eql(null);
-    });
+  it('Artist object creation ', () => {
+    expect(new Artist('Marlon Jackson', [theJackson5], [Funk], [dianaRossPresentsTheJackson5],
+        [blameItOnTheBoogie], 1290000)).not.to.be.eql(null);
   });
 
   describe('Getters of Artist Class', () => {

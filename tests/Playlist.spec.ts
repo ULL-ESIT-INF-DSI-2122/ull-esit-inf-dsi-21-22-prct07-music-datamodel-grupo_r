@@ -13,10 +13,8 @@ describe('Playlist class test', () => {
   const Rock = new Genre('Rock', [], [], [Sera]);
   const playlist = new Playlist('Mi playlist', [Besos, Anitos], '3600', [Pop]);
 
-  describe('Playlist Class', () => {
-    it('Playlist object creation ', () => {
-      expect(new Playlist('Mi playlist', [Besos, Anitos], '3600', [Pop])).not.to.be.eql(null);
-    });
+  it('Playlist object creation ', () => {
+    expect(new Playlist('Mi playlist', [Besos, Anitos], '3600', [Pop])).not.to.be.eql(null);
   });
 
   describe('Getters of Playlist Class', () => {

@@ -15,10 +15,8 @@ describe('Genre class test', () => {
   const elCantoDelLoco = new Group('El Canto Del Loco', [], '2001', [], [], 200);
   const Besos = new Song('Besos', [], 4, [], 150, true);
 
-  describe('Genre Class', () => {
-    it('Genre object creation ', () => {
-      expect(new Genre('Soul', [elCantoDelLoco], [], [Besos])).not.to.be.eql(null);
-    });
+  it('Genre object creation ', () => {
+    expect(new Genre('Soul', [elCantoDelLoco], [], [Besos])).not.to.be.eql(null);
   });
 
   describe('Getters of Genre Class', () => {
