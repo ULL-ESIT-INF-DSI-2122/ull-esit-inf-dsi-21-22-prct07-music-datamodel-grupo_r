@@ -5,7 +5,7 @@ import { Song } from '../src/Song';
 import { Genre } from '../src/Genre';
 import { Playlist } from '../src/Playlist';
 
-describe('Genre class test', () => {
+describe('Playlist class test', () => {
   const Besos = new Song('Besos', [], 4, [], 150, true);
   const Anitos = new Song('16 añitos', [], 4.13, [], 17020329, false);
   const Pop = new Genre('playlist', [], [], [Besos, Anitos]);
