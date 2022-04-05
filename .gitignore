@@ -5,3 +5,4 @@ dist
 dummy
 .coveralls.yml 
 db.json
+.temp.json
