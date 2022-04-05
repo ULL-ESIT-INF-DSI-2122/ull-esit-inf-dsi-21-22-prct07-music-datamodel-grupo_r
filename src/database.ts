@@ -55,10 +55,12 @@ type schemaType = {
   songs: Song[],
   groups: Group[]
 }
-export class JsonDatabase implements anyDatabase {
+export class JsonDatabase extends Database {
   // eslint-disable-next-line max-len
+  private initialized: boolean = false;
   private database: lowdb.LowdbSync<schemaType>;
   constructor(private dbDir: string = '') {
+    super();
     if (dbDir != '') {
       this.database = lowdb(new FileSync(dbDir));
       // eslint-disable-next-line max-len
@@ -68,26 +70,42 @@ export class JsonDatabase implements anyDatabase {
         this.database.set(`groups`, []).write();
         this.database.set(`artists`, []).write();
         this.database.set(`genres`, []).write();
+        this.initialized = true;
       }
-    } else throw new Error('.json dir not specified, cant load db');
+    } else {
+      this.initialized = false;
+      this.database = lowdb(new FileSync('.temp.json'));
+    }
   }
-  addToDatabase(item: (Song[] | Album[] | Genre[] | Group[] | Artist[])): void {
-    item.forEach((item) => {
-      if (item instanceof Song) {
-        this.database.set(`songs`, [...this.database.get(`songs`).value(), item]).write();
+  setInitialized(value: boolean): void {
+    this.initialized = value;
+  }
+
+  isInitialized(): boolean {
+    return this.initialized;
+  }
+  addToDatabase(item: (Song[] | Album[] | Genre[] | Group[] | Artist[])): Promise<string> {
+    return new Promise((resolve, reject) => {
+      if (this.initialized) {
+        item.forEach((item) => {
+          if (item instanceof Song) {
+            this.database.set(`songs`, [...this.database.get(`songs`).value(), item]).write();
+          }
+          if (item instanceof Album) {
+            this.database.set(`albums`, [...this.database.get(`albums`).value(), item]).write();
+          }
+          if (item instanceof Genre) {
+            this.database.set(`genres`, [...this.database.get(`genres`).value(), item]).write();
+          }
+          if (item instanceof Group) {
+            this.database.set(`groups`, [...this.database.get(`groups`).value(), item]).write();
+          }
+          if (item instanceof Artist) {
+            this.database.set(`artists`, [...this.database.get(`artists`).value(), item]).write();
+          }
+        });
       }
-      if (item instanceof Album) {
-        this.database.set(`albums`, [...this.database.get(`albums`).value(), item]).write();
-      }
-      if (item instanceof Genre) {
-        this.database.set(`genres`, [...this.database.get(`genres`).value(), item]).write();
-      }
-      if (item instanceof Group) {
-        this.database.set(`groups`, [...this.database.get(`groups`).value(), item]).write();
-      }
-      if (item instanceof Artist) {
-        this.database.set(`artists`, [...this.database.get(`artists`).value(), item]).write();
-      }
+      resolve('good');
     });
   }
 

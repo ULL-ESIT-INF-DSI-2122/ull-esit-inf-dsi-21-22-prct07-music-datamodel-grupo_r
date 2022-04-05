@@ -1,5 +1,5 @@
 import { Group } from './Group';
-import { Genre } from './Genres';
+import { Genre } from './Genre';
 import { Album } from './Album';
 import { Song } from './Song';
 
