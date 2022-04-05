@@ -65,7 +65,7 @@ export class Album {
    * Get the release date
    * @return {string} date
    */
-   public getDate(): string {
+  public getDate(): string {
     return this.date;
   }
 
@@ -97,10 +97,10 @@ export class Album {
  * Add related musical genre(s).
  * @param {Genres[]} genres Relate genre(s)
  */
-    public addGenres(genres: Genre[]): void {
-      for (let i: number = 0; i < genres.length; i++) {
-        this.genres.push(genres[i]);
-      }
+  public addGenres(genres: Genre[]): void {
+    for (let i: number = 0; i < genres.length; i++) {
+      this.genres.push(genres[i]);
+    }
   }
 
   /**
