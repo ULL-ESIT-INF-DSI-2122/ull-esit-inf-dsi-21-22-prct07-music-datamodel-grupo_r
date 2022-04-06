@@ -2,6 +2,7 @@ import * as inquirer from 'inquirer';
 
 export class Question {
   private question: Object = {};
+
   constructor(
     private type: string,
     private name: string,

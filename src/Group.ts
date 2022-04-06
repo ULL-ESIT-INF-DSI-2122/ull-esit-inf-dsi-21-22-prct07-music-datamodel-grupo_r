@@ -22,7 +22,7 @@ export class Group {
     private date: string,
     private genres: Genre[],
     private albums: Album[],
-    private listeners: number
+    private listeners: number,
   ) {
     this.name = name;
     this.members = members;
@@ -68,7 +68,7 @@ export class Group {
    * Get the creation date
    * @return {string} date
    */
-   public getDate(): string {
+  public getDate(): string {
     return this.date;
   }
 
@@ -100,10 +100,10 @@ export class Group {
  * Add related musical genre(s).
  * @param {Genres[]} genres Relate genre(s)
  */
-    public addGenres(genres: Genre[]): void {
-      for (let i: number = 0; i < genres.length; i++) {
-        this.genres.push(genres[i]);
-      }
+  public addGenres(genres: Genre[]): void {
+    for (let i: number = 0; i < genres.length; i++) {
+      this.genres.push(genres[i]);
+    }
   }
 
   /**
@@ -122,8 +122,8 @@ export class Group {
     this.albums = albums;
   }
 
-  /**
-   * 
+  /** Get listeners.
+   *
    * @return {number} Listeners
    */
   public getListeners(): number {
@@ -131,7 +131,7 @@ export class Group {
   }
 
   /**
-   * Increment listeners counter 
+   * Increment listeners counter
    */
   public incrementListeners(): void {
     this.listeners++;
