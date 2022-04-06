@@ -24,8 +24,10 @@ export enum managementCommands {
   Add = 'Add',
   Modify = 'Modify',
   Delete = 'Delete',
-  Preview = 'Display all content',
+  DisplayMEM = 'Display memory content',
+  DisplayDB = 'Display db content',
   Load = 'Load a database',
+  Save = 'Save from memory to database (load first)',
   Purge = 'Wipes all database (NO RETURN!)',
   Return = 'Return'
 }
@@ -103,32 +105,30 @@ export class Terminal {
 
 
   promptStart(): void {
-    if (this.database.isInitialized()) {
-      console.clear();
-      console.log('------Musitronic360------ \n');
-      inquirer.prompt({
-        type: 'list',
-        name: 'command',
-        message: 'Choose option',
-        choices: Object.values(startCommands),
-      }).then((answers) => {
-        switch (answers['command']) {
-          case startCommands.View:
-            this.promptView();
-            break;
-          case startCommands.Search:
-            this.promptStart();
-            break;
-          case startCommands.Management:
-            this.promptManagement();
-            break;
-          case startCommands.Exit:
-            break;
-          default:
-            console.log('Missing ' + answers['command']);
-        }
-      });
-    } else this.loadDbPrompt();
+    console.clear();
+    console.log('------Musitronic360------ \n');
+    inquirer.prompt({
+      type: 'list',
+      name: 'command',
+      message: 'Choose option',
+      choices: Object.values(startCommands),
+    }).then((answers) => {
+      switch (answers['command']) {
+        case startCommands.View:
+          this.promptView();
+          break;
+        case startCommands.Search:
+          this.promptStart();
+          break;
+        case startCommands.Management:
+          this.promptManagement();
+          break;
+        case startCommands.Exit:
+          break;
+        default:
+          console.log('Missing ' + answers['command']);
+      }
+    });
   }
   private async continuePrompt(): Promise<void> {
     return new Promise(async (resolve, reject) => {
@@ -144,16 +144,18 @@ export class Terminal {
   }
 
   private async loadDbPrompt(): Promise<void> {
-    console.clear();
-    console.log('------Musitronic360------ \n');
-    inquirer.prompt({
-      type: 'input',
-      name: 'dbDir',
-      message: 'Write the .json database directory',
-    }).then(async (answers) => {
-      await this.loadDatabase(answers.dbDir as string);
-      await this.continuePrompt();
-      this.promptStart();
+    return new Promise(async (resolve, reject) => {
+      console.clear();
+      console.log('------Musitronic360------ \n');
+      await inquirer.prompt({
+        type: 'input',
+        name: 'dbDir',
+        message: 'Write the .json database directory',
+      }).then(async (answers) => {
+        await this.loadDatabase(answers.dbDir as string);
+        await this.continuePrompt();
+      });
+      resolve();
     });
   }
 
@@ -198,7 +200,7 @@ export class Terminal {
     const qGenres: Question = new Question('input', 'genres', 'Write the genres');
     const qReleaseDate: Question = new Question('input', 'date', 'Write the release date');
     const qSongs: Question = new Question('input', 'songs', 'Write the songs that are part of this item');
-    const qAlbums: Question = new Question('input', 'albums', 'Write the albums that this artist is part of');
+    const qAlbums: Question = new Question('input', 'albums', 'Write the albums that this item is part of');
     const qListeners: Question = new Question('input', 'listeners', 'Write the ammount of listeners of this artist');
     const qPlays: Question = new Question('input', 'plays', 'Write the number of plays');
     const qSingle: Object = {
@@ -287,22 +289,49 @@ export class Terminal {
           this.promptManagement();
           break;
         case managementCommands.Modify:
+          console.log('WIP');
+          await this.continuePrompt();
           this.promptManagement();
           break;
         case managementCommands.Delete:
+          console.log('WIP');
+          await this.continuePrompt();
           this.promptManagement();
           break;
-        case managementCommands.Preview:
-          this.database.print();
+        case managementCommands.DisplayMEM:
           this.database.printMemory();
           await this.continuePrompt();
           this.promptManagement();
           break;
+        case managementCommands.DisplayDB:
+          try {
+            await this.database.print();
+          } catch (error) {
+            console.error(error);
+            await this.continuePrompt();
+          }
+          this.promptManagement();
+          break;
         case managementCommands.Load:
-          this.loadDbPrompt();
+          await this.loadDbPrompt();
+          this.promptManagement();
+          break;
+        case managementCommands.Save:
+          try {
+            await this.database.saveFromMemToDb();
+          } catch (error) {
+            console.error(error);
+            await this.continuePrompt();
+          }
+          this.promptManagement();
           break;
         case managementCommands.Purge:
-          this.database.purgeDatabase();
+          try {
+            await this.database.purgeDatabase();
+          } catch (error) {
+            console.error(error);
+            await this.continuePrompt();
+          }
           this.promptManagement();
           break;
         case managementCommands.Return:
@@ -314,6 +343,4 @@ export class Terminal {
 }
 
 const terminal: Terminal = new Terminal('');
-const song2: Song = new Song('holaaaa', [], 12, [], 55, true);
-console.log(Object.getOwnPropertyNames(song2));
 terminal.promptStart();
