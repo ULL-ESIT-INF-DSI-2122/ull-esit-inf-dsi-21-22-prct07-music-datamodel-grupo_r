@@ -1,7 +1,0 @@
-node_modules
-dist
-.nyc_output
-coverage
-dummy
-db.json
-.vs_code
