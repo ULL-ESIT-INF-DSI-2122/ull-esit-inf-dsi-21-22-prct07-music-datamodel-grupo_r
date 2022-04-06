@@ -191,27 +191,83 @@ export class Terminal {
     });
   }
   private async addPrompt(command: string): Promise<void> {
-    const qName: Question = new Question('input', 'name', 'Write the name');
-    const qArtist: Question = new Question('input', 'artist', 'Write the artist name');
+    const qName: Question = new Question('input', 'name', 'Write the name/title');
+    const qArtist: Question = new Question('input', 'artist', 'Write the artist name or group');
+    const qMember: Question = new Question('input', 'members', 'Write the members of the group');
     const qLength: Question = new Question('input', 'length', 'Write the length');
     const qGenres: Question = new Question('input', 'genres', 'Write the genres');
+    const qReleaseDate: Question = new Question('input', 'date', 'Write the release date');
+    const qSongs: Question = new Question('input', 'songs', 'Write the songs that are part of this item');
+    const qAlbums: Question = new Question('input', 'albums', 'Write the albums that this artist is part of');
+    const qListeners: Question = new Question('input', 'listeners', 'Write the ammount of listeners of this artist');
     const qPlays: Question = new Question('input', 'plays', 'Write the number of plays');
+    const qSingle: Object = {
+      name: 'isSingle',
+      type: 'confirm',
+      message: 'It is a single?',
+    };
     // eslint-disable-next-line max-len
-    const songQuestions = [qName.returnQuestion(),qArtist.returnQuestion(),qLength.returnQuestion(),qGenres.returnQuestion(),qPlays.returnQuestion()];
+    const songQuestions = [qName.returnQuestion(), qArtist.returnQuestion(), qLength.returnQuestion(), qGenres.returnQuestion(), qPlays.returnQuestion(), qSingle];
+    const albumQuestions = [qName.returnQuestion(), qArtist.returnQuestion(), qReleaseDate.returnQuestion(), qGenres.returnQuestion(), qSongs.returnQuestion()];
+    const artistQuestions = [qName.returnQuestion(), qArtist.returnQuestion(), qGenres.returnQuestion(), qAlbums.returnQuestion(), qSongs.returnQuestion(), qListeners.returnQuestion()];
+    const groupQuestions = [qName.returnQuestion(), qMember.returnQuestion(), qReleaseDate.returnQuestion(), qGenres.returnQuestion(), qAlbums.returnQuestion(), qListeners.returnQuestion()];
+    const genreQuestions = [qName.returnQuestion(), qArtist.returnQuestion(), qAlbums.returnQuestion(), qSongs.returnQuestion()];
     console.log(qName.returnQuestion());
     console.log(songQuestions);
     return new Promise(async (resolve, reject) => {
       console.log('------Musitronic360------ \n');
       console.log('Adding '+command+'\n');
-      if (command == 'Song') {
-        inquirer.prompt(songQuestions).then(async (answers) => {
-          console.log(answers);
-          // eslint-disable-next-line max-len
-          await this.database.addToMemory([new Song(answers['name'],answers['artist'],answers['length'],answers['genres'],answers['plays'],false)]);
-          this.database.printMemory();
-          await this.continuePrompt();
-          this.promptStart();
-        });
+      switch (command) {
+        case 'Song':
+          inquirer.prompt(songQuestions).then(async (answers) => {
+            console.log(answers);
+            // eslint-disable-next-line max-len
+            await this.database.addToMemory([new Song(answers['name'], answers['artist'], answers['length'], answers['genres'], answers['plays'], answers['isSingle'])]);
+            this.database.printMemory();
+            await this.continuePrompt();
+            this.promptManagement();
+          });
+          break;
+        case 'Genre':
+          inquirer.prompt(genreQuestions).then(async (answers) => {
+            console.log(answers);
+            // eslint-disable-next-line max-len
+            await this.database.addToMemory([new Genre(answers['name'], answers['artist'], answers['albums'], answers['songs'])]);
+            this.database.printMemory();
+            await this.continuePrompt();
+            this.promptManagement();
+          });
+          break;
+        case 'Album':
+          inquirer.prompt(albumQuestions).then(async (answers) => {
+            console.log(answers);
+            // eslint-disable-next-line max-len
+            await this.database.addToMemory([new Album(answers['name'], answers['artist'], answers['date'], answers['genres'], answers['songs'])]);
+            this.database.printMemory();
+            await this.continuePrompt();
+            this.promptManagement();
+          });
+          break;
+        case 'Artist':
+          inquirer.prompt(artistQuestions).then(async (answers) => {
+            console.log(answers);
+            // eslint-disable-next-line max-len
+            await this.database.addToMemory([new Artist(answers['name'], answers['artist'], answers['genres'], answers['albums'], answers['songs'], answers['listeners'] )]);
+            this.database.printMemory();
+            await this.continuePrompt();
+            this.promptManagement();
+          });
+          break;
+        case 'Group':
+          inquirer.prompt(groupQuestions).then(async (answers) => {
+            console.log(answers);
+            // eslint-disable-next-line max-len
+            await this.database.addToMemory([new Group(answers['name'], answers['members'], answers['date'], answers['genres'], answers['albums'], answers['listeners'])]);
+            this.database.printMemory();
+            await this.continuePrompt();
+            this.promptManagement();
+          });
+          break;
       }
     });
   }
@@ -258,6 +314,6 @@ export class Terminal {
 }
 
 const terminal: Terminal = new Terminal('');
-let song2: Song = new Song('holaaaa', [], 12, [], 55, true);
+const song2: Song = new Song('holaaaa', [], 12, [], 55, true);
 console.log(Object.getOwnPropertyNames(song2));
 terminal.promptStart();
