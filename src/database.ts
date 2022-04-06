@@ -13,7 +13,7 @@ interface anyDatabase {
 }
 export class Database implements anyDatabase {
   // eslint-disable-next-line max-len
-  constructor(private songs: Song[] = [], private artists: Artist[] = [], private albums: Album[] = [], private genres: Genre[] = [], private groups: Group[] = []) {
+  constructor(protected songs: Song[] = [], protected artists: Artist[] = [], protected albums: Album[] = [], protected genres: Genre[] = [], protected groups: Group[] = []) {
   }
   addToMemory(item: (Song[] | Album[] | Genre[] | Group[] | Artist[])): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -61,7 +61,7 @@ type schemaType = {
 export class JsonDatabase extends Database {
   // eslint-disable-next-line max-len
   private initialized: boolean = false;
-  private database: lowdb.LowdbSync<schemaType>;
+  private database?: lowdb.LowdbSync<schemaType>;
   constructor(private dbDir: string = '') {
     super();
     if (dbDir != '') {
@@ -74,10 +74,17 @@ export class JsonDatabase extends Database {
         this.database.set(`artists`, []).write();
         this.database.set(`genres`, []).write();
         this.initialized = true;
+      } else {
+        this.database?.read();
+        this.albums = this.database?.get(`albums`).value();
+        this.artists = this.database?.get(`artist`).value();
+        this.songs = this.database?.get(`songs`).value();
+        this.groups = this.database?.get(`groups`).value();
+        this.genres = this.database?.get(`genres`).value();
+        this.initialized = true;
       }
     } else {
       this.initialized = false;
-      this.database = lowdb(new FileSync('.temp.json'));
     }
   }
   setInitialized(value: boolean): void {
@@ -87,46 +94,70 @@ export class JsonDatabase extends Database {
   isInitialized(): boolean {
     return this.initialized;
   }
-  addToDatabase(item: (Song[] | Album[] | Genre[] | Group[] | Artist[])): Promise<string> {
-    return new Promise((resolve, reject) => {
-      if (this.initialized) {
-        item.forEach((item) => {
-          if (item instanceof Song) {
-            this.database.set(`songs`, [...this.database.get(`songs`).value(), item]).write();
-          }
-          if (item instanceof Album) {
-            this.database.set(`albums`, [...this.database.get(`albums`).value(), item]).write();
-          }
-          if (item instanceof Genre) {
-            this.database.set(`genres`, [...this.database.get(`genres`).value(), item]).write();
-          }
-          if (item instanceof Group) {
-            this.database.set(`groups`, [...this.database.get(`groups`).value(), item]).write();
-          }
-          if (item instanceof Artist) {
-            this.database.set(`artists`, [...this.database.get(`artists`).value(), item]).write();
-          }
-        });
-      }
-      resolve('good');
-    });
-  }
+  // addToDatabase(item: (Song[] | Album[] | Genre[] | Group[] | Artist[])): Promise<string> {
+  //   return new Promise((resolve, reject) => {
+  //     if (this.initialized) {
+  //       item.forEach((item) => {
+  //         if (item instanceof Song) {
+  //           this.database?.set(`songs`, [...this.database.get(`songs`).value(), item]).write();
+  //         }
+  //         if (item instanceof Album) {
+  //           this.database?.set(`albums`, [...this.database.get(`albums`).value(), item]).write();
+  //         }
+  //         if (item instanceof Genre) {
+  //           this.database?.set(`genres`, [...this.database.get(`genres`).value(), item]).write();
+  //         }
+  //         if (item instanceof Group) {
+  //           this.database?.set(`groups`, [...this.database.get(`groups`).value(), item]).write();
+  //         }
+  //         if (item instanceof Artist) {
+  //           this.database?.set(`artists`, [...this.database.get(`artists`).value(), item]).write();
+  //         }
+  //       });
+  //     }
+  //     resolve('good');
+  //   });
+  // }
 
   deleteFromDatabase(item: (Song[] | Album[] | Genre[] | Group[] | Artist[])): void {
   }
-  purgeDatabase() {
-    this.database.set(`songs`, []).write();
-    this.database.set(`albums`, []).write();
-    this.database.set(`groups`, []).write();
-    this.database.set(`artists`, []).write();
-    this.database.set(`genres`, []).write();
+  saveFromMemToDb() {
+    return new Promise((resolve, reject) => {
+      if (this.isInitialized()) {
+        this.database?.set(`songs`, this.songs).write();
+        this.database?.set(`albums`, this.albums).write();
+        this.database?.set(`groups`, this.groups).write();
+        this.database?.set(`artists`, this.artists).write();
+        this.database?.set(`genres`, this.genres).write();
+        this.initialized = true;
+        resolve('good');
+      } else throw new Error('No database loaded');
+    });
   }
+  purgeDatabase() {
+    return new Promise((resolve, reject) => {
+      if (this.isInitialized()) {
+        this.database?.set(`songs`, []).write();
+        this.database?.set(`albums`, []).write();
+        this.database?.set(`groups`, []).write();
+        this.database?.set(`artists`, []).write();
+        this.database?.set(`genres`, []).write();
+        resolve('');
+      } else throw new Error('No database loaded');
+    });
+  }
+
   print() {
-    this.database.read();
-    console.log(this.database.get(`albums`).value());
-    console.log(this.database.get(`artist`).value());
-    console.log(this.database.get(`songs`).value());
-    console.log(this.database.get(`groups`).value());
-    console.log(this.database.get(`genres`).value());
+    return new Promise((resolve, reject) => {
+      if (this.isInitialized()) {
+        this.database?.read();
+        console.log(this.database?.get(`albums`).value());
+        console.log(this.database?.get(`artist`).value());
+        console.log(this.database?.get(`songs`).value());
+        console.log(this.database?.get(`groups`).value());
+        console.log(this.database?.get(`genres`).value());
+        resolve('');
+      } else throw new Error('No database loaded');
+    });
   }
 }
