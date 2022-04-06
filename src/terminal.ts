@@ -7,7 +7,6 @@ import { Artist } from './Artist';
 import { Genre } from './Genre';
 import { Question } from './Question';
 
-
 export enum viewCommands {
   All = 'View all entries',
   AlphabeticalSong = 'View songs alphabetically',
@@ -192,8 +191,14 @@ export class Terminal {
       resolve(result);
     });
   }
+  validate(value:string) {
+    if (value == 'a') {
+      return true;
+    }
+    return value;
+  }
   private async addPrompt(command: string): Promise<void> {
-    const qName: Question = new Question('input', 'name', 'Write the name/title');
+    const qName: Question = new Question('input', 'name', 'Write the name/title', this.validate);
     const qArtist: Question = new Question('input', 'artist', 'Write the artist name or group');
     const qMember: Question = new Question('input', 'members', 'Write the members of the group');
     const qLength: Question = new Question('input', 'length', 'Write the length');
@@ -214,15 +219,12 @@ export class Terminal {
     const artistQuestions = [qName.returnQuestion(), qArtist.returnQuestion(), qGenres.returnQuestion(), qAlbums.returnQuestion(), qSongs.returnQuestion(), qListeners.returnQuestion()];
     const groupQuestions = [qName.returnQuestion(), qMember.returnQuestion(), qReleaseDate.returnQuestion(), qGenres.returnQuestion(), qAlbums.returnQuestion(), qListeners.returnQuestion()];
     const genreQuestions = [qName.returnQuestion(), qArtist.returnQuestion(), qAlbums.returnQuestion(), qSongs.returnQuestion()];
-    console.log(qName.returnQuestion());
-    console.log(songQuestions);
     return new Promise(async (resolve, reject) => {
       console.log('------Musitronic360------ \n');
       console.log('Adding '+command+'\n');
       switch (command) {
         case 'Song':
           inquirer.prompt(songQuestions).then(async (answers) => {
-            console.log(answers);
             // eslint-disable-next-line max-len
             await this.database.addToMemory([new Song(answers['name'], answers['artist'], answers['length'], answers['genres'], answers['plays'], answers['isSingle'])]);
             this.database.printMemory();

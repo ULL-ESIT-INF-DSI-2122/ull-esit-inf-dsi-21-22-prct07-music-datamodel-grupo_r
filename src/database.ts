@@ -74,6 +74,14 @@ export class JsonDatabase extends Database {
         this.database.set(`artists`, []).write();
         this.database.set(`genres`, []).write();
         this.initialized = true;
+      } else {
+        this.database?.read();
+        this.albums = this.database?.get(`albums`).value();
+        this.artists = this.database?.get(`artist`).value();
+        this.songs = this.database?.get(`songs`).value();
+        this.groups = this.database?.get(`groups`).value();
+        this.genres = this.database?.get(`genres`).value();
+        this.initialized = true;
       }
     } else {
       this.initialized = false;
@@ -86,30 +94,30 @@ export class JsonDatabase extends Database {
   isInitialized(): boolean {
     return this.initialized;
   }
-  addToDatabase(item: (Song[] | Album[] | Genre[] | Group[] | Artist[])): Promise<string> {
-    return new Promise((resolve, reject) => {
-      if (this.initialized) {
-        item.forEach((item) => {
-          if (item instanceof Song) {
-            this.database?.set(`songs`, [...this.database.get(`songs`).value(), item]).write();
-          }
-          if (item instanceof Album) {
-            this.database?.set(`albums`, [...this.database.get(`albums`).value(), item]).write();
-          }
-          if (item instanceof Genre) {
-            this.database?.set(`genres`, [...this.database.get(`genres`).value(), item]).write();
-          }
-          if (item instanceof Group) {
-            this.database?.set(`groups`, [...this.database.get(`groups`).value(), item]).write();
-          }
-          if (item instanceof Artist) {
-            this.database?.set(`artists`, [...this.database.get(`artists`).value(), item]).write();
-          }
-        });
-      }
-      resolve('good');
-    });
-  }
+  // addToDatabase(item: (Song[] | Album[] | Genre[] | Group[] | Artist[])): Promise<string> {
+  //   return new Promise((resolve, reject) => {
+  //     if (this.initialized) {
+  //       item.forEach((item) => {
+  //         if (item instanceof Song) {
+  //           this.database?.set(`songs`, [...this.database.get(`songs`).value(), item]).write();
+  //         }
+  //         if (item instanceof Album) {
+  //           this.database?.set(`albums`, [...this.database.get(`albums`).value(), item]).write();
+  //         }
+  //         if (item instanceof Genre) {
+  //           this.database?.set(`genres`, [...this.database.get(`genres`).value(), item]).write();
+  //         }
+  //         if (item instanceof Group) {
+  //           this.database?.set(`groups`, [...this.database.get(`groups`).value(), item]).write();
+  //         }
+  //         if (item instanceof Artist) {
+  //           this.database?.set(`artists`, [...this.database.get(`artists`).value(), item]).write();
+  //         }
+  //       });
+  //     }
+  //     resolve('good');
+  //   });
+  // }
 
   deleteFromDatabase(item: (Song[] | Album[] | Genre[] | Group[] | Artist[])): void {
   }

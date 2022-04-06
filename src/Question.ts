@@ -1,17 +1,17 @@
 import * as inquirer from 'inquirer';
 
 export class Question {
+  private question: Object = {};
   constructor(
     private type: string,
     private name: string,
     private message: string,
-    private question: Object = {},
     private funct: Function = () => {},
   ) {
     this.type = type;
     this.name = name;
     this.message = message;
-    this.question = {};
+    this.funct = funct;
   }
 
   /**
@@ -40,7 +40,18 @@ export class Question {
       name: this.name,
       message: this.message,
     };
-    return objeto;
+    const objeto2: {
+      type: string,
+      name:string,
+      message:string,
+      validate: Function,
+    } = {
+      type: this.type,
+      name: this.name,
+      message: this.message,
+      validate: this.funct,
+    };
+    return objeto2;
   }
   /**
    * Get the question name.
