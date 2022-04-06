@@ -193,7 +193,7 @@ export class Terminal {
   private async addPrompt(command: string): Promise<void> {
     const qName: Question = new Question('input', 'name', 'Write the name');
     const qArtist: Question = new Question('input', 'artist', 'Write the artist name');
-    const qLength: Question = new Question('input', 'length', 'Write the length of the song');
+    const qLength: Question = new Question('input', 'length', 'Write the length');
     const qGenres: Question = new Question('input', 'genres', 'Write the genres');
     const qPlays: Question = new Question('input', 'plays', 'Write the number of plays');
     // eslint-disable-next-line max-len
