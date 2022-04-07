@@ -104,57 +104,29 @@ export class Terminal {
 
 
   promptStart(): void {
-    if (this.database.isInitialized()) {
-      console.clear();
-      console.log('------Musitronic360------ \n');
-      inquirer.prompt({
-        type: 'list',
-        name: 'command',
-        message: 'Choose option',
-        choices: Object.values(startCommands),
-      }).then((answers) => {
-        switch (answers['command']) {
-          case startCommands.View:
-            this.promptView();
-            break;
-          case startCommands.Search:
-            this.promptStart();
-            break;
-          case startCommands.Management:
-            this.promptManagement();
-            break;
-          case startCommands.Exit:
-            break;
-          default:
-            console.log('Missing ' + answers['command']);
-        }
-      });
-    } else this.loadDbPrompt();
-  }
-  private async continuePrompt(): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      await inquirer.prompt({
-        name: 'continue',
-        type: 'confirm',
-        message: 'Press enter to continue...',
-      }).then(async (answers) => {
-        resolve();
-      });
-      resolve();
-    });
-  }
-
-  private async loadDbPrompt(): Promise<void> {
     console.clear();
     console.log('------Musitronic360------ \n');
     inquirer.prompt({
-      type: 'input',
-      name: 'dbDir',
-      message: 'Write the .json database directory',
-    }).then(async (answers) => {
-      await this.loadDatabase(answers.dbDir as string);
-      await this.continuePrompt();
-      this.promptStart();
+      type: 'list',
+      name: 'command',
+      message: 'Choose option',
+      choices: Object.values(startCommands),
+    }).then((answers) => {
+      switch (answers['command']) {
+        case startCommands.View:
+          this.promptView();
+          break;
+        case startCommands.Search:
+          this.promptStart();
+          break;
+        case startCommands.Management:
+          this.promptManagement();
+          break;
+        case startCommands.Exit:
+          break;
+        default:
+          console.log('Missing ' + answers['command']);
+      }
     });
   }
   private async continuePrompt(): Promise<void> {
@@ -354,9 +326,6 @@ export class Terminal {
             await this.continuePrompt();
           }
           this.promptManagement();
-          break;
-        case managementCommands.Load:
-          this.loadDbPrompt();
           break;
         case managementCommands.Purge:
           try {
