@@ -17,12 +17,12 @@ export class Group {
    * @param {number} listeners Number of listeners
    */
   constructor(
-    private name: string,
-    private members: Artist[],
-    private date: string,
-    private genres: Genre[],
-    private albums: Album[],
-    private listeners: number,
+    public name: string,
+    public members: Artist[],
+    public date: string,
+    public genres: Genre[],
+    public albums: Album[],
+    public listeners: number,
   ) {
     this.name = name;
     this.members = members;

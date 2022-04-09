@@ -13,14 +13,14 @@ export class Playlist {
    * @param genres Musical genres included in the playlist
    */
   constructor(
-    private name: string,
-    private songs: Song[],
-    private duration: string,
-    private genres: Genre[],
+    public name: string,
+    public songs: Song[],
+    public duration: number,
+    public genres: Genre[],
   ) {
     this.name = name;
     this.songs = songs;
-    this.duration = this.setDuration(Number(duration));
+    this.duration = duration;
   }
 
   /**
@@ -61,7 +61,7 @@ export class Playlist {
    * Get the duration of the playlist.
    * @returns the duration of the playlist
    */
-  public getDuration(): string {
+  public getDuration(): number {
     return this.duration;
   }
 
