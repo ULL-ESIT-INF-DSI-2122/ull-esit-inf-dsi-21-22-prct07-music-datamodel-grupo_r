@@ -19,7 +19,8 @@
         "require-jsdoc": "off",
         "valid-jsdoc": "off",
         "linebreak-style" : "off",
-        "max-len": ["error", {"code": 120}],
+        "prefer-const": "off",
+        "max-len": "off",
         "object-curly-spacing": "off"
     }
 }

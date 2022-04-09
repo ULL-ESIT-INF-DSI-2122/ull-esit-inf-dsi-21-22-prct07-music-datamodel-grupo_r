@@ -115,10 +115,10 @@ export class Group {
 
   /**
    * Set the albums list
-   * @param {Album[]} albums Albums list
+   * @param {Album} album Albums list
    */
-  public setAlbums(albums: Album[]) {
-    this.albums = albums;
+  public setAlbums(album: Album) {
+    this.albums.push(album);
   }
 
   /** Get listeners.

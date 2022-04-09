@@ -1,5 +1,6 @@
 import { Genre } from './Genre';
 import { Artist } from './Artist';
+import { Group } from './Group';
 
 /**
  * @class Represents an artist.
@@ -7,7 +8,7 @@ import { Artist } from './Artist';
 export class Song {
   constructor(
     public name: string,
-    public artists: Artist[],
+    public artists: Artist | Group,
     public length: number,
     public genres: Genre[],
     public plays: number,
@@ -39,12 +40,12 @@ export class Song {
   }
 
 
-  public getArtists(): Artist[] {
+  public getArtists(): Artist | Group {
     return this.artists;
   }
 
-  public setArtists(artist: Artist): void {
-    this.artists.push(artist);
+  public setArtists(artist: Artist | Group): void {
+    this.artists = artist;
   }
 
   public getLength(): number {
@@ -80,7 +81,7 @@ export class Song {
   setSingle(isSingle: boolean): void {
     this.isSingle = isSingle;
   }
-  getSingle():boolean {
+  getSingle(): boolean {
     return this.isSingle;
   }
   /**
@@ -90,10 +91,7 @@ export class Song {
   public print(): string {
     let output: string = 'Song - ' + this.name;
 
-    output += '\nArtists: ';
-    this.artists.forEach((a) => {
-      output += '\n -' + a.getName();
-    });
+    output += '\nAuthor: ' + this.artists.getName();
 
     output += '\nLength: ' + this.length + ' seconds';
 

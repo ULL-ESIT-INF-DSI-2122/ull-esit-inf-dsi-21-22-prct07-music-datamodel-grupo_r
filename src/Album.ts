@@ -135,7 +135,7 @@ export class Album {
       output += '\n -' + s.getName();
     });
 
-    output += '\n------------\n';
+    output += '\n------------\n\n';
     console.log(output);
     return output;
   }

@@ -1,5 +1,5 @@
 import * as inquirer from 'inquirer';
-import { JsonDatabase } from './database';
+import { JsonDatabase } from './JsonDatabase';
 import { Group } from './Group';
 import { Album } from './Album';
 import { Song } from './Song';
@@ -7,49 +7,12 @@ import { Artist } from './Artist';
 import { Genre } from './Genre';
 import { Question } from './Question';
 import { Playlist } from './Playlist';
+import { viewCommands } from './Commands';
+import { managementCommands } from './Commands';
+import { typeCommands } from './Commands';
+import { startCommands } from './Commands';
 
 inquirer.registerPrompt('search-list', require('inquirer-search-list'));
-
-export enum viewCommands {
-  AlphabeticalSong = 'View songs alphabetically',
-  AlphabeticalAlbum = 'View albums alphabetically',
-  AlphabeticalPlaylist = 'View playlists alphabetically',
-  ReleaseDate = 'View albums by release date',
-  ViewCount = 'View by play count',
-  OnlySingles = 'View only singles',
-  Return = 'Return'
-}
-
-
-
-export enum managementCommands {
-  Add = 'Add',
-  Modify = 'Modify',
-  Delete = 'Delete',
-  DisplayMEM = 'Display memory content',
-  DisplayDB = 'Display db content',
-  Load = 'Load a database',
-  Save = 'Save from memory to database (load first)',
-  Purge = 'Wipes all database (NO RETURN!)',
-  PurgeMEM ='Wipes all memory (NO RETURN!)',
-  Return = 'Return'
-}
-
-export enum typeCommands {
-  Song = 'Song',
-  Genre = 'Genre',
-  Artist = 'Artist',
-  Album = 'Album',
-  Group = 'Group',
-  Playlist = 'Playlist'
-}
-
-export enum startCommands {
-  View = 'View',
-  Search = 'Search (wip)',
-  Management = 'Enter management mode (add, modify, remove, load DB)',
-  Exit = 'Exit'
-}
 export class Terminal {
   private database: JsonDatabase;
   constructor(private dbDir: string = '') {
@@ -131,7 +94,7 @@ export class Terminal {
     }).then(async (answers) => {
       switch (answers['command']) {
         case startCommands.View:
-          //console.log(await this.database.getFromMemory('a','Song'));
+          // console.log(await this.database.getFromMemory('a','Song'));
           this.promptView();
           break;
         case startCommands.Search:
@@ -238,7 +201,7 @@ export class Terminal {
       type: 'confirm',
       message: 'It is a single?',
     };
- 
+
     const songQuestions = [qName.returnQuestion(), qArtist.returnQuestion(),
       qLength.returnQuestion(), qGenres.returnQuestion(), qPlays.returnQuestion(), qSingle];
     const albumQuestions = [qName.returnQuestion(),
@@ -273,7 +236,6 @@ export class Terminal {
               const newGenre: Genre = new Genre(answers['name'],
                   answers['artist'], answers['albums'], answers['songs']);
               await this.database.addToMemory([newGenre]);
-              newGenre.print();
               await this.continuePrompt();
               this.promptManagement();
             });
@@ -293,9 +255,8 @@ export class Terminal {
             inquirer.prompt(artistQuestions).then(async (answers) => {
               console.log(answers);
               const newArtist: Artist = new Artist(answers['name'], answers['members'], answers['genres'],
-              answers['albums'], answers['songs'], parseInt(answers['listeners']));
+                  answers['albums'], answers['songs'], parseInt(answers['listeners']));
               await this.database.addToMemory([newArtist]);
-              newArtist.print();
               await this.continuePrompt();
               this.promptManagement();
             });
@@ -332,17 +293,26 @@ export class Terminal {
     return new Promise(async (resolve, reject) => {
       console.log('------Musitronic360------ \n');
       console.log('Deleting '+command+'\n');
-      //console.log((await this.database.searchByName('all', 'song')).map((o) => o.name));
+      // console.log((await (this.database.getFromMemory('$ALL$', command))).map((o) => o.name));
       switch (command) {
         case 'Song':
           const qSong: Object = {
             name: 'song',
             type: 'search-list',
             message: 'Select song',
-            //choices: (this.database.searchByName('all', 'song')).map((o) => o.name),
+            choices: (await (this.database.getFromMemory('$ALL$', command))).map((o) => o.name),
           };
           await inquirer.prompt(qSong).then(async (answers) => {
-            this.database.deleteFromMemory(answers.song);
+            const copy: (Song|undefined) = await this.database.deleteFromMemory(answers.song) as (Song|undefined);
+            (await this.database.getFromMemory('$ALL$', 'artist')).forEach((artist) => {
+              if (artist instanceof Artist) {
+                artist.getSongs().forEach((song, index) => {
+                  if (copy === song) {
+                    artist.replaceSongs(artist.getSongs().splice(index, 1));
+                  }
+                });
+              }
+            });
             console.log('Deleted: ' + answers.song);
             resolve();
           });

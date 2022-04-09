@@ -118,6 +118,15 @@ export class Artist {
   }
 
   /**
+   * Set the published songs
+   * @param songs Song
+   * @returns Songs
+   */
+  public replaceSongs(songs: Song[]) {
+    this.songs = songs;
+  }
+
+  /**
    * Calculates the number of monthly listeners
    * @returns Listeners
    */

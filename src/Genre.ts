@@ -16,12 +16,12 @@ export class Genre {
    */
   constructor(
     public name: string,
-    public groups: (Group | Artist)[],
+    public authors: (Group | Artist)[],
     public albums: Album[],
     public songs: Song[],
   ) {
     this.name = name;
-    this.groups = groups;
+    this.authors = authors;
     this.albums = albums;
     this.songs = songs;
   }
@@ -44,20 +44,20 @@ export class Genre {
   }
 
   /**
-   * Get the groups and/or artists produce music of this genre.
-   * @returns Groups
+   * Get the authors and/or artists produce music of this genre.
+   * @returns authors
    */
-  public getGroups(): (Group | Artist)[] {
-    return this.groups;
+  public getAuthors(): (Group | Artist)[] {
+    return this.authors;
   }
 
   /**
-   * Set the groups and/or artists produce music of this genre.
+   * Set the authors and/or artists produce music of this genre.
    * @param group Group or Artist
-   * @returns Groups
+   * @returns authors
    */
-  public setGroups(group: Group | Artist): void {
-    this.groups.push(group);
+  public setAuthors(group: Group | Artist): void {
+    this.authors.push(group);
   }
 
   /**
@@ -99,8 +99,8 @@ export class Genre {
    */
   public print(): string {
     let output: string = 'Genre - ' + this.name;
-    output += '\nGroups: ';
-    this.groups.forEach((g) => {
+    output += '\n Author: ';
+    this.authors.forEach((g) => {
       output += '\n -' + g.getName();
     });
 

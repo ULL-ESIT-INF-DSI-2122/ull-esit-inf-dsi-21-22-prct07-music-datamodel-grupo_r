@@ -1,0 +1,66 @@
+{
+  "songs": [
+    {
+      "name": "Solo Amigos",
+      "artists": "Adexe",
+      "length": 225,
+      "genres": [
+        "UrbanoLatino"
+      ],
+      "plays": 5000000,
+      "isSingle": true
+    }
+  ],
+  "albums": [],
+  "groups": [
+    {
+      "name": "Adexe Y Nau",
+      "members": [
+        "Adexe"
+      ],
+      "date": "03/07/2015",
+      "genres": [
+        "UrbanoLatino"
+      ],
+      "albums": [],
+      "listeners": 499119
+    }
+  ],
+  "genres": [
+    {
+      "name": "UrbanoLatino",
+      "groups": [
+        "Adexe",
+        "Adexe Y Nau"
+      ],
+      "albums": [],
+      "canciones": [
+        "Solo Amigos"
+      ]
+    },
+    {
+      "name": "Pop",
+      "groups": [],
+      "albums": [],
+      "canciones": []
+    }
+  ],
+  "artists": [
+    {
+      "name": "Adexe",
+      "groups": [
+        "Adexe Y Nau"
+      ],
+      "genres": [
+        "UrbanoLatino",
+        "Pop"
+      ],
+      "albums": [],
+      "songs": [
+        "Solo Amigos"
+      ],
+      "listeners": 120200
+    }
+  ],
+  "playlists": []
+}
