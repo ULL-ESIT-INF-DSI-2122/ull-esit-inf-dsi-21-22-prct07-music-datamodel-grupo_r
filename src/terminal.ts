@@ -334,7 +334,6 @@ export class Terminal {
           
           break;
         case 'Artist':
-          
           break;
         case 'Group':
           
