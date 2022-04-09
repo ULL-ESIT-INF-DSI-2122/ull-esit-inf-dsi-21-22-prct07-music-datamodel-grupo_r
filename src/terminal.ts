@@ -426,3 +426,4 @@ export class Terminal {
 
 const terminal: Terminal = new Terminal('MusicDataBase.json');
 terminal.promptStart();
+
