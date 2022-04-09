@@ -83,4 +83,35 @@ export class Song {
   getSingle():boolean {
     return this.isSingle;
   }
+  /**
+ * Print the song information
+ * @return {string}
+ */
+  public print(): string {
+    let output: string = 'Song - ' + this.name;
+
+    output += '\nArtists: ';
+    this.artists.forEach((a) => {
+      output += '\n -' + a.getName();
+    });
+
+    output += '\nLength: ' + this.length + ' seconds';
+
+    output += '\nGenres: ';
+    this.genres.forEach((g) => {
+      output += '\n -' + g.getName();
+    });
+
+    output += '\nPlays: ' + this.plays;
+
+    if (this.isSingle) {
+      output += '\nPublished as single?: Yes';
+    } else {
+      output += '\nPublished as single?: No';
+    }
+    output += '\n------------\n';
+
+    console.log(output);
+    return output;
+  }
 }

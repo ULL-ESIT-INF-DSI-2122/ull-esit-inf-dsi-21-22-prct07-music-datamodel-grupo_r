@@ -93,4 +93,29 @@ export class Genre {
   public setSongs(song: Song) {
     this.songs.push(song);
   }
+  /**
+   * Print the genre information
+   * @return {string}
+   */
+  public print(): string {
+    let output: string = 'Genre - ' + this.name;
+    output += '\nGroups: ';
+    this.groups.forEach((g) => {
+      output += '\n -' + g.getName();
+    });
+
+    output += '\nAlbums: ';
+    this.albums.forEach((a) => {
+      output += '\n -' + a.getName();
+    });
+
+    output += '\nSongs: ';
+    this.songs.forEach((s) => {
+      output += '\n -' + s.getName();
+    });
+
+    output += '\n------------\n';
+    console.log(output);
+    return output;
+  }
 }

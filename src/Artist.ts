@@ -138,4 +138,36 @@ export class Artist {
   public getListeners(): number {
     return this.listeners;
   }
+  /**
+ * Print the artist information
+ * @return {string}
+ */
+  public print(): string {
+    let output: string = 'Artist - ' + this.name;
+
+    output += '\nGroups: ';
+    this.groups.forEach((g) => {
+      output += '\n -' + g.getName();
+    });
+
+    output += '\nGenres: ';
+    this.genres.forEach((g) => {
+      output += '\n -' + g.getName();
+    });
+
+    output += '\nAlbums: ';
+    this.albums.forEach((a) => {
+      output += '\n -' + a.getName();
+    });
+
+    output += '\nSongs: ';
+    this.songs.forEach((s) => {
+      output += '\n -' + s.getName();
+    });
+
+    output += '\nListeners: ' + this.listeners;
+    output += '\n------------\n';
+    console.log(output);
+    return output;
+  }
 }

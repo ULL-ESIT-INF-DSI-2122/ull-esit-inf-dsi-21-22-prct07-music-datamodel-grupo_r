@@ -99,4 +99,29 @@ export class Playlist {
   public setGenres(genre: Genre): void {
     this.genres.push(genre);
   }
+
+  /**
+   * Print the playlist information
+   * @return {string}
+   */
+  public print(): string {
+    let output: string = 'Playlist - ' + this.name;
+
+    output += '\nSongs: ';
+    this.songs.forEach((s) => {
+      output += '\n -' + s.getName();
+    });
+
+    output += '\nDuration: ' + this.duration;
+
+    output += '\nGenres: ';
+    this.genres.forEach((g) => {
+      output += '\n -' + g.getName();
+    });
+
+    output += '\n------------\n';
+
+    console.log(output);
+    return output;
+  }
 }

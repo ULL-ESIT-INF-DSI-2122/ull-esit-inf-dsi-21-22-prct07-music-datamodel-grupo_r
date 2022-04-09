@@ -403,7 +403,7 @@
   ],
   "albums": [
     {
-      "title": "El Cartel: The Big Boss",
+      "name": "El Cartel: The Big Boss",
       "author": "Daddy Yankee",
       "date": "05/06/2007",
       "genres": ["UrbanoLatino"],
@@ -413,7 +413,7 @@
       "Plane To PR", "Me quedaría", "Todos quieren a Raymond", "Impacto"]
     },
     {
-      "title": "Dangerous",
+      "name": "Dangerous",
       "author": "Michael Jackson",
       "date": "26/11/1991",
       "genres": ["Rock", "Pop"],
@@ -422,7 +422,7 @@
       "Will You Be There", "Keep The Faith", "Gone Too Soon", "Dangerous"]
     },
     {
-      "title": "Scatman's World",
+      "name": "Scatman's World",
       "author": "Scatman John",
       "date": "10/07/1995",
       "genres": ["Pop", "Electronic"],
@@ -431,7 +431,7 @@
       "Song of Scatland", "Hi, Louis"]
     },
     {
-      "title": "Jazz",
+      "name": "Jazz",
       "author": "Queen",
       "date": "10/11/1978",
       "genres": ["Rock"],
@@ -440,7 +440,7 @@
       "Leaving Home Ain't Easy", "Don't Stop Me Now", "More of That Jazz"]
     },
     {
-      "title": "Curtain Call: The Hits",
+      "name": "Curtain Call: The Hits",
       "author": "Eminem",
       "date": "06/12/2005",
       "genres": ["Rap"],
@@ -449,7 +449,7 @@
       "Guilty Conscience", "Cleanin' Out My Closet", "Just Lose It", "When I'm Gone"]
     },
     {
-      "title": "Plastic Beach",
+      "name": "Plastic Beach",
       "author": "Gorillaz",
       "date": "09/03/2010",
       "genres": ["Indie", "Electronic", "Pop"],
@@ -459,7 +459,7 @@
       "To Binge", "Cloud of Unknowing", "Pirate Jet"]
     },
     {
-      "title": "Best of Beethoven",
+      "name": "Best of Beethoven",
       "author": "Ludwig van Beethoven",
       "date": "03/07/1990",
       "genres": ["Classical"],
@@ -467,7 +467,7 @@
       "Symphony No.6", "Piano Sonata No. 1", "Symphony No.9"]
     },
     {
-      "title": "21",
+      "name": "21",
       "author": "Adele",
       "date": "29/11/2012",
       "genres": ["Soul", "Pop"],
@@ -476,7 +476,7 @@
       "Lovesong", "Someone like You"]
     },
     {
-      "title": "The Gambler",
+      "name": "The Gambler",
       "author": "Kenny Rogers",
       "date": "01/11/1978",
       "genres": ["Country"],
@@ -486,7 +486,7 @@
       "San Francisco Mabel Joy", "Morgana Jones"]
     },
     {
-      "title": "Piece of Mind",
+      "name": "Piece of Mind",
       "author": "Iron Maiden",
       "date": "16/05/1983",
       "genres": ["Metal"],

@@ -122,7 +122,6 @@ export class Terminal {
 
   }
   promptStart(): void {
-    console.clear();
     console.log('------Musitronic360------ \n');
     inquirer.prompt({
       type: 'list',
@@ -239,12 +238,20 @@ export class Terminal {
       type: 'confirm',
       message: 'It is a single?',
     };
-    // eslint-disable-next-line max-len
-    const songQuestions = [qName.returnQuestion(), qArtist.returnQuestion(), qLength.returnQuestion(), qGenres.returnQuestion(), qPlays.returnQuestion(), qSingle];
-    const albumQuestions = [qName.returnQuestion(), qArtist.returnQuestion(), qReleaseDate.returnQuestion(), qGenres.returnQuestion(), qSongs.returnQuestion()];
-    const artistQuestions = [qName.returnQuestion(), qMember.returnQuestion(), qGenres.returnQuestion(), qAlbums.returnQuestion(), qSongs.returnQuestion(), qListeners.returnQuestion()];
-    const groupQuestions = [qName.returnQuestion(), qMember.returnQuestion(), qReleaseDate.returnQuestion(), qGenres.returnQuestion(), qAlbums.returnQuestion(), qListeners.returnQuestion()];
-    const genreQuestions = [qName.returnQuestion(), qArtist.returnQuestion(), qAlbums.returnQuestion(), qSongs.returnQuestion()];
+ 
+    const songQuestions = [qName.returnQuestion(), qArtist.returnQuestion(),
+      qLength.returnQuestion(), qGenres.returnQuestion(), qPlays.returnQuestion(), qSingle];
+    const albumQuestions = [qName.returnQuestion(),
+      qArtist.returnQuestion(), qReleaseDate.returnQuestion(), qGenres.returnQuestion(), qSongs.returnQuestion()];
+    const artistQuestions = [qName.returnQuestion(),
+      qMember.returnQuestion(), qGenres.returnQuestion(),
+      qAlbums.returnQuestion(), qSongs.returnQuestion(), qListeners.returnQuestion()];
+    const groupQuestions = [qName.returnQuestion(), qMember.returnQuestion(),
+      qReleaseDate.returnQuestion(), qGenres.returnQuestion(), qAlbums.returnQuestion(), qListeners.returnQuestion()];
+    const genreQuestions = [qName.returnQuestion(),
+      qArtist.returnQuestion(), qAlbums.returnQuestion(), qSongs.returnQuestion()];
+    const playlistQuestions = [qName.returnQuestion(), qSongs.returnQuestion(),
+      qLength.returnQuestion(), qGenres.returnQuestion()];
     try {
       return new Promise(async (resolve, reject) => {
         console.log('------Musitronic360------ \n');
@@ -252,10 +259,10 @@ export class Terminal {
         switch (command) {
           case 'Song':
             inquirer.prompt(songQuestions).then(async (answers) => {
-              await this.database.addToMemory([new Song(answers['name'], answers['artist'], answers['length'], answers['genres'], answers['plays'], answers['isSingle'])]);
-              this.database.printMemory();
-
-              // eslint-disable-next-line max-len
+              const newSong: Song = new Song(answers['name'], answers['artist'],
+                  answers['length'], answers['genres'], answers['plays'], answers['isSingle']);
+              await this.database.addToMemory([newSong]);
+              newSong.print();
               await this.continuePrompt();
               this.promptManagement();
             });
@@ -263,9 +270,10 @@ export class Terminal {
           case 'Genre':
             inquirer.prompt(genreQuestions).then(async (answers) => {
               console.log(answers);
-              // eslint-disable-next-line max-len
-              await this.database.addToMemory([new Genre(answers['name'], answers['artist'], answers['albums'], answers['songs'])]);
-              this.database.printMemory();
+              const newGenre: Genre = new Genre(answers['name'],
+                  answers['artist'], answers['albums'], answers['songs']);
+              await this.database.addToMemory([newGenre]);
+              newGenre.print();
               await this.continuePrompt();
               this.promptManagement();
             });
@@ -273,9 +281,10 @@ export class Terminal {
           case 'Album':
             inquirer.prompt(albumQuestions).then(async (answers) => {
               console.log(answers);
-              // eslint-disable-next-line max-len
-              await this.database.addToMemory([new Album(answers['name'], answers['artist'], answers['date'], answers['genres'], answers['songs'])]);
-              this.database.printMemory();
+              const newAlbum: Album = new Album(answers['name'], answers['artist'],
+                  answers['date'], answers['genres'], answers['songs']);
+              await this.database.addToMemory([newAlbum]);
+              newAlbum.print();
               await this.continuePrompt();
               this.promptManagement();
             });
@@ -283,9 +292,10 @@ export class Terminal {
           case 'Artist':
             inquirer.prompt(artistQuestions).then(async (answers) => {
               console.log(answers);
-              // eslint-disable-next-line max-len
-              await this.database.addToMemory([new Artist(answers['name'], answers['members'], answers['genres'], answers['albums'], answers['songs'], parseInt(answers['listeners']) )]);
-              this.database.printMemory();
+              const newArtist: Artist = new Artist(answers['name'], answers['members'], answers['genres'],
+              answers['albums'], answers['songs'], parseInt(answers['listeners']));
+              await this.database.addToMemory([newArtist]);
+              newArtist.print();
               await this.continuePrompt();
               this.promptManagement();
             });
@@ -293,9 +303,21 @@ export class Terminal {
           case 'Group':
             inquirer.prompt(groupQuestions).then(async (answers) => {
               console.log(answers);
-              // eslint-disable-next-line max-len
-              await this.database.addToMemory([new Group(answers['name'], answers['members'], answers['date'], answers['genres'], answers['albums'], answers['listeners'])]);
-              this.database.printMemory();
+              const newGroup: Group = new Group(answers['name'], answers['members'],
+                  answers['date'], answers['genres'], answers['albums'], answers['listeners']);
+              await this.database.addToMemory([newGroup]);
+              newGroup.print();
+              await this.continuePrompt();
+              this.promptManagement();
+            });
+            break;
+
+          case 'Playlist':
+            inquirer.prompt(playlistQuestions).then(async (answers) => {
+              const newPlaylist: Playlist = new Playlist(answers['name'], answers['songs'],
+                  answers['duration'], answers['genres']);
+              await this.database.addToMemory([newPlaylist]);
+              newPlaylist.print();
               await this.continuePrompt();
               this.promptManagement();
             });
@@ -310,14 +332,14 @@ export class Terminal {
     return new Promise(async (resolve, reject) => {
       console.log('------Musitronic360------ \n');
       console.log('Deleting '+command+'\n');
-      console.log((await this.database.searchName('all', 'song')).map((o) => o.name));
+      //console.log((await this.database.searchByName('all', 'song')).map((o) => o.name));
       switch (command) {
         case 'Song':
           const qSong: Object = {
             name: 'song',
             type: 'search-list',
             message: 'Select song',
-            choices: (this.database.searchName('all', 'song')).map((o) => o.name),
+            //choices: (this.database.searchByName('all', 'song')).map((o) => o.name),
           };
           await inquirer.prompt(qSong).then(async (answers) => {
             this.database.deleteFromMemory(answers.song);
@@ -328,18 +350,14 @@ export class Terminal {
           this.promptManagement();
           break;
         case 'Genre':
-          
           break;
         case 'Album':
-          
           break;
         case 'Artist':
           break;
         case 'Group':
-          
           break;
         case 'Playlist':
-        
           break;
       }
       resolve();

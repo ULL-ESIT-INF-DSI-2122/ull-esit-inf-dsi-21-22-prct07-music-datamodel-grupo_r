@@ -1,7 +1,6 @@
 import { Album } from './Album';
 import { Genre } from './Genre';
 import { Artist } from './Artist';
-import { Song } from './Song';
 
 /**
  * @class Represents a group.
@@ -135,5 +134,35 @@ export class Group {
    */
   public incrementListeners(): void {
     this.listeners++;
+  }
+  /**
+   * Print the group information
+   * @return {string}
+   */
+  public print(): string {
+    let output: string = 'Group - ' + this.name;
+
+    output += '\nMembers: ';
+    this.members.forEach((m) => {
+      output += '\n -' + m.getName();
+    });
+
+    output += '\nDate: ' + this.date;
+
+    output += '\nGenres: ';
+    this.genres.forEach((g) => {
+      output += '\n -' + g.getName();
+    });
+
+    output += '\nAlbums: ';
+    this.albums.forEach((a) => {
+      output += '\n -' + a.getName();
+    });
+
+    output += '\nListeners: ' + this.listeners;
+    output += '\n------------\n';
+
+    console.log(output);
+    return output;
   }
 }

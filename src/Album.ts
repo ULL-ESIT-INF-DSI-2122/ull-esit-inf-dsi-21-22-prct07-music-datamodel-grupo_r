@@ -9,7 +9,7 @@ import { Song } from './Song';
 export class Album {
   /**
    * Initialize an Album object.
-   * @param {string} title Album title
+   * @param {string} name Album title
    * @param {Artist | Group} author Artist or group that publish the album
    * @param {string} date Release date
    * @param {Genre[]} genres Related musical genres
@@ -33,16 +33,16 @@ export class Album {
    * Get the album title.
    * @return {string} album title
    */
-  public getTitle(): string {
+  public getName(): string {
     return this.name;
   }
 
   /**
    * Set the album title.
-   * @param {string} title Album title
+   * @param {string} name Album title
    */
-  public setTitle(title: string): void {
-    this.name = title;
+  public setName(name: string): void {
+    this.name = name;
   }
 
   /**
@@ -117,5 +117,26 @@ export class Album {
    */
   public setSongs(songs: Song[]) {
     this.songs = songs;
+  }
+  /**
+ * Print the album information
+ * @return {string}
+ */
+  public print(): string {
+    let output: string = 'Album - ' + this.name + '\nAuthor: ' + this.author.name + '\nDate: ' + this.date;
+
+    output += '\nGenres: ';
+    this.genres.forEach((g) => {
+      output += '\n -' + g.getName();
+    });
+
+    output += '\nSongs: ';
+    this.songs.forEach((s) => {
+      output += '\n -' + s.getName();
+    });
+
+    output += '\n------------\n';
+    console.log(output);
+    return output;
   }
 }
