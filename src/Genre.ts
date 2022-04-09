@@ -10,7 +10,7 @@ export class Genre {
   /**
    * Initialize an Genres object.
    * @param name Genre name
-   * @param groups Groups and/or artists produce music of this genre
+   * @param authors Groups and/or artists produce music of this genre
    * @param albums Albums in the library related to this genre
    * @param songs Songs in the library of that genre
    */

@@ -7,5 +7,5 @@ import { Playlist } from './Playlist';
 
 export interface anyDatabase {
   addToMemory(item: (Song[] | Album[] | Genre[] | Group[] | Artist[]| Playlist[])): void;
-  deleteFromMemory(item: string): void;
+  deleteFromMemory(item: string, type:string): void;
 }

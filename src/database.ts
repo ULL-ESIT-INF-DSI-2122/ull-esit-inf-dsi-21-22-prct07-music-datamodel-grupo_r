@@ -49,7 +49,9 @@ export class Database implements anyDatabase {
               dummy.push(value);
             }
           });
-        } else resolve(this.songs);
+        } else {
+          resolve(this.songs);
+        }
       }
       if (type == 'Album') {
         if (item !== '$ALL$') {
@@ -229,16 +231,61 @@ export class Database implements anyDatabase {
     }
     return empty;
   }
-  async deleteFromMemory(item: string): Promise<(Song | Group | Artist | Album | Genre | Playlist| undefined)> {
+  async deleteFromMemory(item: string, type:string): Promise<(Song | Group | Artist | Album | Genre | Playlist| undefined)> {
     return new Promise((resolve, reject) => {
       let dummy:(Song | Group | Artist | Album | Genre | Playlist | undefined) = undefined;
-      this.songs.forEach((song, index)=> {
-        if (item === song.name) {
-          this.songs.splice(index, 1);
-          dummy = song;
-        }
-      });
-      resolve(dummy);
+      switch (type) {
+        case 'Song':
+          dummy = undefined;
+          this.songs.forEach((song, index)=> {
+            if (item === song.getName()) {
+              this.songs.splice(index, 1);
+              dummy = song;
+            }
+          });
+          resolve(dummy);
+          break;
+        case 'Genre':
+          dummy = undefined;
+          this.genres.forEach((genre, index)=> {
+            if (item === genre.getName()) {
+              this.genres.splice(index, 1);
+              dummy = genre;
+            }
+          });
+          resolve(dummy);
+          break;
+        case 'Artist':
+          dummy = undefined;
+          this.artists.forEach((artist, index)=> {
+            if (item === artist.getName()) {
+              this.artists.splice(index, 1);
+              dummy = artist;
+            }
+          });
+          resolve(dummy);
+          break;
+        case 'Album':
+          dummy = undefined;
+          this.albums.forEach((album, index)=> {
+            if (item === album.getName()) {
+              this.albums.splice(index, 1);
+              dummy = album;
+            }
+          });
+          resolve(dummy);
+          break;
+        case 'Group':
+          dummy = undefined;
+          this.groups.forEach((group, index)=> {
+            if (item === group.getName()) {
+              this.groups.splice(index, 1);
+              dummy = group;
+            }
+          });
+          resolve(dummy);
+          break;
+      }
     });
   }
   printMemory() {

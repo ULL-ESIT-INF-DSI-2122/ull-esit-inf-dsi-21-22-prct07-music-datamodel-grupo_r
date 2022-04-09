@@ -303,12 +303,33 @@ export class Terminal {
             choices: (await (this.database.getFromMemory('$ALL$', command))).map((o) => o.name),
           };
           await inquirer.prompt(qSong).then(async (answers) => {
-            const copy: (Song|undefined) = await this.database.deleteFromMemory(answers.song) as (Song|undefined);
-            (await this.database.getFromMemory('$ALL$', 'artist')).forEach((artist) => {
+            const copySong: (Song | undefined) = await this.database.deleteFromMemory(answers.song, 'Song') as (Song | undefined);
+            (await this.database.getFromMemory('$ALL$', 'Artist')).forEach((artist) => {
               if (artist instanceof Artist) {
                 artist.getSongs().forEach((song, index) => {
-                  if (copy === song) {
-                    artist.replaceSongs(artist.getSongs().splice(index, 1));
+                  if (copySong === song) {
+                    artist.getSongs().splice(index, 1);
+                    console.log('Deleted ' + song.getName() + ' from ' + artist.getName());
+                  }
+                });
+              }
+            });
+            (await this.database.getFromMemory('$ALL$', 'Album')).forEach((album) => {
+              if (album instanceof Album) {
+                album.getSongs().forEach((song, index) => {
+                  if (copySong === song) {
+                    album.getSongs().splice(index, 1);
+                    console.log('Deleted ' + song.getName() + ' from ' + album.getName());
+                  }
+                });
+              }
+            });
+            (await this.database.getFromMemory('$ALL$', 'Genre')).forEach((genre) => {
+              if (genre instanceof Genre) {
+                genre.getSongs().forEach((song, index) => {
+                  if (copySong === song) {
+                    genre.getSongs().splice(index, 1);
+                    console.log('Deleted ' + song.getName() + ' from ' + genre.getName());
                   }
                 });
               }
@@ -320,12 +341,192 @@ export class Terminal {
           this.promptManagement();
           break;
         case 'Genre':
+          const qGenre: Object = {
+            name: 'genre',
+            type: 'search-list',
+            message: 'Select genre',
+            choices: (await (this.database.getFromMemory('$ALL$', command))).map((o) => o.name),
+          };
+          await inquirer.prompt(qGenre).then(async (answers) => {
+            console.log(answers.genre);
+            const copyGenre: (Genre | undefined) = await this.database.deleteFromMemory(answers.genre, 'Genre') as (Genre | undefined);
+            (await this.database.getFromMemory('$ALL$', 'Artist')).forEach((artist) => {
+              if (artist instanceof Artist) {
+                artist.getGenres().forEach((genre, index) => {
+                  if (copyGenre === genre) {
+                    artist.getGenres().splice(index, 1);
+                  }
+                });
+              }
+            });
+            (await this.database.getFromMemory('$ALL$', 'Group')).forEach((group) => {
+              if (group instanceof Group) {
+                group.getGenres().forEach((genre, index) => {
+                  if (copyGenre === genre) {
+                    group.getGenres().splice(index, 1);
+                  }
+                });
+              }
+            });
+            (await this.database.getFromMemory('$ALL$', 'Song')).forEach((song) => {
+              if (song instanceof Song) {
+                song.getGenres().forEach((genre, index) => {
+                  if (copyGenre === genre) {
+                    song.getGenres().splice(index, 1);
+                  }
+                });
+              }
+            });
+            (await this.database.getFromMemory('$ALL$', 'Album')).forEach((album) => {
+              if (album instanceof Album) {
+                album.getGenres().forEach((genre, index) => {
+                  if (copyGenre === genre) {
+                    album.getGenres().splice(index, 1);
+                  }
+                });
+              }
+            });
+            console.log('Deleted: ' + answers.genre);
+            resolve();
+          });
+          await this.continuePrompt();
+          this.promptManagement();
           break;
         case 'Album':
+          const qAlbum: Object = {
+            name: 'album',
+            type: 'search-list',
+            message: 'Select album',
+            choices: (await (this.database.getFromMemory('$ALL$', command))).map((o) => o.name),
+          };
+          await inquirer.prompt(qAlbum).then(async (answers) => {
+            const copyAlbum: (Album | undefined) = await this.database.deleteFromMemory(answers.album, 'Album') as (Album | undefined);
+            (await this.database.getFromMemory('$ALL$', 'Group')).forEach((group) => {
+              if (group instanceof Group) {
+                group.getAlbums().forEach((album, index) => {
+                  if (copyAlbum === album) {
+                    group.getAlbums().splice(index, 1);
+                  }
+                });
+              }
+            });
+            (await this.database.getFromMemory('$ALL$', 'Genre')).forEach((genre) => {
+              if (genre instanceof Genre) {
+                genre.getAlbums().forEach((album, index) => {
+                  if (copyAlbum === album) {
+                    genre.getAlbums().splice(index, 1);
+                  }
+                });
+              }
+            });
+            (await this.database.getFromMemory('$ALL$', 'Artist')).forEach((artist) => {
+              if (artist instanceof Artist) {
+                artist.getAlbums().forEach((album, index) => {
+                  if (copyAlbum === album) {
+                    artist.getAlbums().splice(index, 1);
+                  }
+                });
+              }
+            });
+            console.log('Deleted: ' + answers.album);
+            resolve();
+          });
+          await this.continuePrompt();
+          this.promptManagement();
           break;
         case 'Artist':
+          const qArtist: Object = {
+            name: 'artist',
+            type: 'search-list',
+            message: 'Select artist',
+            choices: (await (this.database.getFromMemory('$ALL$', command))).map((o) => o.name),
+          };
+          await inquirer.prompt(qArtist).then(async (answers) => {
+            const copyArtist: (Artist | undefined) = await this.database.deleteFromMemory(answers.artist, 'Artist') as (Artist | undefined);
+            (await this.database.getFromMemory('$ALL$', 'Group')).forEach((group) => {
+              if (group instanceof Group) {
+                group.getMembers().forEach((artist, index) => {
+                  if (copyArtist === artist) {
+                    group.getMembers().splice(index, 1);
+                  }
+                });
+              }
+            });
+            (await this.database.getFromMemory('$ALL$', 'Song')).forEach((song) => {
+              if (song instanceof Song) {
+                if (copyArtist === song.getArtists()) {
+                  console.log('Its not possible to delete the author from an Song, you have to remove the Song first');
+                }
+              }
+            });
+            (await this.database.getFromMemory('$ALL$', 'Album')).forEach((album) => {
+              if (album instanceof Album) {
+                if (copyArtist === album.getAuthor()) {
+                  console.log('Its not possible to delete the author from an Album, you have to remove the Album first');
+                }
+              }
+            });
+            (await this.database.getFromMemory('$ALL$', 'Genre')).forEach((genre) => {
+              if (genre instanceof Genre) {
+                genre.getAuthors().forEach((author, index) => {
+                  if (copyArtist === author) {
+                    genre.getAuthors().splice(index, 1);
+                  }
+                });
+              }
+            });
+            console.log('Deleted: ' + answers.artist);
+            resolve();
+          });
+          await this.continuePrompt();
+          this.promptManagement();
           break;
         case 'Group':
+          const qGroup: Object = {
+            name: 'group',
+            type: 'search-list',
+            message: 'Select group',
+            choices: (await (this.database.getFromMemory('$ALL$', command))).map((o) => o.name),
+          };
+          await inquirer.prompt(qGroup).then(async (answers) => {
+            const copyGroup: (Group|undefined) = await this.database.deleteFromMemory(answers.group, 'Group') as (Group|undefined);
+            (await this.database.getFromMemory('$ALL$', 'Artist')).forEach((artist) => {
+              if (artist instanceof Artist) {
+                artist.getGroups().forEach((group, index) => {
+                  if (copyGroup === group) {
+                    artist.getGroups().splice(index, 1);
+                  }
+                });
+              }
+            });
+            (await this.database.getFromMemory('$ALL$', 'Genre')).forEach((genre) => {
+              if (genre instanceof Genre) {
+                genre.getAuthors().forEach((author, index) => {
+                  if (copyGroup === author) {
+                    genre.getAuthors().splice(index, 1);
+                  }
+                });
+              }
+            });
+            (await this.database.getFromMemory('$ALL$', 'Album')).forEach((album) => {
+              if (album instanceof Album) {
+                if (copyGroup === album.getAuthor()) {
+                  console.log('Its not possible to delete the author from an Album, you have to remove the Album first');
+                }
+              }
+            });
+            (await this.database.getFromMemory('$ALL$', 'Song')).forEach((song) => {
+              if (song instanceof Song) {
+                if (copyGroup === song.getArtists()) {
+                  console.log('Its not possible to delete a group from an Song, you have to remove the Song first');
+                }
+              }
+            });
+            console.log('Deleted: ' + answers.group);
+            resolve();
+          });
+          await this.continuePrompt();
+          this.promptManagement();
           break;
         case 'Playlist':
           break;
@@ -413,4 +614,3 @@ export class Terminal {
 
 const terminal: Terminal = new Terminal('MusicDataBase.json');
 terminal.promptStart();
-

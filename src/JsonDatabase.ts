@@ -7,6 +7,7 @@ import { Song } from './Song';
 import { Artist } from './Artist';
 import { Genre } from './Genre';
 import { Playlist } from './Playlist';
+
 /**
  * Tipo de datos que se usa para instanciar la lowdb a los campos necesarios
  */
@@ -295,6 +296,7 @@ export class JsonDatabase extends Database {
             genresNames.push(genre.getName());
           });
           item.getAlbums().forEach((album) => {
+            console.log(album.getName());
             albumsNames.push(album.getName());
           });
           item.getSongs().forEach((song) => {
@@ -341,12 +343,12 @@ export class JsonDatabase extends Database {
             name: string,
             authors: string[],
             albums: string[],
-            canciones: string[],
+            songs: string[],
           } = {
             name: item.getName(),
             authors: authorsNames,
             albums: albumsNames,
-            canciones: songsNames,
+            songs: songsNames,
           };
           dummyGenre.push(objetoGenre);
           console.log('Genre');
