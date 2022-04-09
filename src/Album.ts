@@ -16,13 +16,13 @@ export class Album {
    * @param {Song[]} songs Songs list
    */
   constructor(
-    public title: string,
+    public name: string,
     public author: Artist | Group,
     public date: string,
     public genres: Genre[],
     public songs: Song[],
   ) {
-    this.title = title;
+    this.name = name;
     this.author = author;
     this.date = date;
     this.genres = genres;
@@ -34,7 +34,7 @@ export class Album {
    * @return {string} album title
    */
   public getTitle(): string {
-    return this.title;
+    return this.name;
   }
 
   /**
@@ -42,7 +42,7 @@ export class Album {
    * @param {string} title Album title
    */
   public setTitle(title: string): void {
-    this.title = title;
+    this.name = title;
   }
 
   /**

@@ -6,7 +6,9 @@ import { Song } from './Song';
 import { Artist } from './Artist';
 import { Genre } from './Genre';
 import { Question } from './Question';
+import { Playlist } from './Playlist';
 
+inquirer.registerPrompt('search-list', require('inquirer-search-list'));
 
 export enum viewCommands {
   AlphabeticalSong = 'View songs alphabetically',
@@ -39,6 +41,7 @@ export enum typeCommands {
   Artist = 'Artist',
   Album = 'Album',
   Group = 'Group',
+  Playlist = 'Playlist'
 }
 
 export enum startCommands {
@@ -184,7 +187,7 @@ export class Terminal {
       await inquirer.prompt({
         type: 'list',
         name: 'command',
-        message: 'Select what do you want to add',
+        message: 'Select what item do you want to operate with',
         choices: Object.values(typeCommands),
       }).then(async (answers) => {
         switch (answers['command']) {
@@ -202,6 +205,9 @@ export class Terminal {
             break;
           case typeCommands.Group:
             result = 'Group';
+            break;
+          case typeCommands.Playlist:
+            result = 'Playlist';
             break;
         }
       });
@@ -246,10 +252,8 @@ export class Terminal {
         switch (command) {
           case 'Song':
             inquirer.prompt(songQuestions).then(async (answers) => {
-              if (this.database.searchName(answers['artist'], 'artist').length > 0 && this.database.searchName(answers['genre'], 'genre').length > 0) {
-                await this.database.addToMemory([new Song(answers['name'], answers['artist'], answers['length'], answers['genres'], answers['plays'], answers['isSingle'])]);
-                this.database.printMemory();
-              }
+              await this.database.addToMemory([new Song(answers['name'], answers['artist'], answers['length'], answers['genres'], answers['plays'], answers['isSingle'])]);
+              this.database.printMemory();
 
               // eslint-disable-next-line max-len
               await this.continuePrompt();
@@ -302,7 +306,46 @@ export class Terminal {
       console.log(error);
     }
   }
-
+  private promptDelete(command: string): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      console.log('------Musitronic360------ \n');
+      console.log('Deleting '+command+'\n');
+      console.log((await this.database.searchName('all', 'song')).map((o) => o.name));
+      switch (command) {
+        case 'Song':
+          const qSong: Object = {
+            name: 'song',
+            type: 'search-list',
+            message: 'Select song',
+            choices: (this.database.searchName('all', 'song')).map((o) => o.name),
+          };
+          await inquirer.prompt(qSong).then(async (answers) => {
+            this.database.deleteFromMemory(answers.song);
+            console.log('Deleted: ' + answers.song);
+            resolve();
+          });
+          await this.continuePrompt();
+          this.promptManagement();
+          break;
+        case 'Genre':
+          
+          break;
+        case 'Album':
+          
+          break;
+        case 'Artist':
+          
+          break;
+        case 'Group':
+          
+          break;
+        case 'Playlist':
+        
+          break;
+      }
+      resolve();
+    });
+  }
   private promptManagement() {
     console.clear();
     console.log('------Musitronic360------ \n');
@@ -325,8 +368,7 @@ export class Terminal {
           break;
         case managementCommands.Delete:
           console.log('WIP');
-          await this.continuePrompt();
-          this.promptManagement();
+          await this.promptDelete(await this.selectTypePrompt());
           break;
         case managementCommands.DisplayMEM:
           this.database.printMemory();
@@ -382,5 +424,5 @@ export class Terminal {
   }
 }
 
-const terminal: Terminal = new Terminal('');
+const terminal: Terminal = new Terminal('MusicDataBase.json');
 terminal.promptStart();

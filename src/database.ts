@@ -10,7 +10,7 @@ import { viewCommands } from './terminal';
 
 interface anyDatabase {
   addToMemory(item: (Song[] | Album[] | Genre[] | Group[] | Artist[]| Playlist[])): void;
-  deleteFromMemory(item: (Song[] | Album[] | Genre[] | Group[] | Artist[]| Playlist[])): void;
+  deleteFromMemory(item: string): void;
 }
 export class Database implements anyDatabase {
   // eslint-disable-next-line max-len
@@ -97,18 +97,31 @@ export class Database implements anyDatabase {
   searchName(name:string, type:string): (Song|Group|Artist|Album|Genre|Playlist)[] {
     let result : (Song|Group|Artist|Album|Genre|Playlist)[] = [];
     switch (type) {
-      case 'artist':
-        this.artists.forEach((artist) => {
-          if (artist.getName() == name) {
-            result.push(artist);
-          }
-        });
+      case 'song':
+        if (name == 'all') {
+          this.songs.forEach((song) => {
+            result.push(song);
+          });
+        } else {
+          this.artists.forEach((artist) => {
+            if (artist.getName() == name) {
+              result.push(artist);
+            }
+          });
+        }
         break;
     }
     return result;
   }
-  deleteFromMemory(item: (Song[] | Album[] | Genre[] | Group[] | Artist[] | Playlist[])): void {
-    
+  async deleteFromMemory(item: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.songs.forEach((song, index)=> {
+        if (item === song.name) {
+          this.songs.splice(index, 1);
+        }
+      });
+      resolve();
+    });
   }
   printMemory() {
     console.log(this.albums);
@@ -181,7 +194,7 @@ export class JsonDatabase extends Database {
         this.database?.read();
         const albums = this.database?.get(`albums`).value();
         albums.forEach((album) => {
-          this.addToMemory([new Album(album.title, album.author, album.date, album.genres, album.songs)]);
+          this.addToMemory([new Album(album.name, album.author, album.date, album.genres, album.songs)]);
         });
 
         const artists = this.database?.get(`artists`).value();
