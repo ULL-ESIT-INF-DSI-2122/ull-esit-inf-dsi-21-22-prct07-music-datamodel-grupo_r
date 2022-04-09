@@ -128,6 +128,7 @@ export class JsonDatabase extends Database {
           const songsRef = this.searchByName(playlist.songs, 'song') as Song[];
           const genresRef: Genre[] = this.searchByName(playlist.genres, 'genre') as Genre[];
           const newPlaylist = new Playlist(playlist.name, songsRef, playlist.duration, genresRef);
+          this.dbPlaylists.push(newPlaylist);
           this.addToMemory([newPlaylist]);
         });
 

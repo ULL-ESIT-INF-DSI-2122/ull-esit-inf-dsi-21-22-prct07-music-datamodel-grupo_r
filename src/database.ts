@@ -8,6 +8,7 @@ import { viewCommands } from './Commands';
 import { anyDatabase } from './anyDatabase';
 
 export class Database implements anyDatabase {
+  protected dbPlaylists:Playlist[] = [];
   constructor(protected songs: Song[] = [], protected artists: Artist[] = [], protected albums: Album[] = [],
     protected genres: Genre[] = [], protected groups: Group[] = [], protected playlists: Playlist[] = []) {
   }
@@ -55,7 +56,7 @@ export class Database implements anyDatabase {
       }
       if (type == 'Album') {
         if (item !== '$ALL$') {
-          this.albums.every((value) => {
+          this.albums.forEach((value) => {
             if ('getTitle' in value && value.getName() === item) {
               dummy.push(value);
             }
@@ -64,7 +65,7 @@ export class Database implements anyDatabase {
       }
       if (type == 'Genre') {
         if (item !== '$ALL$') {
-          this.genres.every((value) => {
+          this.genres.forEach((value) => {
             if (value.getName() === item) {
               dummy.push(value);
             }
@@ -73,7 +74,7 @@ export class Database implements anyDatabase {
       }
       if (type == 'Group') {
         if (item !== '$ALL$') {
-          this.groups.every((value) => {
+          this.groups.forEach((value) => {
             if (value.getName() === item) {
               dummy.push(value);
             }
@@ -82,7 +83,7 @@ export class Database implements anyDatabase {
       }
       if (type == 'Artist') {
         if (item !== '$ALL$') {
-          this.artists.every((value) => {
+          this.artists.forEach((value) => {
             if (value.getName() === item) {
               dummy.push(value);
             }
@@ -90,13 +91,25 @@ export class Database implements anyDatabase {
         } else resolve(this.artists);
       }
       if (type == 'Playlist') {
-        if (item !== '$ALL$') {
-          this.playlists.every((value) => {
-            if (value.getName() === item) {
-              dummy.push(value);
-            }
-          });
-        } else resolve(this.playlists);
+        switch (item) {
+          case '$ALL$':
+            resolve(this.playlists);
+            break;
+          case '$ONLYNEW$':
+            this.playlists.forEach((value) => {
+              if (!this.dbPlaylists.includes(value)) {
+                dummy.push(value);
+              }
+            });
+            break;
+          default:
+            this.playlists.forEach((value) => {
+              if (value.getName() === item) {
+                dummy.push(value);
+              }
+            });
+            break;
+        }
       }
       resolve(dummy);
     });
@@ -324,9 +337,6 @@ export class Database implements anyDatabase {
           break;
         case viewCommands.AlphabeticalAlbum:
           console.log(this.albums.sort((a, b) => a.getName().localeCompare(b.getName())));
-          break;
-        case viewCommands.AlphabeticalPlaylist:
-          console.log(this.playlists.sort((a, b) => a.getName().localeCompare(b.getName())));
           break;
         case viewCommands.OnlySingles:
           this.songs.forEach((song) => {

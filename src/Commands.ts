@@ -1,7 +1,6 @@
 export enum viewCommands {
   AlphabeticalSong = 'View songs alphabetically',
   AlphabeticalAlbum = 'View albums alphabetically',
-  AlphabeticalPlaylist = 'View playlists alphabetically',
   ReleaseDate = 'View albums by release date',
   ViewCount = 'View by play count',
   OnlySingles = 'View only singles',
@@ -27,12 +26,17 @@ export enum typeCommands {
   Artist = 'Artist',
   Album = 'Album',
   Group = 'Group',
-  Playlist = 'Playlist'
 }
 
 export enum startCommands {
   View = 'View',
-  Search = 'Search (wip)',
+  Playlist = 'Playlist',
+  Management = 'Enter management mode (add, modify, remove, load DB)',
+  Exit = 'Exit'
+}
+
+export enum playlistCommands {
+  View = 'View',
   Management = 'Enter management mode (add, modify, remove, load DB)',
   Exit = 'Exit'
 }

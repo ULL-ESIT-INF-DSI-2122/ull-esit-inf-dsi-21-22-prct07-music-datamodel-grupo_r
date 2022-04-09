@@ -11,6 +11,7 @@ import { viewCommands } from './Commands';
 import { managementCommands } from './Commands';
 import { typeCommands } from './Commands';
 import { startCommands } from './Commands';
+import { playlistCommands } from './Commands';
 
 inquirer.registerPrompt('search-list', require('inquirer-search-list'));
 export class Terminal {
@@ -31,6 +32,30 @@ export class Terminal {
     return this.database;
   }
 
+  private promptViewPlaylist() {
+    console.log('------Musitronic360------ \n');
+    inquirer.prompt({
+      type: 'list',
+      name: 'command',
+      message: 'Choose option',
+      choices: Object.values(playlistCommands),
+    }).then(async (answers) => {
+      switch (answers['command']) {
+        case playlistCommands.View:
+          this.promptView();
+          break;
+        case playlistCommands.Management:
+          this.promptManagement();
+          break;
+        case playlistCommands.Exit:
+          this.promptStart();
+          break;
+        default:
+          console.log('Missing ' + answers['command']);
+      }
+    });
+  }
+
 
   private promptView(): void {
     console.clear();
@@ -48,11 +73,6 @@ export class Terminal {
           this.promptView();
           break;
         case viewCommands.AlphabeticalAlbum:
-          await this.database.printBy(answers['command']);
-          await this.continuePrompt();
-          this.promptView();
-          break;
-        case viewCommands.AlphabeticalPlaylist:
           await this.database.printBy(answers['command']);
           await this.continuePrompt();
           this.promptView();
@@ -81,9 +101,6 @@ export class Terminal {
     });
   }
 
-  promptSearch(command: string): void {
-
-  }
   promptStart(): void {
     console.log('------Musitronic360------ \n');
     inquirer.prompt({
@@ -94,12 +111,10 @@ export class Terminal {
     }).then(async (answers) => {
       switch (answers['command']) {
         case startCommands.View:
-          // console.log(await this.database.getFromMemory('a','Song'));
           this.promptView();
           break;
-        case startCommands.Search:
-          this.promptSearch(await this.selectTypePrompt());
-          await this.continuePrompt();
+        case startCommands.Playlist:
+          this.promptViewPlaylist();
           break;
         case startCommands.Management:
           this.promptManagement();
@@ -168,23 +183,12 @@ export class Terminal {
           case typeCommands.Group:
             result = 'Group';
             break;
-          case typeCommands.Playlist:
-            result = 'Playlist';
-            break;
         }
       });
       resolve(result);
     });
   }
 
-  // private async retry(command:string) {
-  //   switch (command) {
-  //     case 'song':
-  //       try {
-  //         await this.addPrompt('song');
-  //       }
-  //   }
-  // }
   private async addPrompt(command: string): Promise<void> {
     const qName: Question = new Question('input', 'name', 'Write the name/title');
     const qArtist: Question = new Question('input', 'artist', 'Write the artist name or group');
@@ -309,7 +313,7 @@ export class Terminal {
                 artist.getSongs().forEach((song, index) => {
                   if (copySong === song) {
                     artist.getSongs().splice(index, 1);
-                    console.log('Deleted ' + song.getName() + ' from ' + artist.getName());
+                    console.log('Deleted ' + song.getName() + ' from Author: ' + artist.getName());
                   }
                 });
               }
@@ -319,7 +323,7 @@ export class Terminal {
                 album.getSongs().forEach((song, index) => {
                   if (copySong === song) {
                     album.getSongs().splice(index, 1);
-                    console.log('Deleted ' + song.getName() + ' from ' + album.getName());
+                    console.log('Deleted ' + song.getName() + ' from Album: ' + album.getName());
                   }
                 });
               }
@@ -329,7 +333,7 @@ export class Terminal {
                 genre.getSongs().forEach((song, index) => {
                   if (copySong === song) {
                     genre.getSongs().splice(index, 1);
-                    console.log('Deleted ' + song.getName() + ' from ' + genre.getName());
+                    console.log('Deleted ' + song.getName() + ' from Genre: ' + genre.getName());
                   }
                 });
               }
@@ -355,6 +359,7 @@ export class Terminal {
                 artist.getGenres().forEach((genre, index) => {
                   if (copyGenre === genre) {
                     artist.getGenres().splice(index, 1);
+                    console.log('Deleted ' + genre.getName() + ' from Artist: ' + artist.getName());
                   }
                 });
               }
@@ -364,6 +369,7 @@ export class Terminal {
                 group.getGenres().forEach((genre, index) => {
                   if (copyGenre === genre) {
                     group.getGenres().splice(index, 1);
+                    console.log('Deleted ' + genre.getName() + ' from Group: ' + group.getName());
                   }
                 });
               }
@@ -373,6 +379,7 @@ export class Terminal {
                 song.getGenres().forEach((genre, index) => {
                   if (copyGenre === genre) {
                     song.getGenres().splice(index, 1);
+                    console.log('Deleted ' + genre.getName() + ' from Song: ' + song.getName());
                   }
                 });
               }
@@ -382,6 +389,7 @@ export class Terminal {
                 album.getGenres().forEach((genre, index) => {
                   if (copyGenre === genre) {
                     album.getGenres().splice(index, 1);
+                    console.log('Deleted ' + genre.getName() + ' from Album: ' + album.getName());
                   }
                 });
               }
@@ -406,6 +414,7 @@ export class Terminal {
                 group.getAlbums().forEach((album, index) => {
                   if (copyAlbum === album) {
                     group.getAlbums().splice(index, 1);
+                    console.log('Deleted ' + album.getName() + ' from Group: ' + group.getName());
                   }
                 });
               }
@@ -415,6 +424,7 @@ export class Terminal {
                 genre.getAlbums().forEach((album, index) => {
                   if (copyAlbum === album) {
                     genre.getAlbums().splice(index, 1);
+                    console.log('Deleted ' + album.getName() + ' from Genre: ' + genre.getName());
                   }
                 });
               }
@@ -424,6 +434,7 @@ export class Terminal {
                 artist.getAlbums().forEach((album, index) => {
                   if (copyAlbum === album) {
                     artist.getAlbums().splice(index, 1);
+                    console.log('Deleted ' + album.getName() + ' from Artist: ' + artist.getName());
                   }
                 });
               }
@@ -448,6 +459,7 @@ export class Terminal {
                 group.getMembers().forEach((artist, index) => {
                   if (copyArtist === artist) {
                     group.getMembers().splice(index, 1);
+                    console.log('Deleted ' + artist.getName() + ' from Group: ' + group.getName());
                   }
                 });
               }
@@ -471,6 +483,7 @@ export class Terminal {
                 genre.getAuthors().forEach((author, index) => {
                   if (copyArtist === author) {
                     genre.getAuthors().splice(index, 1);
+                    console.log('Deleted ' + author.getName() + ' from Genre: ' + genre.getName());
                   }
                 });
               }
@@ -495,6 +508,7 @@ export class Terminal {
                 artist.getGroups().forEach((group, index) => {
                   if (copyGroup === group) {
                     artist.getGroups().splice(index, 1);
+                    console.log('Deleted ' + group.getName() + ' from Artist: ' + artist.getName());
                   }
                 });
               }
@@ -504,6 +518,7 @@ export class Terminal {
                 genre.getAuthors().forEach((author, index) => {
                   if (copyGroup === author) {
                     genre.getAuthors().splice(index, 1);
+                    console.log('Deleted ' + author.getName() + ' from Genre: ' + genre.getName());
                   }
                 });
               }
@@ -529,12 +544,99 @@ export class Terminal {
           this.promptManagement();
           break;
         case 'Playlist':
+          const qPlaylist: Object = {
+            name: 'playlist',
+            type: 'search-list',
+            message: 'Select playlist',
+            choices: (await (this.database.getFromMemory('$ONLYNEW$', command))).map((o) => o.name),
+          };
+          await inquirer.prompt(qPlaylist).then(async (answers) => {
+            await this.database.deleteFromMemory(answers.playlist, 'Playlist');
+          });
           break;
       }
       resolve();
     });
   }
+
   private promptManagement() {
+    console.clear();
+    console.log('------Musitronic360------ \n');
+    inquirer.prompt({
+      type: 'list',
+      name: 'command',
+      message: 'Choose option',
+      choices: Object.values(managementCommands),
+    }).then(async (answers) => {
+      switch (answers['command']) {
+        case managementCommands.Add:
+          await this.addPrompt(await this.selectTypePrompt());
+          await this.continuePrompt();
+          this.promptManagement();
+          break;
+        case managementCommands.Modify:
+          console.log('WIP');
+          await this.continuePrompt();
+          this.promptManagement();
+          break;
+        case managementCommands.Delete:
+          console.log('WIP');
+          await this.promptDelete(await this.selectTypePrompt());
+          break;
+        case managementCommands.DisplayMEM:
+          this.database.printMemory();
+          await this.continuePrompt();
+          this.promptManagement();
+          break;
+        case managementCommands.DisplayDB:
+          try {
+            await this.database.print();
+            await this.continuePrompt();
+          } catch (error) {
+            console.error(error);
+            await this.continuePrompt();
+          }
+          this.promptManagement();
+          break;
+        case managementCommands.Load:
+          await this.loadDbPrompt();
+          this.promptManagement();
+          break;
+        case managementCommands.Save:
+          try {
+            await this.database.saveFromMemToDb();
+          } catch (error) {
+            console.error(error);
+            await this.continuePrompt();
+          }
+          this.promptManagement();
+          break;
+        case managementCommands.Purge:
+          try {
+            await this.database.purgeDatabase();
+          } catch (error) {
+            console.error(error);
+            await this.continuePrompt();
+          }
+          this.promptManagement();
+          break;
+        case managementCommands.PurgeMEM:
+          try {
+            await this.database.purgeMemory();
+          } catch (error) {
+            console.error(error);
+            await this.continuePrompt();
+          }
+          this.promptManagement();
+          break;
+        case managementCommands.Return:
+          this.promptStart();
+          break;
+      }
+    });
+  }
+
+  private promptPlaylistManagement() {
     console.clear();
     console.log('------Musitronic360------ \n');
     inquirer.prompt({
