@@ -7,8 +7,8 @@ import { Artist } from './Artist';
 import { Genre } from './Genre';
 import { Question } from './Question';
 
+
 export enum viewCommands {
-  All = 'View all entries',
   AlphabeticalSong = 'View songs alphabetically',
   AlphabeticalAlbum = 'View albums alphabetically',
   AlphabeticalPlaylist = 'View playlists alphabetically',
@@ -17,6 +17,7 @@ export enum viewCommands {
   OnlySingles = 'View only singles',
   Return = 'Return'
 }
+
 
 
 export enum managementCommands {
@@ -63,6 +64,8 @@ export class Terminal {
   private getDatabase(): JsonDatabase {
     return this.database;
   }
+
+
   private promptView(): void {
     console.clear();
     console.log('------Musitronic360------ \n');
@@ -71,27 +74,36 @@ export class Terminal {
       name: 'command',
       message: 'Choose option',
       choices: Object.values(viewCommands),
-    }).then((answers) => {
+    }).then(async (answers) => {
       switch (answers['command']) {
-        case viewCommands.All:
-          this.promptView();
-          break;
         case viewCommands.AlphabeticalSong:
+          await this.database.printBy(answers['command']);
+          await this.continuePrompt();
           this.promptView();
           break;
         case viewCommands.AlphabeticalAlbum:
+          await this.database.printBy(answers['command']);
+          await this.continuePrompt();
           this.promptView();
           break;
         case viewCommands.AlphabeticalPlaylist:
+          await this.database.printBy(answers['command']);
+          await this.continuePrompt();
           this.promptView();
           break;
         case viewCommands.ReleaseDate:
+          await this.database.printBy(answers['command']);
+          await this.continuePrompt();
           this.promptView();
           break;
         case viewCommands.ViewCount:
+          await this.database.printBy(answers['command']);
+          await this.continuePrompt();
           this.promptView();
           break;
         case viewCommands.OnlySingles:
+          await this.database.printBy(answers['command']);
+          await this.continuePrompt();
           this.promptView();
           break;
         case viewCommands.Return:
@@ -103,7 +115,9 @@ export class Terminal {
     });
   }
 
+  promptSearch(command: string): void {
 
+  }
   promptStart(): void {
     console.clear();
     console.log('------Musitronic360------ \n');
@@ -119,7 +133,8 @@ export class Terminal {
           this.promptView();
           break;
         case startCommands.Search:
-          this.promptStart();
+          this.promptSearch(await this.selectTypePrompt());
+          await this.continuePrompt();
           break;
         case startCommands.Management:
           this.promptManagement();

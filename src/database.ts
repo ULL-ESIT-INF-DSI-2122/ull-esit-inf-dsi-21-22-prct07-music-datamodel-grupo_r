@@ -5,17 +5,18 @@ import { Artist } from './Artist';
 import { Genre } from './Genre';
 import { Song } from './Song';
 import { Album } from './Album';
-
+import { Playlist } from './Playlist';
+import { viewCommands } from './terminal';
 
 interface anyDatabase {
-  addToMemory(item: (Song[] | Album[] | Genre[] | Group[] | Artist[])): void;
-  deleteFromDatabase(item: (Song[] | Album[] | Genre[] | Group[] | Artist[])): void;
+  addToMemory(item: (Song[] | Album[] | Genre[] | Group[] | Artist[]| Playlist[])): void;
+  deleteFromMemory(item: (Song[] | Album[] | Genre[] | Group[] | Artist[]| Playlist[])): void;
 }
 export class Database implements anyDatabase {
   // eslint-disable-next-line max-len
-  constructor(protected songs: Song[] = [], protected artists: Artist[] = [], protected albums: Album[] = [], protected genres: Genre[] = [], protected groups: Group[] = []) {
+  constructor(protected songs: Song[] = [], protected artists: Artist[] = [], protected albums: Album[] = [], protected genres: Genre[] = [], protected groups: Group[] = [], protected playlists: Playlist[] = []) {
   }
-  addToMemory(item: (Song[] | Album[] | Genre[] | Group[] | Artist[])): Promise<void> {
+  addToMemory(item: (Song[] | Album[] | Genre[] | Group[] | Artist[] | Playlist[])): Promise<void> {
     return new Promise((resolve, reject) => {
       item.forEach((item) => {
         if (item instanceof Song) {
@@ -33,13 +34,16 @@ export class Database implements anyDatabase {
         if (item instanceof Artist) {
           this.artists.push(item);
         }
+        if (item instanceof Playlist) {
+          this.playlists.push(item);
+        }
       });
       resolve();
     });
   }
-  async getFromMemory(item:string, type:string):Promise<(Song|Group|Artist|Album|Genre)[]> {
+  async getFromMemory(item:string, type:string):Promise<(Song|Group|Artist|Album|Genre|Playlist)[]> {
     return new Promise((resolve, reject) => {
-      let dummy: (Song|Group|Artist|Album|Genre)[] = [];
+      let dummy: (Song|Group|Artist|Album|Genre|Playlist)[] = [];
       if (type == 'Song') {
         this.songs.forEach((value) => {
           if ('getName' in value && value.getName() === item) {
@@ -86,11 +90,12 @@ export class Database implements anyDatabase {
       this.albums = [];
       this.groups = [];
       this.albums = [];
+      this.playlists = [];
       resolve();
     });
   }
-  searchName(name:string, type:string): (Song|Group|Artist|Album|Genre)[] {
-    let result : (Song|Group|Artist|Album|Genre)[] = [];
+  searchName(name:string, type:string): (Song|Group|Artist|Album|Genre|Playlist)[] {
+    let result : (Song|Group|Artist|Album|Genre|Playlist)[] = [];
     switch (type) {
       case 'artist':
         this.artists.forEach((artist) => {
@@ -102,7 +107,8 @@ export class Database implements anyDatabase {
     }
     return result;
   }
-  deleteFromDatabase(item: (Song[] | Album[] | Genre[] | Group[] | Artist[])): void {
+  deleteFromMemory(item: (Song[] | Album[] | Genre[] | Group[] | Artist[] | Playlist[])): void {
+    
   }
   printMemory() {
     console.log(this.albums);
@@ -110,7 +116,37 @@ export class Database implements anyDatabase {
     console.log(this.songs);
     console.log(this.groups);
     console.log(this.genres);
-    console.log('Nº Albums: '+ this.albums.length +' Nº Artists: '+this.artists.length +' Nº Songs: '+this.songs.length +' Nº Groups: '+ this.groups.length +' Nº Genres: ' + this.genres.length);
+    console.log(this.playlists);
+    console.log('Nº Albums: '+ this.albums.length +' Nº Artists: '+this.artists.length +' Nº Songs: '+this.songs.length +' Nº Groups: '+ this.groups.length +' Nº Genres: ' + this.genres.length +' Nº Playlists: ' + this.playlists.length);
+  }
+  printBy(command: viewCommands): Promise<void> {
+    return new Promise<void>((resolve, reject) =>{
+      switch (command) {
+        case viewCommands.AlphabeticalSong:
+          console.log(this.songs.sort((a, b) => a.getName().localeCompare(b.getName())));
+          break;
+        case viewCommands.AlphabeticalAlbum:
+          console.log(this.albums.sort((a, b) => a.getTitle().localeCompare(b.getTitle())));
+          break;
+        case viewCommands.AlphabeticalPlaylist:
+          console.log(this.playlists.sort((a, b) => a.getName().localeCompare(b.getName())));
+          break;
+        case viewCommands.OnlySingles:
+          this.songs.forEach((song) => {
+            if (song.getSingle() === true) {
+              console.log(song);
+            }
+          });
+          break;
+        case viewCommands.ReleaseDate:
+          console.log(this.albums.sort((a, b) => a.getDate().localeCompare(b.getDate())));
+          break;
+        case viewCommands.ViewCount:
+          console.log(this.songs.sort((a, b) => a.getPlays().toString().localeCompare(b.getPlays().toString())));
+          break;
+      }
+      resolve();
+    });
   }
 }
 /**
@@ -122,6 +158,7 @@ type schemaType = {
   albums: Album[],
   songs: Song[],
   groups: Group[]
+  playlists: Playlist[]
 }
 export class JsonDatabase extends Database {
   // eslint-disable-next-line max-len
@@ -163,6 +200,10 @@ export class JsonDatabase extends Database {
         const genres = this.database?.get(`genres`).value();
         genres.forEach((genre) => {
           this.addToMemory([new Genre(genre.name, genre.groups, genre.albums, genre.songs)]);
+        });
+        const playlists = this.database?.get(`playlists`).value();
+        playlists.forEach((playlist) => {
+          this.addToMemory([new Playlist(playlist.name, playlist.songs, playlist.duration, playlist.genres)]);
         });
 
         this.initialized = true;
@@ -209,8 +250,7 @@ export class JsonDatabase extends Database {
   //   });
   // }
 
-  deleteFromDatabase(item: (Song[] | Album[] | Genre[] | Group[] | Artist[])): void {
-  }
+
   saveFromMemToDb() {
     return new Promise((resolve, reject) => {
       if (JsonDatabase.JsonDatabase.isInitialized()) {
@@ -219,6 +259,7 @@ export class JsonDatabase extends Database {
         JsonDatabase.JsonDatabase.database?.set(`groups`, JsonDatabase.JsonDatabase.groups).write();
         JsonDatabase.JsonDatabase.database?.set(`artists`, JsonDatabase.JsonDatabase.artists).write();
         JsonDatabase.JsonDatabase.database?.set(`genres`, JsonDatabase.JsonDatabase.genres).write();
+        JsonDatabase.JsonDatabase.database?.set(`playlists`, JsonDatabase.JsonDatabase.playlists).write();
         JsonDatabase.JsonDatabase.initialized = true;
         resolve('good');
       } else throw new Error('No database loaded');
@@ -232,6 +273,7 @@ export class JsonDatabase extends Database {
         JsonDatabase.JsonDatabase.database?.set(`groups`, []).write();
         JsonDatabase.JsonDatabase.database?.set(`artists`, []).write();
         JsonDatabase.JsonDatabase.database?.set(`genres`, []).write();
+        JsonDatabase.JsonDatabase.database?.set(`playlists`, []).write();
         resolve('');
       } else throw new Error('No database loaded');
     });
@@ -246,6 +288,7 @@ export class JsonDatabase extends Database {
         console.log(JsonDatabase.JsonDatabase.database?.get(`songs`).value());
         console.log(JsonDatabase.JsonDatabase.database?.get(`groups`).value());
         console.log(JsonDatabase.JsonDatabase.database?.get(`genres`).value());
+        console.log(JsonDatabase.JsonDatabase.database?.get(`playlists`).value());
         resolve('');
       } else throw new Error('No database loaded');
     });
