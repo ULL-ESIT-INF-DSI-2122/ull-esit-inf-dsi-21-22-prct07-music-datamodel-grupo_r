@@ -17,19 +17,19 @@ export class Artist {
    * @param listeners Number of monthly listeners
    */
   constructor(
-    private name: string,
-    private groups: Group[],
-    private genres: Genre[],
-    private albums: Album[],
-    private songs: Song[],
-    private listeners: number,
+    public name: string,
+    public groups: Group[],
+    public genres: Genre[],
+    public albums: Album[],
+    public songs: Song[],
+    public listeners: number,
   ) {
     this.name = name;
     this.groups = groups;
     this.genres = genres;
     this.albums = albums;
     this.songs = songs;
-    this.listeners = this.calculateListeners();
+    this.listeners = listeners;
   }
 
   /**

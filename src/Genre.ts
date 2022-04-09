@@ -15,10 +15,10 @@ export class Genre {
    * @param songs Songs in the library of that genre
    */
   constructor(
-    private name: string,
-    private groups: (Group | Artist)[],
-    private albums: Album[],
-    private songs: Song[],
+    public name: string,
+    public groups: (Group | Artist)[],
+    public albums: Album[],
+    public songs: Song[],
   ) {
     this.name = name;
     this.groups = groups;

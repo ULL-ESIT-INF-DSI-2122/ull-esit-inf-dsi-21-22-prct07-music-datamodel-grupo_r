@@ -16,11 +16,11 @@ export class Album {
    * @param {Song[]} songs Songs list
    */
   constructor(
-    private title: string,
-    private author: Artist | Group,
-    private date: string,
-    private genres: Genre[],
-    private songs: Song[],
+    public title: string,
+    public author: Artist | Group,
+    public date: string,
+    public genres: Genre[],
+    public songs: Song[],
   ) {
     this.title = title;
     this.author = author;

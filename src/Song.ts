@@ -6,12 +6,12 @@ import { Artist } from './Artist';
  */
 export class Song {
   constructor(
-    private name: string,
-    private artists: Artist[],
-    private length: number,
-    private genres: Genre[],
-    private plays: number,
-    private isSingle: boolean,
+    public name: string,
+    public artists: Artist[],
+    public length: number,
+    public genres: Genre[],
+    public plays: number,
+    public isSingle: boolean,
   ) {
     this.name = name;
     this.artists = artists;

@@ -30,28 +30,33 @@ export class Question {
   public setType(type: string): void {
     this.type = type;
   }
-  public returnQuestion():Object {
-    const objeto: {
-      type: string,
-      name:string,
-      message:string,
-    } = {
-      type: this.type,
-      name: this.name,
-      message: this.message,
-    };
-    const objeto2: {
-      type: string,
-      name:string,
-      message:string,
-      validate: Function,
-    } = {
-      type: this.type,
-      name: this.name,
-      message: this.message,
-      validate: this.funct,
-    };
-    return objeto2;
+  public returnQuestion(returnFunction: boolean = false):Object {
+    let result = {};
+    if (this.funct.toString() === (() => {}).toString() || !returnFunction) {
+      const objeto: {
+        type: string,
+        name:string,
+        message:string,
+      } = {
+        type: this.type,
+        name: this.name,
+        message: this.message,
+      };
+      return objeto;
+    } else {
+      const objeto2: {
+        type: string,
+        name:string,
+        message:string,
+        validate: Function,
+      } = {
+        type: this.type,
+        name: this.name,
+        message: this.message,
+        validate: this.funct,
+      };
+      return objeto2;
+    }
   }
   /**
    * Get the question name.
