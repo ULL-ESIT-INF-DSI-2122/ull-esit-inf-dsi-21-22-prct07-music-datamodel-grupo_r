@@ -1,5 +1,3 @@
-import * as inquirer from 'inquirer';
-
 export class Question {
   private question: Object = {};
   constructor(
@@ -31,7 +29,6 @@ export class Question {
     this.type = type;
   }
   public returnQuestion(returnFunction: boolean = false):Object {
-    let result = {};
     if (this.funct.toString() === (() => {}).toString() || !returnFunction) {
       const objeto: {
         type: string,

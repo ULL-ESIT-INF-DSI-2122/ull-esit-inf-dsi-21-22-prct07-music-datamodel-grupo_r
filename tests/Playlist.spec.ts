@@ -6,16 +6,16 @@ import { Genre } from '../src/Genre';
 import { Playlist } from '../src/Playlist';
 
 describe('Playlist class test', () => {
-  const Besos = new Song('Besos', [], 4, [], 150, true);
-  const Anitos = new Song('16 añitos', [], 4.13, [], 17020329, false);
+  const Besos = new Song('Besos', undefined, 4, [], 150, true);
+  const Anitos = new Song('16 añitos', undefined, 4.13, [], 17020329, false);
   const Pop = new Genre('playlist', [], [], [Besos, Anitos]);
-  const Sera = new Song('Será', [], 180, [Pop], 150, true);
+  const Sera = new Song('Será', undefined, 180, [Pop], 150, true);
   const Rock = new Genre('Rock', [], [], [Sera]);
-  const playlist = new Playlist('Mi playlist', [Besos, Anitos], '3600', [Pop]);
+  const playlist = new Playlist('Mi playlist', [Besos, Anitos], 3600, [Pop]);
 
   describe('Playlist Class', () => {
     it('Playlist object creation ', () => {
-      expect(new Playlist('Mi playlist', [Besos, Anitos], '3600', [Pop])).not.to.be.eql(null);
+      expect(new Playlist('Mi playlist', [Besos, Anitos], 3600, [Pop])).not.to.be.eql(null);
     });
   });
 

@@ -10,18 +10,18 @@ export class Genre {
   /**
    * Initialize an Genres object.
    * @param name Genre name
-   * @param groups Groups and/or artists produce music of this genre
+   * @param authors Groups and/or artists produce music of this genre
    * @param albums Albums in the library related to this genre
    * @param songs Songs in the library of that genre
    */
   constructor(
     public name: string,
-    public groups: (Group | Artist)[],
+    public authors: (Group | Artist)[],
     public albums: Album[],
     public songs: Song[],
   ) {
     this.name = name;
-    this.groups = groups;
+    this.authors = authors;
     this.albums = albums;
     this.songs = songs;
   }
@@ -44,20 +44,20 @@ export class Genre {
   }
 
   /**
-   * Get the groups and/or artists produce music of this genre.
-   * @returns Groups
+   * Get the authors and/or artists produce music of this genre.
+   * @returns authors
    */
-  public getGroups(): (Group | Artist)[] {
-    return this.groups;
+  public getAuthors(): (Group | Artist)[] {
+    return this.authors;
   }
 
   /**
-   * Set the groups and/or artists produce music of this genre.
+   * Set the authors and/or artists produce music of this genre.
    * @param group Group or Artist
-   * @returns Groups
+   * @returns authors
    */
-  public setGroups(group: Group | Artist): void {
-    this.groups.push(group);
+  public setAuthors(group: Group | Artist): void {
+    this.authors.push(group);
   }
 
   /**
@@ -92,5 +92,30 @@ export class Genre {
    */
   public setSongs(song: Song) {
     this.songs.push(song);
+  }
+  /**
+   * Print the genre information
+   * @return {string}
+   */
+  public print(): string {
+    let output: string = 'Genre - ' + this.name;
+    output += '\n Author: ';
+    this.authors.forEach((g) => {
+      output += '\n -' + g.getName();
+    });
+
+    output += '\nAlbums: ';
+    this.albums.forEach((a) => {
+      output += '\n -' + a.getName();
+    });
+
+    output += '\nSongs: ';
+    this.songs.forEach((s) => {
+      output += '\n -' + s.getName();
+    });
+
+    output += '\n------------\n';
+    console.log(output);
+    return output;
   }
 }

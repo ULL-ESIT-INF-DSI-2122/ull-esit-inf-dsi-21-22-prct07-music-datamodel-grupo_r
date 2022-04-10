@@ -1,21 +1,18 @@
-import * as lowdb from 'lowdb';
-import * as FileSync from 'lowdb/adapters/FileSync';
 import { Group } from './Group';
 import { Artist } from './Artist';
 import { Genre } from './Genre';
 import { Song } from './Song';
 import { Album } from './Album';
 import { Playlist } from './Playlist';
-import { viewCommands } from './terminal';
+import { viewCommands } from './Commands';
+import { anyDatabase } from './anyDatabase';
 
-interface anyDatabase {
-  addToMemory(item: (Song[] | Album[] | Genre[] | Group[] | Artist[]| Playlist[])): void;
-  deleteFromMemory(item: string): void;
-}
 export class Database implements anyDatabase {
-  // eslint-disable-next-line max-len
-  constructor(protected songs: Song[] = [], protected artists: Artist[] = [], protected albums: Album[] = [], protected genres: Genre[] = [], protected groups: Group[] = [], protected playlists: Playlist[] = []) {
+  protected dbPlaylists:Playlist[] = [];
+  constructor(protected songs: Song[] = [], protected artists: Artist[] = [], protected albums: Album[] = [],
+    protected genres: Genre[] = [], protected groups: Group[] = [], protected playlists: Playlist[] = []) {
   }
+
   addToMemory(item: (Song[] | Album[] | Genre[] | Group[] | Artist[] | Playlist[])): Promise<void> {
     return new Promise((resolve, reject) => {
       item.forEach((item) => {
@@ -41,108 +38,305 @@ export class Database implements anyDatabase {
       resolve();
     });
   }
-  async getFromMemory(item:string, type:string):Promise<(Song|Group|Artist|Album|Genre|Playlist)[]> {
+
+  async getFromMemory(item:string, type:string): Promise<(Song | Group | Artist | Album | Genre | Playlist)[]> {
     return new Promise((resolve, reject) => {
-      let dummy: (Song|Group|Artist|Album|Genre|Playlist)[] = [];
+      const dummy: (Song | Group | Artist | Album | Genre | Playlist)[] = [];
       if (type == 'Song') {
-        this.songs.forEach((value) => {
-          if ('getName' in value && value.getName() === item) {
-            console.log(value.getName());
-            dummy.push(value);
-          }
-        });
+        if (item !== '$ALL$') {
+          this.songs.forEach((value) => {
+            if ('getName' in value && value.getName() === item) {
+              console.log(value.getName());
+              dummy.push(value);
+            }
+          });
+        } else {
+          resolve(this.songs);
+        }
       }
       if (type == 'Album') {
-        this.albums.every((value) => {
-          if ('getTitle' in value && value.getTitle() === item) {
-            dummy.push(value);
-          }
-        });
+        if (item !== '$ALL$') {
+          this.albums.forEach((value) => {
+            if ('getTitle' in value && value.getName() === item) {
+              dummy.push(value);
+            }
+          });
+        } else resolve(this.albums);
       }
       if (type == 'Genre') {
-        this.genres.every((value) => {
-          if (value.getName() === item) {
-            dummy.push(value);
-          }
-        });
+        if (item !== '$ALL$') {
+          this.genres.forEach((value) => {
+            if (value.getName() === item) {
+              dummy.push(value);
+            }
+          });
+        } else resolve(this.genres);
       }
       if (type == 'Group') {
-        this.groups.every((value) => {
-          if (value.getName() === item) {
-            dummy.push(value);
-          }
-        });
+        if (item !== '$ALL$') {
+          this.groups.forEach((value) => {
+            if (value.getName() === item) {
+              dummy.push(value);
+            }
+          });
+        } else resolve(this.groups);
       }
       if (type == 'Artist') {
-        this.artists.every((value) => {
-          if (value.getName() === item) {
-            dummy.push(value);
-          }
-        });
+        if (item !== '$ALL$') {
+          this.artists.forEach((value) => {
+            if (value.getName() === item) {
+              dummy.push(value);
+            }
+          });
+        } else resolve(this.artists);
+      }
+      if (type == 'Playlist') {
+        switch (item) {
+          case '$ALL$':
+            resolve(this.playlists);
+            break;
+          case '$ONLYNEW$':
+            this.playlists.forEach((value) => {
+              if (!this.dbPlaylists.includes(value)) {
+                dummy.push(value);
+              }
+            });
+            break;
+          default:
+            this.playlists.forEach((value) => {
+              if (value.getName() === item) {
+                dummy.push(value);
+              }
+            });
+            break;
+        }
       }
       resolve(dummy);
     });
   }
+
   purgeMemory(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.songs = [];
       this.artists = [];
       this.albums = [];
       this.groups = [];
-      this.albums = [];
+      this.genres = [];
       this.playlists = [];
       resolve();
     });
   }
-  searchName(name:string, type:string): (Song|Group|Artist|Album|Genre|Playlist)[] {
-    let result : (Song|Group|Artist|Album|Genre|Playlist)[] = [];
+
+  searchByName(name:any, type: string):
+    (Song[] | Group[] | Artist[] | Album[] | Genre[] | Playlist[] | Artist | Group | undefined) {
+    const empty : (Song[] | Group[] | Artist[] | Album[] | Genre[] | Playlist[]) = [];
+    const dummy: string[] | string = name as (string[]| string);
     switch (type) {
-      case 'song':
-        if (name == 'all') {
-          this.songs.forEach((song) => {
-            result.push(song);
-          });
-        } else {
-          this.artists.forEach((artist) => {
+      case 'genre':
+        let resultGenre: Genre[] = [];
+        this.genres.forEach((genre) => {
+          if (dummy instanceof Array) {
+            dummy.forEach((name) => {
+              if (genre.getName() == name) {
+                resultGenre.push(genre);
+              }
+            });
+          } else {
+            if (genre.getName() == name) {
+              resultGenre.push(genre);
+            }
+          }
+        });
+        return resultGenre;
+      case 'artist':
+        let resultArtist: Artist[] = [];
+        this.artists.forEach((artist) => {
+          if (dummy instanceof Array) {
+            dummy.forEach((name) => {
+              if (artist.getName() == name) {
+                resultArtist.push(artist);
+              }
+            });
+          } else {
             if (artist.getName() == name) {
-              result.push(artist);
+              resultArtist.push(artist);
+            }
+          }
+        });
+        return resultArtist;
+      case 'song':
+        let resultSong: Song[] = [];
+        this.songs.forEach((song) => {
+          if (dummy instanceof Array) {
+            dummy.forEach((name) => {
+              if (song.getName() == name) {
+                resultSong.push(song);
+              }
+            });
+          } else {
+            if (song.getName() == name) {
+              resultSong.push(song);
+            }
+          }
+        });
+        return resultSong;
+      case 'album':
+        let resultAlbum: Album[] = [];
+        this.albums.forEach((album) => {
+          if (dummy instanceof Array) {
+            dummy.forEach((name) => {
+              if (album.getName() == name) {
+                resultAlbum.push(album);
+              }
+            });
+          } else {
+            if (album.getName() == name) {
+              resultAlbum.push(album);
+            }
+          }
+        });
+        return resultAlbum;
+      case 'group':
+        let resultGroup: Group[] = [];
+        this.groups.forEach((group) => {
+          if (dummy instanceof Array) {
+            dummy.forEach((name) => {
+              if (group.getName() == name) {
+                resultGroup.push(group);
+              }
+            });
+          } else {
+            if (group.getName() == name) {
+              resultGroup.push(group);
+            }
+          }
+        });
+        return resultGroup;
+      case 'playlist':
+        let resultPlaylist: Playlist[] = [];
+        this.playlists.forEach((playlist) => {
+          if (dummy instanceof Array) {
+            dummy.forEach((name) => {
+              if (playlist.getName() == name) {
+                resultPlaylist.push(playlist);
+              }
+            });
+          } else {
+            if (playlist.getName() == name) {
+              resultPlaylist.push(playlist);
+            }
+          }
+        });
+        return resultPlaylist;
+      case 'author':
+        let resultAuthor: Artist | Group | undefined = undefined;
+        this.artists.forEach((artist) => {
+          if (artist.getName() == name) {
+            resultAuthor = artist;
+          }
+        });
+        this.groups.forEach((group) => {
+          if (group.getName() == name) {
+            resultAuthor = group;
+          }
+        });
+        return resultAuthor;
+    }
+    return empty;
+  }
+  async deleteFromMemory(item: string, type:string): Promise<(Song | Group | Artist | Album | Genre | Playlist| undefined)> {
+    return new Promise((resolve, reject) => {
+      let dummy:(Song | Group | Artist | Album | Genre | Playlist | undefined) = undefined;
+      switch (type) {
+        case 'Song':
+          dummy = undefined;
+          this.songs.forEach((song, index)=> {
+            if (item === song.getName()) {
+              this.songs.splice(index, 1);
+              dummy = song;
             }
           });
-        }
-        break;
-    }
-    return result;
-  }
-  async deleteFromMemory(item: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.songs.forEach((song, index)=> {
-        if (item === song.name) {
-          this.songs.splice(index, 1);
-        }
-      });
-      resolve();
+          resolve(dummy);
+          break;
+        case 'Genre':
+          dummy = undefined;
+          this.genres.forEach((genre, index)=> {
+            if (item === genre.getName()) {
+              this.genres.splice(index, 1);
+              dummy = genre;
+            }
+          });
+          resolve(dummy);
+          break;
+        case 'Artist':
+          dummy = undefined;
+          this.artists.forEach((artist, index)=> {
+            if (item === artist.getName()) {
+              this.artists.splice(index, 1);
+              dummy = artist;
+            }
+          });
+          resolve(dummy);
+          break;
+        case 'Album':
+          dummy = undefined;
+          this.albums.forEach((album, index)=> {
+            if (item === album.getName()) {
+              this.albums.splice(index, 1);
+              dummy = album;
+            }
+          });
+          resolve(dummy);
+          break;
+        case 'Group':
+          dummy = undefined;
+          this.groups.forEach((group, index)=> {
+            if (item === group.getName()) {
+              this.groups.splice(index, 1);
+              dummy = group;
+            }
+          });
+          resolve(dummy);
+          break;
+      }
     });
   }
   printMemory() {
-    console.log(this.albums);
-    console.log(this.artists);
-    console.log(this.songs);
-    console.log(this.groups);
-    console.log(this.genres);
-    console.log(this.playlists);
-    console.log('Nº Albums: '+ this.albums.length +' Nº Artists: '+this.artists.length +' Nº Songs: '+this.songs.length +' Nº Groups: '+ this.groups.length +' Nº Genres: ' + this.genres.length +' Nº Playlists: ' + this.playlists.length);
+    let output: string = '';
+    this.albums.forEach((album) => {
+      output += album.print();
+    });
+    this.artists.forEach((artist) => {
+      output += artist.print();
+    });
+    this.songs.forEach((song) => {
+      output += song.print();
+    });
+    this.groups.forEach((group) => {
+      output += group.print();
+    });
+    this.genres.forEach((genre) => {
+      output += genre.print();
+    });
+    this.playlists.forEach((playlist) => {
+      output += playlist.print();
+    });
+    console.log(output);
+    console.log('Nº Albums: '+
+        this.albums.length +' Nº Artists: ' +
+        this.artists.length + ' Nº Songs: ' +
+        this.songs.length + ' Nº Groups: '+
+        this.groups.length +' Nº Genres: ' +
+        this.genres.length + ' Nº Playlists: ' + this.playlists.length);
   }
   printBy(command: viewCommands): Promise<void> {
-    return new Promise<void>((resolve, reject) =>{
+    return new Promise<void>((resolve, reject) => {
       switch (command) {
         case viewCommands.AlphabeticalSong:
           console.log(this.songs.sort((a, b) => a.getName().localeCompare(b.getName())));
           break;
         case viewCommands.AlphabeticalAlbum:
-          console.log(this.albums.sort((a, b) => a.getTitle().localeCompare(b.getTitle())));
-          break;
-        case viewCommands.AlphabeticalPlaylist:
-          console.log(this.playlists.sort((a, b) => a.getName().localeCompare(b.getName())));
+          console.log(this.albums.sort((a, b) => a.getName().localeCompare(b.getName())));
           break;
         case viewCommands.OnlySingles:
           this.songs.forEach((song) => {
@@ -159,151 +353,6 @@ export class Database implements anyDatabase {
           break;
       }
       resolve();
-    });
-  }
-}
-/**
- * Tipo de datos que se usa para instanciar la lowdb a los campos necesarios
- */
-type schemaType = {
-  genres: Genre[],
-  artists: Artist[],
-  albums: Album[],
-  songs: Song[],
-  groups: Group[]
-  playlists: Playlist[]
-}
-export class JsonDatabase extends Database {
-  // eslint-disable-next-line max-len
-  private initialized: boolean = false;
-  private database?: lowdb.LowdbSync<schemaType>;
-  private static JsonDatabase: JsonDatabase;
-  private constructor(private dbDir: string = '') {
-    super();
-    if (dbDir != '') {
-      this.database = lowdb(new FileSync(dbDir));
-      // eslint-disable-next-line max-len
-      if (!this.database.has(`genres`).value() && !this.database.has(`songs`).value() && !this.database.has(`albums`).value() && !this.database.has(`groups`).value() && !this.database.has(`artist`).value()) {
-        this.database.set(`songs`, []).write();
-        this.database.set(`albums`, []).write();
-        this.database.set(`groups`, []).write();
-        this.database.set(`artists`, []).write();
-        this.database.set(`genres`, []).write();
-        this.initialized = true;
-      } else {
-        this.database?.read();
-        const albums = this.database?.get(`albums`).value();
-        albums.forEach((album) => {
-          this.addToMemory([new Album(album.name, album.author, album.date, album.genres, album.songs)]);
-        });
-
-        const artists = this.database?.get(`artists`).value();
-        artists.forEach((artist) => {
-          this.addToMemory([new Artist(artist.name, artist.groups, artist.genres, artist.albums, artist.songs, artist.listeners)]);
-        });
-        const songs = this.database?.get(`songs`).value();
-        songs.forEach((song) => {
-          this.addToMemory([new Song(song.name, song.artists, song.length, song.genres, song.plays, song.isSingle)]);
-        });
-        const groups = this.database?.get(`groups`).value();
-        groups.forEach((group) => {
-          this.addToMemory([new Group(group.name, group.members, group.date, group.genres, group.albums, group.listeners)]);
-        });
-
-        const genres = this.database?.get(`genres`).value();
-        genres.forEach((genre) => {
-          this.addToMemory([new Genre(genre.name, genre.groups, genre.albums, genre.songs)]);
-        });
-        const playlists = this.database?.get(`playlists`).value();
-        playlists.forEach((playlist) => {
-          this.addToMemory([new Playlist(playlist.name, playlist.songs, playlist.duration, playlist.genres)]);
-        });
-
-        this.initialized = true;
-      }
-    } else {
-      this.initialized = false;
-    }
-  }
-  public static getJsonDatabaseInstance(dbDir: string = ''): JsonDatabase {
-    if (!JsonDatabase.JsonDatabase || dbDir !== '') {
-      JsonDatabase.JsonDatabase = new JsonDatabase(dbDir);
-    }
-    return JsonDatabase.JsonDatabase;
-  }
-  setInitialized(value: boolean): void {
-    JsonDatabase.JsonDatabase.initialized = value;
-  }
-
-  isInitialized(): boolean {
-    return JsonDatabase.JsonDatabase.initialized;
-  }
-  // addToDatabase(item: (Song[] | Album[] | Genre[] | Group[] | Artist[])): Promise<string> {
-  //   return new Promise((resolve, reject) => {
-  //     if (JsonDatabase.JsonDatabase.initialized) {
-  //       item.forEach((item) => {
-  //         if (item instanceof Song) {
-  //           JsonDatabase.JsonDatabase.database?.set(`songs`, [...JsonDatabase.JsonDatabase.database.get(`songs`).value(), item]).write();
-  //         }
-  //         if (item instanceof Album) {
-  //           JsonDatabase.JsonDatabase.database?.set(`albums`, [...JsonDatabase.JsonDatabase.database.get(`albums`).value(), item]).write();
-  //         }
-  //         if (item instanceof Genre) {
-  //           JsonDatabase.JsonDatabase.database?.set(`genres`, [...JsonDatabase.JsonDatabase.database.get(`genres`).value(), item]).write();
-  //         }
-  //         if (item instanceof Group) {
-  //           JsonDatabase.JsonDatabase.database?.set(`groups`, [...JsonDatabase.JsonDatabase.database.get(`groups`).value(), item]).write();
-  //         }
-  //         if (item instanceof Artist) {
-  //           JsonDatabase.JsonDatabase.database?.set(`artists`, [...JsonDatabase.JsonDatabase.database.get(`artists`).value(), item]).write();
-  //         }
-  //       });
-  //     }
-  //     resolve('good');
-  //   });
-  // }
-
-
-  saveFromMemToDb() {
-    return new Promise((resolve, reject) => {
-      if (JsonDatabase.JsonDatabase.isInitialized()) {
-        JsonDatabase.JsonDatabase.database?.set(`songs`, JsonDatabase.JsonDatabase.songs).write();
-        JsonDatabase.JsonDatabase.database?.set(`albums`, JsonDatabase.JsonDatabase.albums).write();
-        JsonDatabase.JsonDatabase.database?.set(`groups`, JsonDatabase.JsonDatabase.groups).write();
-        JsonDatabase.JsonDatabase.database?.set(`artists`, JsonDatabase.JsonDatabase.artists).write();
-        JsonDatabase.JsonDatabase.database?.set(`genres`, JsonDatabase.JsonDatabase.genres).write();
-        JsonDatabase.JsonDatabase.database?.set(`playlists`, JsonDatabase.JsonDatabase.playlists).write();
-        JsonDatabase.JsonDatabase.initialized = true;
-        resolve('good');
-      } else throw new Error('No database loaded');
-    });
-  }
-  purgeDatabase() {
-    return new Promise((resolve, reject) => {
-      if (JsonDatabase.JsonDatabase.isInitialized()) {
-        JsonDatabase.JsonDatabase.database?.set(`songs`, []).write();
-        JsonDatabase.JsonDatabase.database?.set(`albums`, []).write();
-        JsonDatabase.JsonDatabase.database?.set(`groups`, []).write();
-        JsonDatabase.JsonDatabase.database?.set(`artists`, []).write();
-        JsonDatabase.JsonDatabase.database?.set(`genres`, []).write();
-        JsonDatabase.JsonDatabase.database?.set(`playlists`, []).write();
-        resolve('');
-      } else throw new Error('No database loaded');
-    });
-  }
-
-  print() {
-    return new Promise((resolve, reject) => {
-      if (JsonDatabase.JsonDatabase.isInitialized()) {
-        JsonDatabase.JsonDatabase.database?.read();
-        console.log(JsonDatabase.JsonDatabase.database?.get(`albums`).value());
-        console.log(JsonDatabase.JsonDatabase.database?.get(`artist`).value());
-        console.log(JsonDatabase.JsonDatabase.database?.get(`songs`).value());
-        console.log(JsonDatabase.JsonDatabase.database?.get(`groups`).value());
-        console.log(JsonDatabase.JsonDatabase.database?.get(`genres`).value());
-        console.log(JsonDatabase.JsonDatabase.database?.get(`playlists`).value());
-        resolve('');
-      } else throw new Error('No database loaded');
     });
   }
 }

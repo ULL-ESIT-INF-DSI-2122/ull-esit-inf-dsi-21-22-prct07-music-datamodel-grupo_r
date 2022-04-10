@@ -2,7 +2,7 @@
   "songs": [
     {
       "name": "Black or White",
-      "artists": ["Michael Jackson"],
+      "artists": "Michael Jackson",
       "length": 254,
       "genres": ["Pop"],
       "plays": 3000000,
@@ -10,7 +10,7 @@
     },
     {
       "name": "Scatman",
-      "artists": ["Scatman John"],
+      "artists": "Scatman John",
       "length": 211,
       "genres": ["Electronic"],
       "plays": 1000000,
@@ -18,7 +18,7 @@
     },
     {
       "name": "She Looks So Perfect",
-      "artists": ["5SOS"],
+      "artists": "5SOS",
       "length": 219,
       "genres": ["Pop"],
       "plays": 304056180,
@@ -26,7 +26,7 @@
     },
     {
       "name": "Solo Amigos",
-      "artists": ["Adexe Y Nau"],
+      "artists": "Adexe Y Nau",
       "length": 225,
       "genres": ["UrbanoLatino"],
       "plays": 5000000,
@@ -34,7 +34,7 @@
     },
     {
       "name": "Ella Me Levantó",
-      "artists": ["Daddy Yankee"],
+      "artists": "Daddy Yankee",
       "length": 210,
       "genres": ["UrbanoLatino"],
       "plays": 514400,
@@ -42,7 +42,7 @@
     },
     {
       "name": "Speed Demon",
-      "artists": ["Michael Jackson"],
+      "artists": "Michael Jackson",
       "length": 270,
       "genres": ["Electronic", "Pop"],
       "plays": 3000000,
@@ -50,7 +50,7 @@
     },
     {
       "name": "Freed From Desire",
-      "artists": ["Gala"],
+      "artists": "Gala",
       "length": 214,
       "genres": ["Electronic"],
       "plays": 145000000,
@@ -58,7 +58,7 @@
     },
     {
       "name": "Bicycle Race",
-      "artists": ["Queen"],
+      "artists": "Queen",
       "length": 183,
       "genres": ["Rock"],
       "plays": 18000000,
@@ -66,7 +66,7 @@
     },
     {
       "name": "Love Tonight",
-      "artists": ["Shouse"],
+      "artists": "Shouse",
       "length": 239,
       "genres": ["Electronic"],
       "plays": 4000600,
@@ -74,7 +74,7 @@
     },
     {
       "name": "Shake That",
-      "artists": ["Eminem", "Nate Dogg"],
+      "artists": "Eminem",
       "length": 275,
       "genres": ["Rap"],
       "plays": 150000,
@@ -82,7 +82,7 @@
     },
     {
       "name": "Onomeatropella",
-      "artists": ["Bejo"],
+      "artists": "Bejo",
       "length": 204,
       "genres": ["UrbanoLatino"],
       "plays": 22000,
@@ -90,7 +90,7 @@
     },
     {
       "name": "Kiss Me More",
-      "artists": ["Doja Cat", "SZA"],
+      "artists": "Doja Cat",
       "length": 316,
       "genres": ["Rap"],
       "plays": 72000000,
@@ -98,7 +98,7 @@
     },
     {
       "name": "Como Camarón",
-      "artists": ["Estopa"],
+      "artists": "Estopa",
       "length": 218,
       "genres": ["Pop", "Rock"],
       "plays": 34000000,
@@ -106,7 +106,7 @@
     },
     {
       "name": "Are You Ready?",
-      "artists": ["Maneskin"],
+      "artists": "Maneskin",
       "length": 154,
       "genres": ["Indie"],
       "plays": 7445368,
@@ -114,7 +114,7 @@
     },
     {
       "name": "On Melancholy Hill",
-      "artists": ["Gorillaz"],
+      "artists": "Gorillaz",
       "length": 266,
       "genres": ["Indie"],
       "plays": 52000000,
@@ -122,7 +122,7 @@
     },
     {
       "name": "Soy Uno Más",
-      "artists": ["Lit Killah"],
+      "artists": "Lit Killah",
       "length": 198,
       "genres": ["UrbanoLatino"],
       "plays": 3000300,
@@ -130,7 +130,7 @@
     },
     {
       "name": "Otro Trago",
-      "artists": ["Sech"],
+      "artists": "Sech",
       "length": 231,
       "genres": ["UrbanoLatino"],
       "plays": 32000000,
@@ -138,7 +138,7 @@
     },
     {
       "name": "Devuélveme a Mi Chica",
-      "artists": ["Hombres G"],
+      "artists": "Hombres G",
       "length": 196,
       "genres": ["Pop"],
       "plays": 141000000,
@@ -146,7 +146,7 @@
     },
     {
       "name": "Paranoid",
-      "artists": ["Black Sabbath"],
+      "artists": "Black Sabbath",
       "length": 172,
       "genres": ["Rock"],
       "plays": 16000000,
@@ -154,7 +154,7 @@
     },
     {
       "name": "Stairway To Heaven",
-      "artists": ["Led Zeppelin"],
+      "artists": "Led Zeppelin",
       "length": 482,
       "genres": ["Rock"],
       "plays": 78000000,
@@ -162,7 +162,7 @@
     },
     {
       "name": "Sweet Child o' Mine",
-      "artists": ["Guns N' Roses"],
+      "artists": "Guns N' Roses",
       "length": 303,
       "genres": ["Rock"],
       "plays": 150000000,
@@ -170,7 +170,7 @@
     },
     {
       "name": "Es Épico",
-      "artists": ["Canserbero"],
+      "artists": "Canserbero",
       "length": 137,
       "genres": ["Rap"],
       "plays": 207000,
@@ -178,7 +178,7 @@
     },
     {
       "name": "Gangsta Paradise",
-      "artists": ["Coolio", "Kylian Mash"],
+      "artists": "Coolio",
       "length": 257,
       "genres": ["Rap"],
       "plays": 21000000,
@@ -186,7 +186,7 @@
     },
     {
       "name": "I Gotta Feeling",
-      "artists": ["Black Eyed Peas"],
+      "artists": "Black Eyed Peas",
       "length": 292,
       "genres": ["Rap"],
       "plays": 48000000,
@@ -194,7 +194,7 @@
     },
     {
       "name": "Cry Baby",
-      "artists": ["Melanie Martinez"],
+      "artists": "Melanie Martinez",
       "length": 240,
       "genres": ["Indie"],
       "plays": 16000000,
@@ -202,7 +202,7 @@
     },
     {
       "name": "Daddy Issues",
-      "artists": ["The Neighbourhood"],
+      "artists": "The Neighbourhood",
       "length": 257,
       "genres": ["Indie"],
       "plays": 46000000,
@@ -210,7 +210,7 @@
     },
     {
       "name": "Training Wheels",
-      "artists": ["Melanie Martinez"],
+      "artists": "Melanie Martinez",
       "length": 206,
       "genres": ["Indie"],
       "plays": 71000000,
@@ -218,7 +218,7 @@
     },
     {
       "name": "Moonlight Sonata",
-      "artists": ["Ludwig van Beethoven"],
+      "artists": "Ludwig van Beethoven",
       "length": 900,
       "genres": ["Classical"],
       "plays": 185739475,
@@ -226,7 +226,7 @@
     },
     {
       "name": "Für Elise",
-      "artists": ["Ludwig van Beethoven"],
+      "artists": "Ludwig van Beethoven",
       "length": 307,
       "genres": ["Classical"],
       "plays": 16000000,
@@ -234,7 +234,7 @@
     },
     {
       "name": "Spring",
-      "artists": ["Antonio Vivaldi"],
+      "artists": "Antonio Vivaldi",
       "length": 599,
       "genres": ["Classical"],
       "plays": 2800000,
@@ -242,7 +242,7 @@
     },
     {
       "name": "Symphony No.9",
-      "artists": ["Ludwig van Beethoven"],
+      "artists": "Ludwig van Beethoven",
       "length": 3900,
       "genres": ["Classical"],
       "plays": 112000000,
@@ -250,7 +250,7 @@
     },
     {
       "name": "Habanera",
-      "artists": ["Georges Bizet"],
+      "artists": "Georges Bizet",
       "length": 131,
       "genres": ["Classical"],
       "plays": 19000000,
@@ -258,7 +258,7 @@
     },
     {
       "name": "Ain't No Mountain High Enough",
-      "artists": ["Marvin Gaye", "Tammi Terrell"],
+      "artists": "Marvin Gaye",
       "length": 144,
       "genres": ["Soul"],
       "plays": 63007906,
@@ -266,7 +266,7 @@
     },
     {
       "name": "I Feel Good",
-      "artists": ["James Brown"],
+      "artists": "James Brown",
       "length": 165,
       "genres": ["Soul"],
       "plays": 79856037,
@@ -274,7 +274,7 @@
     },
     {
       "name": "Happy",
-      "artists": ["Pharrell Williams"],
+      "artists": "Pharrell Williams",
       "length": 240,
       "genres": ["Soul"],
       "plays": 972531465,
@@ -282,7 +282,7 @@
     },
     {
       "name": "Rolling in the Deep",
-      "artists": ["Adele"],
+      "artists": "Adele",
       "length": 233,
       "genres": ["Soul"],
       "plays": 2006117325,
@@ -290,7 +290,7 @@
     },
     {
       "name": "I Heard It Through the Grapevine",
-      "artists": ["Marvin Gaye"],
+      "artists": "Marvin Gaye",
       "length": 199,
       "genres": ["Soul"],
       "plays": 38421517,
@@ -298,7 +298,7 @@
     },
     {
       "name": "The Gambler",
-      "artists": ["Kenny Rogers"],
+      "artists": "Kenny Rogers",
       "length": 210,
       "genres": ["Country"],
       "plays": 159719891,
@@ -306,7 +306,7 @@
     },
     {
       "name": "Have You Ever Seen The Rain",
-      "artists": ["Creedence Clearwater Revival"],
+      "artists": "Creedence Clearwater Revival",
       "length": 159,
       "genres": ["Country"],
       "plays": 201249581 ,
@@ -314,7 +314,7 @@
     },
     {
       "name": "Fortunate Son",
-      "artists": ["Creedence Clearwater Revival"],
+      "artists": "Creedence Clearwater Revival",
       "length": 141,
       "genres": ["Country"],
       "plays": 81953717,
@@ -322,7 +322,7 @@
     },
     {
       "name": "Achy Breaky Heart",
-      "artists": ["Billy Ray Cyrus"],
+      "artists": "Billy Ray Cyrus",
       "length": 234,
       "genres": ["Country"],
       "plays": 87772982,
@@ -330,7 +330,7 @@
     },
     {
       "name": "Take Me Home, Country Roads",
-      "artists": ["John Denver"],
+      "artists": "John Denver",
       "length":  197,
       "genres": ["Country"],
       "plays": 428957959,
@@ -338,7 +338,7 @@
     },
     {
       "name": "The Trooper",
-      "artists": ["Iron Maiden"],
+      "artists": "Iron Maiden",
       "length": 250,
       "genres": ["Metal"],
       "plays": 58190738,
@@ -346,7 +346,7 @@
     },
     {
       "name": "Nothing Else Matters",
-      "artists": ["Metallica"],
+      "artists": "Metallica",
       "length": 389,
       "genres": ["Metal"],
       "plays": 1108992985,
@@ -354,7 +354,7 @@
     },
     {
       "name": "Chop Suey!",
-      "artists": ["System Of A Down"],
+      "artists": "System Of A Down",
       "length": 208,
       "genres": ["Metal"],
       "plays": 1150132006,
@@ -362,7 +362,7 @@
     },
     {
       "name": "Duality",
-      "artists": ["Slipknot"],
+      "artists": "Slipknot",
       "length": 213,
       "genres": ["Metal"],
       "plays": 326200590,
@@ -370,7 +370,7 @@
     },
     {
       "name": "Live Wire",
-      "artists": ["Mötley Crüe"],
+      "artists": "Mötley Crüe",
       "length": 197,
       "genres": ["Metal"],
       "plays": 20215420,
@@ -378,7 +378,7 @@
     },
     {
       "name": "Under Pressure",
-      "artists": ["Queen"],
+      "artists": "Queen",
       "length": 248,
       "genres": ["Pop", "Rock"],
       "plays": 204518599,
@@ -386,7 +386,7 @@
     },
     {
       "name": "Stone Cold Crazy",
-      "artists": ["Queen"],
+      "artists": "Queen",
       "length": 132,
       "genres": ["Rock", "Metal"],
       "plays": 3223138,
@@ -394,7 +394,7 @@
     },
     {
       "name": "The Monster",
-      "artists": ["Eminem", "Rihanna"],
+      "artists": "Eminem",
       "length": 250,
       "genres": ["Pop", "Rap"],
       "plays": 828713854,
@@ -403,7 +403,7 @@
   ],
   "albums": [
     {
-      "title": "El Cartel: The Big Boss",
+      "name": "El Cartel: The Big Boss",
       "author": "Daddy Yankee",
       "date": "05/06/2007",
       "genres": ["UrbanoLatino"],
@@ -413,7 +413,7 @@
       "Plane To PR", "Me quedaría", "Todos quieren a Raymond", "Impacto"]
     },
     {
-      "title": "Dangerous",
+      "name": "Dangerous",
       "author": "Michael Jackson",
       "date": "26/11/1991",
       "genres": ["Rock", "Pop"],
@@ -422,7 +422,7 @@
       "Will You Be There", "Keep The Faith", "Gone Too Soon", "Dangerous"]
     },
     {
-      "title": "Scatman's World",
+      "name": "Scatman's World",
       "author": "Scatman John",
       "date": "10/07/1995",
       "genres": ["Pop", "Electronic"],
@@ -431,7 +431,7 @@
       "Song of Scatland", "Hi, Louis"]
     },
     {
-      "title": "Jazz",
+      "name": "Jazz",
       "author": "Queen",
       "date": "10/11/1978",
       "genres": ["Rock"],
@@ -440,7 +440,7 @@
       "Leaving Home Ain't Easy", "Don't Stop Me Now", "More of That Jazz"]
     },
     {
-      "title": "Curtain Call: The Hits",
+      "name": "Curtain Call: The Hits",
       "author": "Eminem",
       "date": "06/12/2005",
       "genres": ["Rap"],
@@ -449,7 +449,7 @@
       "Guilty Conscience", "Cleanin' Out My Closet", "Just Lose It", "When I'm Gone"]
     },
     {
-      "title": "Plastic Beach",
+      "name": "Plastic Beach",
       "author": "Gorillaz",
       "date": "09/03/2010",
       "genres": ["Indie", "Electronic", "Pop"],
@@ -459,7 +459,7 @@
       "To Binge", "Cloud of Unknowing", "Pirate Jet"]
     },
     {
-      "title": "Best of Beethoven",
+      "name": "Best of Beethoven",
       "author": "Ludwig van Beethoven",
       "date": "03/07/1990",
       "genres": ["Classical"],
@@ -467,7 +467,7 @@
       "Symphony No.6", "Piano Sonata No. 1", "Symphony No.9"]
     },
     {
-      "title": "21",
+      "name": "21",
       "author": "Adele",
       "date": "29/11/2012",
       "genres": ["Soul", "Pop"],
@@ -476,7 +476,7 @@
       "Lovesong", "Someone like You"]
     },
     {
-      "title": "The Gambler",
+      "name": "The Gambler",
       "author": "Kenny Rogers",
       "date": "01/11/1978",
       "genres": ["Country"],
@@ -486,7 +486,7 @@
       "San Francisco Mabel Joy", "Morgana Jones"]
     },
     {
-      "title": "Piece of Mind",
+      "name": "Piece of Mind",
       "author": "Iron Maiden",
       "date": "16/05/1983",
       "genres": ["Metal"],
@@ -1542,19 +1542,19 @@
     {
       "name": "IntenseMusic",
       "songs": ["Fortunate Son", "Duality", "Chop Suey!", "The Trooper"],
-      "duration": 812,
+      "length": "13m 32s",
       "genres": ["Metal", "Country"]
     },
     {
       "name": "Chilling",
       "songs": ["Ain't No Mountain High Enough", "On Melancholy Hill", "Nothing Else Matters", "Symphony No.9"],
-      "duration": 4699,
+      "length": "1h 18m 19s",
       "genres": ["Soul", "Indie", "Metal", "Classical"]
     },
     {
       "name": "Driving",
       "songs": ["Speed Demon", "Como Camarón", "Devuélveme a Mi Chica", "Bicycle race", "Sweet Child o' Mine", "Under Pressure", "Shake That", "Gangsta Paradise"],
-      "duration": 1950,
+      "length": "32m 30s",
       "genres": ["Pop", "Rock", "Rap"]
     }
   ]

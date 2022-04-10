@@ -1,0 +1,44 @@
+Crear Genre:
+ - Nombre: La string del json
+ - Groups: Empieza vacío
+ - Albums: Empieza vacío
+ - Canciones: Empieza vacío
+
+Crear Artist
+ - Nombre: la string del json
+ - Groups: Empieza vacío
+ - Genres: Generos instanciados (se añade el artista al Genre)
+ - Albums: Empieza vacío
+ - Songs: Empieza vacío
+ - Listeners: El numero del json
+ 
+ Crear Group
+ - Nombre: la string del json
+ - Members: Artistas instanciados (se añade el grupo a cada artista miembro)
+ - Date: la string del json
+ - Genres: Generos instanciados (se añade el album a cada genero)
+ - Albums: Empieza vacío 
+ - Listeners: El numero del json
+
+Crear Song
+ - Nombre: La string del json
+ - Artists: Artistas instanciados (se añade la canción a cada artista)
+ - Length: El numero del json
+ - Genres: Generos instanciados (se añade la cancion al genero)
+ - Plays: numero del json
+ - isSingle: boolean del json
+
+Crear Album
+ - Nombre: la string del json
+ - Author: Artistas / Grupos instanciados (se añade el album al artista o grupo)
+ - Date: la string del json 
+ - Genres: Generos instanciados (se añade el album a cada genero)
+ - Songs: Canciones instanciadas
+ 
+Crear Playlist
+ - Nombre: La string del json
+ - Songs: Canciones instanciadas
+ - Duration: El numero del json
+ - Genres: Generos instanciados
+ 
+ 
