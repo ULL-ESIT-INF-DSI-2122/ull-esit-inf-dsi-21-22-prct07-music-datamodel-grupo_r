@@ -636,6 +636,7 @@ export class Terminal {
     });
   }
 
+  
   private promptPlaylistManagement() {
     console.clear();
     console.log('------Musitronic360------ \n');
