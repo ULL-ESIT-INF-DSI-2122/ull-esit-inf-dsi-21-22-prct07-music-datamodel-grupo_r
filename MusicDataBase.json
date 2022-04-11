@@ -1542,19 +1542,19 @@
     {
       "name": "IntenseMusic",
       "songs": ["Fortunate Son", "Duality", "Chop Suey!", "The Trooper"],
-      "length": "13m 32s",
+      "duration": 812,
       "genres": ["Metal", "Country"]
     },
     {
       "name": "Chilling",
       "songs": ["Ain't No Mountain High Enough", "On Melancholy Hill", "Nothing Else Matters", "Symphony No.9"],
-      "length": "1h 18m 19s",
+      "duration": 4699,
       "genres": ["Soul", "Indie", "Metal", "Classical"]
     },
     {
       "name": "Driving",
       "songs": ["Speed Demon", "Como Camarón", "Devuélveme a Mi Chica", "Bicycle race", "Sweet Child o' Mine", "Under Pressure", "Shake That", "Gangsta Paradise"],
-      "length": "32m 30s",
+      "duration": 1952,
       "genres": ["Pop", "Rock", "Rap"]
     }
   ]

@@ -7,10 +7,10 @@ import { Song } from './Song';
 export class Playlist {
   /**
    * Intialize a Playlist object.
-   * @param name Name of the playlist
-   * @param songs Songs included in the playlist
-   * @param duration Duration in hours and minutes and seconds
-   * @param genres Musical genres included in the playlist
+   * @param {string} name Name of the playlist
+   * @param {Song[]} songs Songs included in the playlist
+   * @param {number} duration Duration in hours and minutes and seconds
+   * @param {Genre[]} genres Musical genres included in the playlist
    */
   constructor(
     public name: string,
@@ -21,11 +21,12 @@ export class Playlist {
     this.name = name;
     this.songs = songs;
     this.duration = duration;
+    this.genres = genres;
   }
 
   /**
    * Get the playlist name.
-   * @returns playlist name
+   * @returns {string} Playlist name
    */
   public getName(): string {
     return this.name;
@@ -33,16 +34,15 @@ export class Playlist {
 
   /**
    * Set the playlist name.
-   * @param name Name
-   * @returns playlist name
+   * @param {string} name Name
    */
   public setName(name: string): void {
     this.name = name;
   }
 
   /**
-   * Get the songs included in the playlist
-   * @returns Songs
+   * Get the songs included in the playlist.
+   * @returns {Song[]} Songs
    */
   public getSongs(): Song[] {
     return this.songs;
@@ -50,8 +50,7 @@ export class Playlist {
 
   /**
    * Set a song to the playlist
-   * @param song Song
-   * @returns Songs
+   * @param {Song} song Song
    */
   public setSongs(song: Song) {
     this.songs.push(song);
@@ -59,7 +58,7 @@ export class Playlist {
 
   /**
    * Get the duration of the playlist.
-   * @returns the duration of the playlist
+   * @returns {number} Duration of the playlist
    */
   public getDuration(): number {
     return this.duration;
@@ -67,7 +66,7 @@ export class Playlist {
 
   /**
    * Converts seconds to hours, minutes and seconds.
-   * @param seconds Duration of the playlist in seconds
+   * @param {number} seconds Duration of the playlist in seconds
    * @returns {string} Converted to the usual notation for expressing hours.
    */
   private setDuration(seconds: number): string {
@@ -85,7 +84,7 @@ export class Playlist {
 
   /**
    * Get the musical genres included in the playlist.
-   * @returns Genres
+   * @returns {Genre[]} Genres
    */
   public getGenres(): Genre[] {
     return this.genres;
@@ -93,33 +92,32 @@ export class Playlist {
 
   /**
    * Set a musical genres to the playlist.
-   * @param genre Genre
-   * @returns Genres
+   * @param {Genre} genre Genre
    */
   public setGenres(genre: Genre): void {
     this.genres.push(genre);
   }
 
   /**
-   * Print the playlist information
-   * @return {string}
+   * Print the playlist information.
+   * @return {string} Playlist information
    */
   public print(): string {
-    let output: string = 'Playlist - ' + this.name;
+    let output: string = `Playlist - ${this.name}`;
 
-    output += '\nSongs: ';
+    output += `\nSongs: `;
     this.songs.forEach((s) => {
-      output += '\n -' + s.getName();
+      output += `\n - ${s.getName()}`;
     });
 
-    output += '\nDuration: ' + this.duration;
+    output += `\nDuration:` + this.setDuration(this.duration);
 
-    output += '\nGenres: ';
+    output += `\nGenres: `;
     this.genres.forEach((g) => {
-      output += '\n -' + g.getName();
+      output += `\n - ${g.getName()}`;
     });
 
-    output += '\n------------\n';
+    output += `\n------------\n`;
 
     console.log(output);
     return output;

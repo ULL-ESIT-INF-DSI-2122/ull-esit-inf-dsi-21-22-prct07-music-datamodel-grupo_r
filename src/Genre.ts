@@ -9,10 +9,10 @@ import { Artist } from './Artist';
 export class Genre {
   /**
    * Initialize an Genres object.
-   * @param name Genre name
-   * @param authors Groups and/or artists produce music of this genre
-   * @param albums Albums in the library related to this genre
-   * @param songs Songs in the library of that genre
+   * @param {string} name Genre name
+   * @param {(Group | Artist)[]} authors Groups and/or artists produce music of this genre
+   * @param {Album[]} albums Albums in the library related to this genre
+   * @param {Song[]} songs Songs in the library of that genre
    */
   constructor(
     public name: string,
@@ -28,7 +28,7 @@ export class Genre {
 
   /**
    * Get the genre name.
-   * @returns genre name
+   * @returns {string} Genre name
    */
   public getName(): string {
     return this.name;
@@ -36,8 +36,7 @@ export class Genre {
 
   /**
    * Set the genre name.
-   * @param name Name
-   * @returns genre name
+   * @param {string} name Name
    */
   public setName(name: string): void {
     this.name = name;
@@ -45,7 +44,7 @@ export class Genre {
 
   /**
    * Get the authors and/or artists produce music of this genre.
-   * @returns authors
+   * @returns {(Group | Artist)[]} Authors
    */
   public getAuthors(): (Group | Artist)[] {
     return this.authors;
@@ -53,8 +52,7 @@ export class Genre {
 
   /**
    * Set the authors and/or artists produce music of this genre.
-   * @param group Group or Artist
-   * @returns authors
+   * @param {Group | Artist} group Group or Artist
    */
   public setAuthors(group: Group | Artist): void {
     this.authors.push(group);
@@ -62,16 +60,23 @@ export class Genre {
 
   /**
    * Get the albums in the library related to this genre.
-   * @returns Albums
+   * @returns {Album[]} Albums
    */
   public getAlbums(): Album[] {
     return this.albums;
   }
 
   /**
+   * Replace the albums in the library related to this genre.
+   * @param {Album[]} album Albums
+   */
+  public replaceAlbums(album: Album[]): void {
+    this.albums = album;
+  }
+
+  /**
    * Set the albums in the library related to this genre.
-   * @param album Album
-   * @returns Album
+   * @param {Album} album Album
    */
   public setAlbums(album: Album) {
     this.albums.push(album);
@@ -79,42 +84,50 @@ export class Genre {
 
   /**
    * Get the songs in the library of that genre.
-   * @returns Songs
+   * @returns {Song[]} Songs
    */
   public getSongs(): Song[] {
     return this.songs;
   }
 
   /**
+   * Replace the songs in the library of that genre.
+   * @param {Song[]} song Songs
+   */
+  public replaceSongs(song: Song[]): void {
+    this.songs = song;
+  }
+
+  /**
    * Set the songs in the library of that genre.
-   * @param song Song
-   * @returns Songs
+   * @param {Song} song Song
    */
   public setSongs(song: Song) {
     this.songs.push(song);
   }
+
   /**
-   * Print the genre information
-   * @return {string}
+   * Print the genre information.
+   * @return {string} Genre information
    */
   public print(): string {
-    let output: string = 'Genre - ' + this.name;
-    output += '\n Author: ';
+    let output: string = `Genre - ${this.name}`;
+    output += `\n Author: `;
     this.authors.forEach((g) => {
-      output += '\n -' + g.getName();
+      output += `\n - ${g.getName()}`;
     });
 
-    output += '\nAlbums: ';
+    output += `\nAlbums: `;
     this.albums.forEach((a) => {
-      output += '\n -' + a.getName();
+      output += `\n - ${a.getName()}`;
     });
 
-    output += '\nSongs: ';
+    output += `\nSongs: `;
     this.songs.forEach((s) => {
-      output += '\n -' + s.getName();
+      output += `\n - ${s.getName()}`;
     });
 
-    output += '\n------------\n';
+    output += `\n------------\n`;
     console.log(output);
     return output;
   }

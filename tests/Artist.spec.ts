@@ -1,6 +1,5 @@
 import 'mocha';
 import {expect} from 'chai';
-
 import { Artist } from '../src/Artist';
 import { Album } from '../src/Album';
 import { Song } from '../src/Song';
@@ -8,8 +7,8 @@ import { Group } from '../src/Group';
 import { Genre } from '../src/Genre';
 
 describe('Artist class test', () => {
-  const blameItOnTheBoogie = new Song('Blame It On The Boogie', [], 5, [], 100, false);
   const theJackson5 = new Group('The Jackson 5', [], '1968', [], [], 50);
+  const blameItOnTheBoogie = new Song('Blame It On The Boogie', theJackson5, 5, [], 100, false);
   const Funk = new Genre('Funk', [theJackson5], [], [blameItOnTheBoogie]);
   const dianaRossPresentsTheJackson5 = new Album('Diana Ross Presents The Jackson 5',
       theJackson5, '1969', [Funk], [blameItOnTheBoogie]);
@@ -18,7 +17,7 @@ describe('Artist class test', () => {
   const elCantoDelLoco = new Group('El Canto Del Loco', [], '2001', [], [], 200);
   const Pop = new Genre('Pop', [michaelJackson, elCantoDelLoco],
       [dianaRossPresentsTheJackson5], [blameItOnTheBoogie]);
-  const Besos = new Song('Besos', [], 4, [], 150, true);
+  const Besos = new Song('Besos', michaelJackson, 4, [], 150, true);
   const Zapatillas = new Album('Zapatillas', elCantoDelLoco, '2000', [Pop], [Besos]);
 
   describe('Artist Class', () => {
