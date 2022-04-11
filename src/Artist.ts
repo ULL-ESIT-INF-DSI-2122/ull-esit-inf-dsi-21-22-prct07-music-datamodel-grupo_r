@@ -9,12 +9,12 @@ import { Song } from './Song';
 export class Artist {
   /**
    * Initialize an Artist object.
-   * @param name Artist name
-   * @param groups Groups to which the artist belongs
-   * @param genres Related musical genres
-   * @param albums Albums in which the artist has participated
-   * @param songs Published songs
-   * @param listeners Number of monthly listeners
+   * @param {string} name Artist name
+   * @param {Group[]} groups Groups to which the artist belongs
+   * @param {Genre[]} genres Related musical genres
+   * @param {Album[]} albums Albums in which the artist has participated
+   * @param {Song[]} songs Published songs
+   * @param {number} listeners Number of monthly listeners
    */
   constructor(
     public name: string,
@@ -29,12 +29,12 @@ export class Artist {
     this.genres = genres;
     this.albums = albums;
     this.songs = songs;
-    this.listeners = listeners;
+    this.listeners = this.calculateListeners();
   }
 
   /**
    * Get the artist name.
-   * @returns artist name
+   * @returns {string} Artist name
    */
   public getName(): string {
     return this.name;
@@ -42,8 +42,7 @@ export class Artist {
 
   /**
    * Set the artist name.
-   * @param name Name
-   * @returns artist name
+   * @param {string} name Name
    */
   public setName(name: string): void {
     this.name = name;
@@ -51,7 +50,7 @@ export class Artist {
 
   /**
    * Get the groups to which the artist belongs.
-   * @returns Groups
+   * @returns {Group[]} Groups
    */
   public getGroups(): Group[] {
     return this.groups;
@@ -59,8 +58,7 @@ export class Artist {
 
   /**
    * Set the groups to which the artist belongs.
-   * @param group Group
-   * @returns Groups
+   * @param {Group} group Group
    */
   public setGroups(group: Group): void {
     this.groups.push(group);
@@ -68,7 +66,7 @@ export class Artist {
 
   /**
    * Get the related musical genres's.
-   * @returns Genres
+   * @returns {Genre[]} Genres
    */
   public getGenres(): Genre[] {
     return this.genres;
@@ -76,8 +74,7 @@ export class Artist {
 
   /**
    * Set the related musical genres's.
-   * @param genre Genre
-   * @returns Genres
+   * @param {Genre} genre Genre
    */
   public setGenres(genre: Genre): void {
     this.genres.push(genre);
@@ -85,50 +82,55 @@ export class Artist {
 
   /**
    * Get the albums in which the artist has participated.
-   * @returns Album
+   * @returns {Album[]} Album
    */
   public getAlbums(): Album[] {
     return this.albums;
   }
 
   /**
+   * Replace the albums in which the artist has participated.
+   * @param {Album} album Album
+   */
+  public replaceAlbums(album: Album[]): void {
+    this.albums = album;
+  }
+
+  /**
    * Set the albums in which the artist has participated.
-   * @param album Album
-   * @returns Album
+   * @param {Album} album Album
    */
   public setAlbums(album: Album) {
     this.albums.push(album);
   }
 
   /**
-   * Get the published songs
-   * @returns Songs
+   * Get the published songs.
+   * @returns {Song[]} Songs
    */
   public getSongs(): Song[] {
     return this.songs;
   }
 
   /**
-   * Set the published songs
-   * @param song Song
-   * @returns Songs
+   * Set the published songs.
+   * @param {Song} song Song
    */
   public setSongs(song: Song) {
     this.songs.push(song);
   }
 
   /**
-   * Set the published songs
-   * @param songs Song
-   * @returns Songs
+   * Replace the published songs.
+   * @param {Song[]} songs Song
    */
-  public replaceSongs(songs: Song[]) {
+  public replaceSongs(songs: Song[]): void {
     this.songs = songs;
   }
 
   /**
-   * Calculates the number of monthly listeners
-   * @returns Listeners
+   * Calculates the number of monthly listeners.
+   * @returns {number} Listeners
    */
   private calculateListeners(): number {
     for (let i = 0; i < this.groups.length; i++) {
@@ -141,41 +143,42 @@ export class Artist {
   }
 
   /**
-   * Get the number of monthly listeners
-   * @returns Listeners
+   * Get the number of monthly listeners.
+   * @returns {number} Listeners
    */
   public getListeners(): number {
     return this.listeners;
   }
+
   /**
- * Print the artist information
- * @return {string}
- */
+   * Print the artist information.
+   * @return {string} Artist information
+   */
   public print(): string {
-    let output: string = 'Artist - ' + this.name;
+    let output: string = `Artist - ${this.name}`;
 
-    output += '\nGroups: ';
+    output += `\nGroups: `;
     this.groups.forEach((g) => {
-      output += '\n -' + g.getName();
+      output += `\n - ${g.getName()}`;
     });
 
-    output += '\nGenres: ';
+    output += `\nGenres: `;
     this.genres.forEach((g) => {
-      output += '\n -' + g.getName();
+      output += `\n - ${g.getName()}`;
     });
 
-    output += '\nAlbums: ';
+    output += `\nAlbums: `;
     this.albums.forEach((a) => {
-      output += '\n -' + a.getName();
+      output += `\n - ${a.getName()}`;
     });
 
-    output += '\nSongs: ';
+    output += `\nSongs: `;
     this.songs.forEach((s) => {
-      output += '\n -' + s.getName();
+      output += `\n - ${s.getName()}`;
     });
 
-    output += '\nListeners: ' + this.listeners;
-    output += '\n------------\n';
+    output += `\nListeners: ${this.listeners}`;
+    output += `\n------------\n`;
     console.log(output);
     return output;
   }

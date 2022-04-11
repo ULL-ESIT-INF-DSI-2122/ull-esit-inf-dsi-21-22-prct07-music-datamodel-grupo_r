@@ -1,6 +1,5 @@
 import 'mocha';
 import {expect} from 'chai';
-
 import { Artist } from '../src/Artist';
 import { Group } from '../src/Group';
 import { Genre } from '../src/Genre';

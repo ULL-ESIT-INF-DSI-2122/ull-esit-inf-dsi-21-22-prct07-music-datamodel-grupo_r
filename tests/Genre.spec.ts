@@ -1,19 +1,18 @@
 import 'mocha';
 import {expect} from 'chai';
-
 import { Album } from '../src/Album';
 import { Song } from '../src/Song';
 import { Group } from '../src/Group';
 import { Genre } from '../src/Genre';
 
 describe('Genre class test', () => {
-  const blameItOnTheBoogie = new Song('Blame It On The Boogie', [], 5, [], 100, false);
   const theJackson5 = new Group('The Jackson 5', [], '1968', [], [], 50);
+  const blameItOnTheBoogie = new Song('Blame It On The Boogie', theJackson5, 5, [], 100, false);
   const Funk = new Genre('Funk', [theJackson5], [], [blameItOnTheBoogie]);
   const dianaRossPresentsTheJackson5 = new Album('Diana Ross Presents The Jackson 5',
       theJackson5, '1969', [Funk], [blameItOnTheBoogie]);
   const elCantoDelLoco = new Group('El Canto Del Loco', [], '2001', [], [], 200);
-  const Besos = new Song('Besos', [], 4, [], 150, true);
+  const Besos = new Song('Besos', elCantoDelLoco, 4, [], 150, true);
 
   describe('Genre Class', () => {
     it('Genre object creation ', () => {
@@ -27,7 +26,7 @@ describe('Genre class test', () => {
     });
 
     it('Checking getGroup()', () => {
-      expect(Funk.getGroups()).to.be.eql([theJackson5]);
+      expect(Funk.getAuthors()).to.be.eql([theJackson5]);
     });
 
     it('Checking getAlbums()', () => {
@@ -46,8 +45,8 @@ describe('Genre class test', () => {
     });
 
     it('Checking setGroup()', () => {
-      Funk.setGroups(elCantoDelLoco);
-      expect(Funk.getGroups()).to.be.eql([theJackson5, elCantoDelLoco]);
+      Funk.setAuthors(elCantoDelLoco);
+      expect(Funk.getAuthors()).to.be.eql([theJackson5, elCantoDelLoco]);
     });
 
     it('Checking setAlbums()', () => {

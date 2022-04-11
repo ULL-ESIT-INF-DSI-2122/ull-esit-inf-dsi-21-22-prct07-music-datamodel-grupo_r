@@ -1,6 +1,5 @@
 import 'mocha';
 import {expect} from 'chai';
-
 import { Artist } from '../src/Artist';
 import { Album } from '../src/Album';
 import { Song } from '../src/Song';
@@ -8,19 +7,19 @@ import { Group } from '../src/Group';
 import { Genre } from '../src/Genre';
 
 describe('Song class test', () => {
-  const Anitos = new Song('16 añitos', [], 4.13, [], 17020329, false);
-  const Pop = new Genre('playlist', [], [], [Anitos]);
-  const Sera = new Song('Será', [], 180, [Pop], 150, true);
-  const Rock = new Genre('Rock', [], [], [Sera]);
   const elCantoDelLoco = new Group('El Canto Del Loco', [], '2001', [], [], 200);
+  const Anitos = new Song('16 añitos', elCantoDelLoco, 4.13, [], 17020329, false);
+  const Pop = new Genre('playlist', [], [], [Anitos]);
+  const Sera = new Song('Será', elCantoDelLoco, 180, [Pop], 150, true);
+  const Rock = new Genre('Rock', [], [], [Sera]);
   const Zapatillas = new Album('Zapatillas', elCantoDelLoco, '2000', [Pop], []);
   const daniMartin = new Artist('Dani Martín', [elCantoDelLoco], [Pop], [Zapatillas],
       [Anitos], 300);
-  const Besos = new Song('Besos', [daniMartin], 4, [Pop], 150, true);
+  const Besos = new Song('Besos', daniMartin, 4, [Pop], 150, true);
   const michaelJackson = new Artist('Michael Jackson', [], [], [], [], 200);
 
   it('Song object creation ', () => {
-    expect(new Song('Peter Pan', [], 4, [], 123, true)).not.to.be.eql(null);
+    expect(new Song('Peter Pan', elCantoDelLoco, 4, [], 123, true)).not.to.be.eql(null);
   });
 
   describe('Getters of Song Class', () => {
@@ -29,7 +28,7 @@ describe('Song class test', () => {
     });
 
     it('Checking getArtists()', () => {
-      expect(Besos.getArtists()).eql([daniMartin]);
+      expect(Besos.getArtists()).eql(daniMartin);
     });
 
     it('Checking getDuration()', () => {
@@ -57,7 +56,7 @@ describe('Song class test', () => {
 
     it('Checking setArtists()', () => {
       Besos.setArtists(michaelJackson);
-      expect(Besos.getArtists()).eql([daniMartin, michaelJackson]);
+      expect(Besos.getArtists()).eql(michaelJackson);
     });
 
     it('Checking setLength()', () => {

@@ -1,15 +1,16 @@
 import 'mocha';
 import {expect} from 'chai';
-
 import { Song } from '../src/Song';
 import { Genre } from '../src/Genre';
 import { Playlist } from '../src/Playlist';
+import { Group } from '../src/Group';
 
 describe('Playlist class test', () => {
-  const Besos = new Song('Besos', undefined, 4, [], 150, true);
-  const Anitos = new Song('16 añitos', undefined, 4.13, [], 17020329, false);
+  const elCantoDelLoco = new Group('El Canto Del Loco', [], '2001', [], [], 200);
+  const Besos = new Song('Besos', elCantoDelLoco, 4, [], 150, true);
+  const Anitos = new Song('16 añitos', elCantoDelLoco, 4.13, [], 17020329, false);
   const Pop = new Genre('playlist', [], [], [Besos, Anitos]);
-  const Sera = new Song('Será', undefined, 180, [Pop], 150, true);
+  const Sera = new Song('Será', elCantoDelLoco, 180, [Pop], 150, true);
   const Rock = new Genre('Rock', [], [], [Sera]);
   const playlist = new Playlist('Mi playlist', [Besos, Anitos], 3600, [Pop]);
 
@@ -29,7 +30,7 @@ describe('Playlist class test', () => {
     });
 
     it('Checking getDuration()', () => {
-      expect(playlist.getDuration()).to.be.eql('01:00:00');
+      expect(playlist.getDuration()).to.be.eql(3600);
     });
 
     it('Checking getGenres()', () => {

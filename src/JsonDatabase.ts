@@ -9,7 +9,7 @@ import { Genre } from './Genre';
 import { Playlist } from './Playlist';
 
 /**
- * Tipo de datos que se usa para instanciar la lowdb a los campos necesarios
+ * @type Data type used to instantiate the lowdb to the required fields
  */
  type schemaType = {
   genres: Genre[],
@@ -20,10 +20,30 @@ import { Playlist } from './Playlist';
   playlists: Playlist[]
 }
 
+/**
+ * @class Database in json format.
+ * @extends {Database}
+ */
 export class JsonDatabase extends Database {
+  /**
+   * @param {boolean} initialized True if the datbase is initialized or False if it is not
+   */
   private initialized: boolean = false;
+
+  /**
+   * @param {lowdb.LowdbSync<schemaType>} database Databse to be loaded.
+   */
   private database?: lowdb.LowdbSync<schemaType>;
+
+  /**
+   * @param {JsonDatabase} JsonDatabase Permit singleton patron to be access databse out of context.
+   * @static
+   */
   private static JsonDatabase: JsonDatabase;
+
+  /**
+   * @param {string} dbDir Name of database's file.
+   */
   private constructor(private dbDir: string = '') {
     super();
     if (dbDir != '') {
@@ -139,46 +159,40 @@ export class JsonDatabase extends Database {
     }
   }
 
+  /**
+   * Get the Json file.
+   * @param {string} dbDir Filename
+   * @returns {JsonDatabase}
+   */
   public static getJsonDatabaseInstance(dbDir: string = ''): JsonDatabase {
     if (!JsonDatabase.JsonDatabase || dbDir !== '') {
       JsonDatabase.JsonDatabase = new JsonDatabase(dbDir);
     }
     return JsonDatabase.JsonDatabase;
   }
-  setInitialized(value: boolean): void {
+
+  /**
+   * Set the initialize value.
+   * @param {boolean} value True if a json file is loaded or False if it is not.
+   */
+  public setInitialized(value: boolean): void {
     JsonDatabase.JsonDatabase.initialized = value;
   }
 
-  isInitialized(): boolean {
+  /**
+   * Checks the initialize value.
+   * @return {boolean} True if a json file is loaded or False if it is not.
+   */
+  public isInitialized(): boolean {
     return JsonDatabase.JsonDatabase.initialized;
   }
-  // addToDatabase(item: (Song[] | Album[] | Genre[] | Group[] | Artist[])): Promise<string> {
-  //   return new Promise((resolve, reject) => {
-  //     if (JsonDatabase.JsonDatabase.initialized) {
-  //       item.forEach((item) => {
-  //         if (item instanceof Song) {
-  //           JsonDatabase.JsonDatabase.database?.set(`songs`, [...JsonDatabase.JsonDatabase.database.get(`songs`).value(), item]).write();
-  //         }
-  //         if (item instanceof Album) {
-  //           JsonDatabase.JsonDatabase.database?.set(`albums`, [...JsonDatabase.JsonDatabase.database.get(`albums`).value(), item]).write();
-  //         }
-  //         if (item instanceof Genre) {
-  //           JsonDatabase.JsonDatabase.database?.set(`genres`, [...JsonDatabase.JsonDatabase.database.get(`genres`).value(), item]).write();
-  //         }
-  //         if (item instanceof Group) {
-  //           JsonDatabase.JsonDatabase.database?.set(`groups`, [...JsonDatabase.JsonDatabase.database.get(`groups`).value(), item]).write();
-  //         }
-  //         if (item instanceof Artist) {
-  //           JsonDatabase.JsonDatabase.database?.set(`artists`, [...JsonDatabase.JsonDatabase.database.get(`artists`).value(), item]).write();
-  //         }
-  //       });
-  //     }
-  //     resolve('good');
-  //   });
-  // }
 
-  saveFromMemToDb() {
-    return new Promise((resolve, reject) => {
+  /**
+   * Save all changes in the database.
+   * @returns
+   */
+  public saveFromMemToDb(): Promise<unknown> {
+    return new Promise((resolve) => {
       let genresNames: string[] = [];
       let artistsNames: string[] = [];
       let albumsNames: string[] = [];
@@ -389,8 +403,12 @@ export class JsonDatabase extends Database {
     });
   }
 
-  purgeDatabase() {
-    return new Promise((resolve, reject) => {
+  /**
+   * Purges all from the database.
+   * @returns {Promise<unknown>}
+   */
+  public purgeDatabase(): Promise<unknown> {
+    return new Promise((resolve) => {
       if (JsonDatabase.JsonDatabase.isInitialized()) {
         JsonDatabase.JsonDatabase.database?.set(`songs`, []).write();
         JsonDatabase.JsonDatabase.database?.set(`albums`, []).write();
@@ -403,8 +421,12 @@ export class JsonDatabase extends Database {
     });
   }
 
-  print() {
-    return new Promise((resolve, reject) => {
+  /**
+   * Prints all the database.
+   * @returns {Promise<unknown>}
+   */
+  public print(): Promise<unknown> {
+    return new Promise((resolve) => {
       if (JsonDatabase.JsonDatabase.isInitialized()) {
         JsonDatabase.JsonDatabase.database?.read();
         console.log(JsonDatabase.JsonDatabase.database?.get(`albums`).value());

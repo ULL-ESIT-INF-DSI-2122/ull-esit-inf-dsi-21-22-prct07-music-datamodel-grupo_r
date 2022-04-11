@@ -31,7 +31,7 @@ export class Album {
 
   /**
    * Get the album title.
-   * @return {string} album title
+   * @return {string} Album title
    */
   public getName(): string {
     return this.name;
@@ -62,15 +62,15 @@ export class Album {
   }
 
   /**
-   * Get the release date
-   * @return {string} date
+   * Get the release date.
+   * @return {string} Date
    */
   public getDate(): string {
     return this.date;
   }
 
   /**
-   * Set the release date
+   * Set the release date.
    * @param {string} date Release date
    */
   public setDate(date: string): void {
@@ -104,7 +104,7 @@ export class Album {
   }
 
   /**
-   * Get the songs list
+   * Get the songs list.
    * @return {Song[]} Songs
    */
   public getSongs(): Song[] {
@@ -112,30 +112,30 @@ export class Album {
   }
 
   /**
-   * Set the songs list
+   * Set the songs list.
    * @param {Song[]} songs Songs list
    */
   public setSongs(songs: Song[]) {
     this.songs = songs;
   }
   /**
- * Print the album information
- * @return {string}
+ * Print the album information.
+ * @return {string} Album information
  */
   public print(): string {
-    let output: string = 'Album - ' + this.name + '\nAuthor: ' + this.author.name + '\nDate: ' + this.date;
+    let output: string = `Album -  ${this.name} \nAuthor: ${this.author.name} \nDate: ${this.date}`;
 
-    output += '\nGenres: ';
+    output += `\nGenres: `;
     this.genres.forEach((g) => {
-      output += '\n -' + g.getName();
+      output += `\n -  ${g.getName()}`;
     });
 
-    output += '\nSongs: ';
+    output += `\nSongs: `;
     this.songs.forEach((s) => {
-      output += '\n -' + s.getName();
+      output += `\n - ${s.getName()}`;
     });
 
-    output += '\n------------\n\n';
+    output += `\n------------\n\n`;
     console.log(output);
     return output;
   }
