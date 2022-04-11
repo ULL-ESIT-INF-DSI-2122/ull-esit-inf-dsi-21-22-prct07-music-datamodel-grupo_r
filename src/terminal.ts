@@ -419,7 +419,7 @@ export class Management {
   }
 
   private continueAddingSongs(value: string) {
-    if (value !== 'continue'){
+    if (value !== 'continue') {
     }
   }
   /**

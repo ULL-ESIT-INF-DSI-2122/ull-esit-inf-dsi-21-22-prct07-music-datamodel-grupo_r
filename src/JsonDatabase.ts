@@ -41,6 +41,7 @@ export class JsonDatabase extends Database {
    */
   private static JsonDatabase: JsonDatabase;
 
+
   /**
    * @param {string} dbDir Name of database's file.
    */
