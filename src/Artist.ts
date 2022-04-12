@@ -155,31 +155,31 @@ export class Artist {
    * @return {string} Artist information
    */
   public print(): string {
-    let output: string = `Artist - ${this.name}`;
+    let output: string = `\x1b[34mArtist - \x1b[0m${this.name}`;
 
-    output += `\nGroups: `;
+    output += `\n\x1b[34mGroups: \x1b[0m`;
     this.groups.forEach((g) => {
-      output += `\n - ${g.getName()}`;
+      output += `\n\x1b[34m - \x1b[0m${g.getName()}`;
     });
 
-    output += `\nGenres: `;
+    output += `\n\x1b[34mGenres: \x1b[0m`;
     this.genres.forEach((g) => {
-      output += `\n - ${g.getName()}`;
+      output += `\n\x1b[34m - \x1b[0m${g.getName()}`;
     });
 
-    output += `\nAlbums: `;
+    output += `\n\x1b[34mAlbums: \x1b[0m`;
     this.albums.forEach((a) => {
-      output += `\n - ${a.getName()}`;
+      output += `\n\x1b[34m - \x1b[0m${a.getName()}`;
     });
 
-    output += `\nSongs: `;
+    output += `\n\x1b[34mSongs: \x1b[0m`;
     this.songs.forEach((s) => {
-      output += `\n - ${s.getName()}`;
+      output += `\n\x1b[34m - \x1b[0m${s.getName()}`;
     });
 
-    output += `\nListeners: ${this.listeners}`;
-    output += `\n------------\n`;
-    console.log(output);
+    output += `\n\x1b[34mListeners: \x1b[0m${this.listeners}`;
+    output += `\n------------\n\n`;
+    // console.log(output);
     return output;
   }
 }
