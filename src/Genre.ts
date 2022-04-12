@@ -111,24 +111,24 @@ export class Genre {
    * @return {string} Genre information
    */
   public print(): string {
-    let output: string = `Genre - ${this.name}`;
-    output += `\n Author: `;
+    let output: string = `\x1b[35mGenre - \x1b[0m${this.name}`;
+    output += `\n\x1b[35mAuthor: \x1b[0m`;
     this.authors.forEach((g) => {
-      output += `\n - ${g.getName()}`;
+      output += `\n\x1b[35m - \x1b[0m${g.getName()}`;
     });
 
-    output += `\nAlbums: `;
+    output += `\n\x1b[35mAlbums: \x1b[0m`;
     this.albums.forEach((a) => {
-      output += `\n - ${a.getName()}`;
+      output += `\n\x1b[35m - \x1b[0m${a.getName()}`;
     });
 
-    output += `\nSongs: `;
+    output += `\n\x1b[35mSongs: \x1b[0m`;
     this.songs.forEach((s) => {
-      output += `\n - ${s.getName()}`;
+      output += `\n\x1b[35m - \x1b[0m${s.getName()}`;
     });
 
     output += `\n------------\n`;
-    console.log(output);
+    // console.log(output);
     return output;
   }
 }

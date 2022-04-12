@@ -158,29 +158,29 @@ export class Group {
    * @return {string} Group information
    */
   public print(): string {
-    let output: string = `Group - ${this.name}`;
+    let output: string = `\x1b[36mGroup - \x1b[0m${this.name}`;
 
-    output += `\nMembers: `;
+    output += `\n\x1b[36mMembers: \x1b[0m`;
     this.members.forEach((m) => {
-      output += `\n - ${m.getName()}`;
+      output += `\n\x1b[36m - \x1b[0m${m.getName()}`;
     });
 
-    output += `\nDate: ${this.date}`;
+    output += `\n\x1b[36mDate: \x1b[0m${this.date}`;
 
-    output += `\nGenres: `;
+    output += `\n\x1b[36mGenres: \x1b[0m`;
     this.genres.forEach((g) => {
-      output += `\n - ${g.getName()}`;
+      output += `\n\x1b[36m - \x1b[0m${g.getName()}`;
     });
 
-    output += `\nAlbums: `;
+    output += `\n\x1b[36mAlbums: \x1b[0m`;
     this.albums.forEach((a) => {
-      output += `\n - ${a.getName()}`;
+      output += `\n\x1b[36m - \x1b[0m${a.getName()}`;
     });
 
-    output += `\nListeners: ${this.listeners}`;
+    output += `\n\x1b[36mListeners: \x1b[0m${this.listeners}`;
     output += `\n------------\n`;
 
-    console.log(output);
+    // console.log(output);
     return output;
   }
 }
