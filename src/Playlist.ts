@@ -79,7 +79,7 @@ export class Playlist {
     let second: number | string = seconds % 60;
     second = (second < 10)? '0' + second : second;
 
-    return hour + ':' + minute + ':' + second;
+    return hour + ' \x1b[31mhours\x1b[0m ' + minute + ' \x1b[31mminutes\x1b[0m ' + second + ' \x1b[31mseconds\x1b[0m';
   }
 
   /**
@@ -103,23 +103,23 @@ export class Playlist {
    * @return {string} Playlist information
    */
   public print(): string {
-    let output: string = `Playlist - ${this.name}`;
+    let output: string = `\x1b[31mPlaylist - \x1b[0m${this.name}`;
 
-    output += `\nSongs: `;
+    output += `\n\x1b[31mSongs: \x1b[0m`;
     this.songs.forEach((s) => {
-      output += `\n - ${s.getName()}`;
+      output += `\n\x1b[31m - \x1b[0m${s.getName()}`;
     });
 
-    output += `\nDuration:` + this.setDuration(this.duration);
+    output += `\n\x1b[31mDuration: \x1b[0m${this.setDuration(this.duration)}`;
 
-    output += `\nGenres: `;
+    output += `\n\x1b[31mGenres: \x1b[0m`;
     this.genres.forEach((g) => {
-      output += `\n - ${g.getName()}`;
+      output += `\n\x1b[31m - \x1b[0m${g.getName()}`;
     });
 
-    output += `\n------------\n`;
+    output += `\n------------\n\n`;
 
-    console.log(output);
+    // console.log(output);
     return output;
   }
 }

@@ -419,7 +419,7 @@ export class Management {
   }
 
   private continueAddingSongs(value: string) {
-    if (value !== 'continue'){
+    if (value !== 'continue') {
     }
   }
   /**
@@ -1095,7 +1095,7 @@ export class Management {
    * Display playlist information to be manage.
    * @returns {void}
    */
-  private promptPlaylistManagement() {
+  private promptPlaylistManagement(): void {
     console.clear();
     console.log('------Musitronic360------ \n');
     inquirer.prompt({
