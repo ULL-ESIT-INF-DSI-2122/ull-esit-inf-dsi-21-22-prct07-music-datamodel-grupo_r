@@ -1095,7 +1095,7 @@ export class Management {
    * Display playlist information to be manage.
    * @returns {void}
    */
-  private promptPlaylistManagement() {
+  private promptPlaylistManagement(): void {
     console.clear();
     console.log('------Musitronic360------ \n');
     inquirer.prompt({

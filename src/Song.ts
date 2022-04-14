@@ -80,6 +80,21 @@ export class Song {
   }
 
   /**
+   * Converts seconds to hours, minutes and seconds.
+   * @param {number} seconds Duration of the playlist in seconds
+   * @returns {string} Converted to the usual notation for expressing hours.
+   */
+  private printLength(seconds: number): string {
+    let minute: number | string = Math.floor((seconds / 60) % 60);
+    minute = (minute < 10)? '0' + minute : minute;
+
+    let second: number | string = seconds % 60;
+    second = (second < 10)? '0' + second : second;
+
+    return minute + ' \x1b[33mminutes\x1b[0m ' + second + ' \x1b[33mseconds\x1b[0m';
+  }
+
+  /**
    * Get the related musical genres's.
    * @returns {Genre[]} Genres
    */
@@ -141,27 +156,27 @@ export class Song {
    * @return {string} Song information
    */
   public print(): string {
-    let output: string = `Song - ${this.name}`;
+    let output: string = `\x1b[33mSong - \x1b[0m${this.name}`;
 
-    output += `\nAuthor: ${this.artists.getName()}`;
+    output += `\n\x1b[33mAuthor: \x1b[0m${this.artists.getName()}`;
 
-    output += `\nLength: ${this.length} seconds`;
+    output += `\n\x1b[33mLength: \x1b[0m${this.printLength(this.length)}`;
 
-    output += `\nGenres: `;
+    output += `\n\x1b[33mGenres: \x1b[0m`;
     this.genres.forEach((g) => {
-      output += `\n - ${g.getName()}`;
+      output += `\n\x1b[33m -\x1b[0m ${g.getName()}`;
     });
 
-    output += `\nPlays: ${this.plays}`;
+    output += `\n\x1b[33mPlays: \x1b[0m${this.plays}`;
 
     if (this.isSingle) {
-      output += `\nPublished as single?: Yes`;
+      output += `\n\x1b[33mPublished as single?: \x1b[0mYes`;
     } else {
-      output += `\nPublished as single?: No`;
+      output += `\n\x1b[33mPublished as single?: \x1b[0mNo`;
     }
-    output += `\n------------\n`;
+    output += `\n------------\n\n`;
 
-    console.log(output);
+    // console.log(output);
     return output;
   }
 }

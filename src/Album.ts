@@ -123,20 +123,20 @@ export class Album {
  * @return {string} Album information
  */
   public print(): string {
-    let output: string = `Album -  ${this.name} \nAuthor: ${this.author.name} \nDate: ${this.date}`;
+    let output: string = `\x1b[32mAlbum -\x1b[0m ${this.name} \n\x1b[32mAuthor: \x1b[0m${this.author.name} \n\x1b[32mDate: \x1b[0m${this.date}`;
 
-    output += `\nGenres: `;
+    output += `\n\x1b[32mGenres: \x1b[0m`;
     this.genres.forEach((g) => {
-      output += `\n -  ${g.getName()}`;
+      output += `\n\x1b[32m - \x1b[0m${g.getName()}`;
     });
 
-    output += `\nSongs: `;
+    output += `\n\x1b[32mSongs: \x1b[0m`;
     this.songs.forEach((s) => {
-      output += `\n - ${s.getName()}`;
+      output += `\n\x1b[32m - \x1b[0m${s.getName()}`;
     });
 
     output += `\n------------\n\n`;
-    console.log(output);
+    // console.log(output);
     return output;
   }
 }
