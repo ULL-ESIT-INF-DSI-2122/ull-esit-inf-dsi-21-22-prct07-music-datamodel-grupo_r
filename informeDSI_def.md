@@ -1,4 +1,16 @@
+
+#  Práctica 7 - Digitalizando la colección de música de los abuelos
+
+- Marco Antonio Cabrera Hernández
+- Jonay Méndez Márquez
+- Mario Hernández García
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ULL-ESIT-INF-DSI-2122_ull-esit-inf-dsi-21-22-prct07-music-datamodel-grupo_r&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ULL-ESIT-INF-DSI-2122_ull-esit-inf-dsi-21-22-prct07-music-datamodel-grupo_r)
+
+[![Test](https://github.com/ULL-ESIT-INF-DSI-2122/ull-esit-inf-dsi-21-22-prct07-music-datamodel-grupo_r/actions/workflows/test.js.yml/badge.svg)](https://github.com/ULL-ESIT-INF-DSI-2122/ull-esit-inf-dsi-21-22-prct07-music-datamodel-grupo_r/actions/workflows/test.js.yml)
+
 # Musitronic360 - Digitalizando una colección musical
+
 El propósito del proyecto es sencillo: diseñar, construir y digitalizar una colección de música. Esto supone poder almacenar toda la información que sea útil a la hora de identificar los distintos elementos del sistema (artistas, canciones, álbumes, etc), y no solo eso, sino tener toda esta información jerarquizada y vinculada entre sí para lograr el perfecto entramado de una base de datos musical. Gestionar, añadir, modificar o eliminar parte de esta información será una parte indispensable del programa, y a estas y otras metas les seguirán una serie de decisiones y soluciones para hacer que todo funcione como es debido. 
 
 Es la estructura del programa, las decisiones que hemos tomado y las soluciones que hacen que cada pieza encaje, lo que explicaremos en este informe. Presentamos así nuestro proyecto *Musitronic360*, donde podrás guardar, reproducir y recopilar la información de tus canciones favoritas.
