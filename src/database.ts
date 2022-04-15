@@ -352,36 +352,76 @@ export class Database implements anyDatabase {
   }
 
   /**
-   * Prints all the database.
+   * Prints all the memory database or specific parts.
    */
-  public printMemory(): void {
+  public printMemory(type:string = ''): void {
     let output: string = '';
-    this.albums.forEach((album) => {
-      output += album.print();
-    });
-    this.artists.forEach((artist) => {
-      output += artist.print();
-    });
-    this.songs.forEach((song) => {
-      output += song.print();
-    });
-    this.groups.forEach((group) => {
-      output += group.print();
-    });
-    this.genres.forEach((genre) => {
-      output += genre.print();
-    });
-    this.playlists.forEach((playlist) => {
-      output += playlist.print();
-    });
-    output += `\x1b[30mTotal:\x1b[0m
-    \x1b[32mNº Albums: \x1b[0m${this.albums.length}
-    \x1b[34mNº Artists: \x1b[0m${this.artists.length}
-    \x1b[33mNº Songs: \x1b[0m${this.songs.length}
-    \x1b[36mNº Groups: \x1b[0m${this.groups.length}
-    \x1b[35mNº Genres: \x1b[0m${this.genres.length}
-    \x1b[31mNº Playlists: \x1b[0m${this.playlists.length}`;
-
+    switch (type) {
+      case '':
+      case 'All':
+        this.albums.forEach((album) => {
+          output += album.print();
+        });
+        this.artists.forEach((artist) => {
+          output += artist.print();
+        });
+        this.songs.forEach((song) => {
+          output += song.print();
+        });
+        this.groups.forEach((group) => {
+          output += group.print();
+        });
+        this.genres.forEach((genre) => {
+          output += genre.print();
+        });
+        this.playlists.forEach((playlist) => {
+          output += playlist.print();
+        });
+        output += `\x1b[30mTotal:\x1b[0m
+        \x1b[32mNº Albums: \x1b[0m${this.albums.length}
+        \x1b[34mNº Artists: \x1b[0m${this.artists.length}
+        \x1b[33mNº Songs: \x1b[0m${this.songs.length}
+        \x1b[36mNº Groups: \x1b[0m${this.groups.length}
+        \x1b[35mNº Genres: \x1b[0m${this.genres.length}
+        \x1b[31mNº Playlists: \x1b[0m${this.playlists.length}`;
+        break;
+      case 'Song':
+        this.songs.forEach((song) => {
+          output += song.print();
+        });
+        output += `\x1b[33mNº Songs: \x1b[0m${this.songs.length}`;
+        break;
+      case 'Album':
+        this.albums.forEach((album) => {
+          output += album.print();
+        });
+        output += `\x1b[32mNº Albums: \x1b[0m${this.albums.length}`;
+        break;
+      case 'Genre':
+        this.genres.forEach((genre) => {
+          output += genre.print();
+        });
+        output += `\x1b[35mNº Genres: \x1b[0m${this.genres.length}`;
+        break;
+      case 'Artist':
+        this.artists.forEach((artist) => {
+          output += artist.print();
+        });
+        output += `\x1b[34mNº Artists: \x1b[0m${this.artists.length}`;
+        break;
+      case 'Group':
+        this.groups.forEach((group) => {
+          output += group.print();
+        });
+        output += `\x1b[36mNº Groups: \x1b[0m${this.groups.length}`;
+        break;
+      case 'Playlist':
+        this.playlists.forEach((playlist) => {
+          output += playlist.print();
+        });
+        output += `\x1b[31mNº Playlists: \x1b[0m${this.playlists.length}`;
+        break;
+    }
     console.log(output);
   }
 

@@ -34,6 +34,10 @@ export class JsonDatabase extends Database {
    */
   private changesSaved: boolean = true;
   /**
+   * @param {string} dbName Name of the database that corresponds to the dbdir
+   */
+  private dbName: string = 'none';
+  /**
    * @param {lowdb.LowdbSync<schemaType>} database Databse to be loaded.
    */
   private database?: lowdb.LowdbSync<schemaType>;
@@ -50,6 +54,7 @@ export class JsonDatabase extends Database {
   private constructor(private dbDir: string = '') {
     super();
     if (dbDir != '') {
+      this.dbName = dbDir;
       this.database = lowdb(new FileSync(dbDir));
       if (!this.database.has(`genres`).value() && !this.database.has(`songs`).value() &&
           !this.database.has(`albums`).value() && !this.database.has(`groups`).value() &&
@@ -196,7 +201,13 @@ export class JsonDatabase extends Database {
   public setChangesSaved(value: boolean): void {
     JsonDatabase.JsonDatabase.changesSaved = value;
   }
-
+  /**
+  * Get the name of the database (dbdir)
+  * @returns string DbName
+  */
+  public getDatabaseName():string {
+    return this.dbName;
+  }
 
   /**
    * Checks the changesSaved value.
