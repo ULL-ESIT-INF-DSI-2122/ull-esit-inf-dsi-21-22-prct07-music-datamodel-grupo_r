@@ -64,12 +64,21 @@ export class Playlist {
     return this.duration;
   }
 
+
+  public updateDuration():void {
+    let totalDuration:number = 0;
+    this.songs.forEach((song) => {
+      totalDuration += song.getLength();
+    });
+    this.duration = totalDuration;
+  }
+
   /**
    * Converts seconds to hours, minutes and seconds.
    * @param {number} seconds Duration of the playlist in seconds
    * @returns {string} Converted to the usual notation for expressing hours.
    */
-  private setDuration(seconds: number): string {
+  private printDuration(seconds: number): string {
     let hour: number | string = Math.floor(seconds / 3600);
     hour = (hour < 10)? '0' + hour : hour;
 
@@ -89,6 +98,19 @@ export class Playlist {
   public getGenres(): Genre[] {
     return this.genres;
   }
+
+
+  public updateGenres(): void {
+    this.getGenres().splice(0, this.getGenres().length);
+    this.songs.forEach((song) => {
+      song.getGenres().forEach((genre) => {
+        if (!this.getGenres().includes(genre)) {
+          this.setGenres(genre);
+        }
+      });
+    });
+  }
+
 
   /**
    * Set a musical genres to the playlist.
@@ -110,7 +132,7 @@ export class Playlist {
       output += `\n\x1b[31m - \x1b[0m${s.getName()}`;
     });
 
-    output += `\n\x1b[31mDuration: \x1b[0m${this.setDuration(this.duration)}`;
+    output += `\n\x1b[31mDuration: \x1b[0m${this.printDuration(this.duration)}`;
 
     output += `\n\x1b[31mGenres: \x1b[0m`;
     this.genres.forEach((g) => {

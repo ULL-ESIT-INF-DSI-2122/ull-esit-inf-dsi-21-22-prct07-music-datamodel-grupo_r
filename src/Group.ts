@@ -56,10 +56,17 @@ export class Group {
   }
 
   /**
+ * Set the group author.
+ * @param {Artist} member Group member
+ */
+  public setMembers(member: Artist): void {
+    this.members.push(member);
+  }
+  /**
    * Set the group author.
    * @param {Artist[]} members Group members
    */
-  public setMembers(members: Artist[]): void {
+  public replaceMembers(members: Artist[]): void {
     this.members = members;
   }
 
@@ -88,11 +95,18 @@ export class Group {
   }
 
   /**
+ * Set the related musical genres.
+ * @param {Genres[]} genres Relate genres
+ */
+  public replaceGenres(genres: Genre[]): void {
+    this.genres = genres;
+  }
+  /**
    * Set the related musical genres.
    * @param {Genres[]} genres Relate genres
    */
-  public setGenres(genres: Genre[]): void {
-    this.genres = genres;
+  public setGenres(genre: Genre): void {
+    this.genres.push(genre);
   }
 
   /**

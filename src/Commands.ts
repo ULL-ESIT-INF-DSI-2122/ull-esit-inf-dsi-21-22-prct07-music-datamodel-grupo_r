@@ -54,6 +54,7 @@ export enum playlistManagementCommands {
   Add = 'Add',
   Modify = 'Modify',
   Delete = 'Delete',
+  DisplayMEM = 'Display playlist on memory',
   Save = 'Save from memory to database (load first)',
   Return = 'Return'
 }
@@ -67,6 +68,21 @@ export enum typeCommands {
   Artist = 'Artist',
   Album = 'Album',
   Group = 'Group',
+  Return = 'Return'
+}
+
+
+/**
+ * @enum {typeDisplayCommands} Entities.
+ */
+ export enum typeDisplayCommands {
+  All = 'All',
+  Song = 'Song',
+  Genre = 'Genre',
+  Artist = 'Artist',
+  Album = 'Album',
+  Group = 'Group',
+  Playlist = 'Playlist',
   Return = 'Return'
 }
 
