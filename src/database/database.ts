@@ -80,7 +80,6 @@ export class Database implements anyDatabase {
         if (item !== '$ALL$') {
           this.songs.forEach((value) => {
             if ('getName' in value && value.getName() === item) {
-              console.log(value.getName());
               dummy.push(value);
             }
           });

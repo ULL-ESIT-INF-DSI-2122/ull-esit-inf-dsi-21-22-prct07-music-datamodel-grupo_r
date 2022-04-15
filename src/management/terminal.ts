@@ -555,7 +555,6 @@ export class Management {
 
             selectedArtist.setAlbums(newAlbum);
             selectedGenres.forEach((genre)=> {
-              console.log(genre);
               genre.setAlbums(newAlbum);
             });
             this.database.addToMemory([newAlbum]);
@@ -842,7 +841,6 @@ export class Management {
                 selectedGenre.setName(answers['name']);
                 let artistsGroupsRemoved: (Group | Artist)[] = selectedGenre.getAuthors();
                 let artistGroupCopy: (Group | Artist) = this.database.searchByName(answers['selectedArtist'], 'author') as (Artist | Group);
-                console.log(artistGroupCopy);
                 artistsGroupsRemoved.forEach((value) => {
                   if (value instanceof Artist) {
                     value.getGenres().forEach((genre, index)=>{
@@ -1076,7 +1074,6 @@ export class Management {
                 let selectedSongs: Song[] = [];
                 inputs.forEach((song)=>{
                   selectedSongs.push((this.database.searchByName(song.songs, 'song') as Song[])[0]);
-                  console.log(song);
                 });
                 selectedPlaylist.getSongs().splice(0, selectedPlaylist.getSongs().length);
                 selectedSongs.forEach((song) => {

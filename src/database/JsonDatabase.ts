@@ -257,7 +257,7 @@ export class JsonDatabase extends Database {
             isSingle: item.getSingle(),
           };
           dummySongs.push(objectSong);
-          console.log('Song');
+          // console.log('Song');
         });
         JsonDatabase.JsonDatabase.database?.set(`songs`, dummySongs).write();
         //
@@ -287,7 +287,7 @@ export class JsonDatabase extends Database {
             songs: songsNames,
           };
           dummyAlbums.push(objectAlbum);
-          console.log('Album');
+          // console.log('Album');
         });
         JsonDatabase.JsonDatabase.database?.set(`albums`, dummyAlbums).write();
         //
@@ -323,7 +323,7 @@ export class JsonDatabase extends Database {
             listeners: item.getListeners(),
           };
           dummyGroups.push(objetoGroup);
-          console.log('Groups');
+          // console.log('Groups');
         });
         JsonDatabase.JsonDatabase.database?.set(`groups`, dummyGroups).write();
 
@@ -365,7 +365,7 @@ export class JsonDatabase extends Database {
             listeners: item.getListeners(),
           };
           dummyArtists.push(objectArtist);
-          console.log('ARTISTS');
+          // console.log('ARTISTS');
         });
         JsonDatabase.JsonDatabase.database?.set(`artists`, dummyArtists).write();
         //
@@ -398,7 +398,7 @@ export class JsonDatabase extends Database {
             songs: songsNames,
           };
           dummyGenre.push(objetoGenre);
-          console.log('Genre');
+          // console.log('Genre');
         });
         JsonDatabase.JsonDatabase.database?.set(`genres`, dummyGenre).write();
         //
@@ -426,7 +426,7 @@ export class JsonDatabase extends Database {
             genres: genresNames,
           };
           dummyPlaylist.push(ObjectPlaylist);
-          console.log('Playlist');
+          // console.log('Playlist');
         });
         JsonDatabase.JsonDatabase.database?.set(`playlists`, dummyPlaylist).write();
         JsonDatabase.JsonDatabase.initialized = true;
