@@ -470,87 +470,92 @@ export class Database implements anyDatabase {
    * @param {viewCommands} command Question to browse the information associated with playlists
    * @param {orderByCommands} mode Questions to browse the information
    */
-  public printPlaylistBy(command: viewPlaylistCommands, mode: orderByCommands): Promise<void> {
-    let playlist: Playlist = this.playlists[0];
-    return new Promise<void>((resolve) => {
-      if (mode === orderByCommands.Ascendantly) {
-        switch (command) {
-          case viewPlaylistCommands.AlphabeticalSong:
-            playlist.getSongs().sort((a, b) => a.getName().localeCompare(b.getName()));
-            playlist.getSongs().forEach((song) => {
-              console.log(song.print());
-            });
-            break;
-          case viewPlaylistCommands.AlphabeticalArtist:
-            let playlistSongs: Song[] = playlist.getSongs();
-            let songsMap: Map<Song, string> = new Map();
-            playlistSongs.forEach((song) => {
-              songsMap.set(song, song.getArtists().getName());
-            });
-            [...songsMap.entries()].sort((a, b) => a[1].localeCompare(b[1]));
-            songsMap.forEach((string, song) => {
-              console.log(song.print());
-            });
-            break;
-          case viewPlaylistCommands.ViewDuration:
-            playlist.getSongs().sort((a, b) => b.getLength() - a.getLength());
-            playlist.getSongs().forEach((song) => {
-              console.log(song.print());
-            });
-            break;
-          case viewPlaylistCommands.AlphabeticalGenre:
-            playlist.getGenres().sort((a, b) => a.getName().localeCompare(b.getName()));
-            playlist.getGenres().forEach((genre) => {
-              console.log(genre.print());
-            });
-            break;
-          case viewPlaylistCommands.ViewCount:
-            playlist.getSongs().sort((a, b) => b.getPlays() - a.getPlays());
-            playlist.getSongs().forEach((song) => {
-              console.log(song.print());
-            });
-            break;
-        }
-      } else {
-        switch (command) {
-          case viewPlaylistCommands.AlphabeticalSong:
-            playlist.getSongs().sort((a, b) => a.getName().localeCompare(b.getName())).reverse();
-            playlist.getSongs().forEach((song) => {
-              console.log(song.print());
-            });
-            break;
-          case viewPlaylistCommands.AlphabeticalArtist:
-            let playlistSongs: Song[] = playlist.getSongs();
-            let songsMap: Map<Song, string> = new Map();
-            playlistSongs.forEach((song) => {
-              songsMap.set(song, song.getArtists().getName());
-            });
-            [...songsMap.entries()].sort((a, b) => a[1].localeCompare(b[1])).reverse();
-            songsMap.forEach((string, song) => {
-              console.log(song.print());
-            });
-            break;
-          case viewPlaylistCommands.ViewDuration:
-            playlist.getSongs().sort((a, b) => b.getLength() - a.getLength()).reverse();
-            playlist.getSongs().forEach((song) => {
-              console.log(song.print());
-            });
-            break;
-          case viewPlaylistCommands.AlphabeticalGenre:
-            playlist.getGenres().sort((a, b) => a.getName().localeCompare(b.getName())).reverse();
-            playlist.getGenres().forEach((genre) => {
-              console.log(genre.print());
-            });
-            break;
-          case viewPlaylistCommands.ViewCount:
-            playlist.getSongs().sort((a, b) => b.getPlays() - a.getPlays()).reverse();
-            playlist.getSongs().forEach((song) => {
-              console.log(song.print());
-            });
-            break;
-        }
+  public printPlaylistBy(command: viewPlaylistCommands, mode: orderByCommands, playlist:string): void {
+    let selectedPlaylist: Playlist = (this.searchByName(playlist, 'playlist') as Playlist[])[0];
+    (this.searchByName(playlist, 'playlist') as Playlist[])[0].print();
+    if (mode === orderByCommands.Ascendantly) {
+      switch (command) {
+        case viewPlaylistCommands.AlphabeticalSong:
+          selectedPlaylist.getSongs().sort((a, b) => a.getName().localeCompare(b.getName()));
+          selectedPlaylist.getSongs().forEach((song) => {
+            console.log(song.print());
+          });
+          break;
+        case viewPlaylistCommands.AlphabeticalArtist:
+          let playlistSongs: Song[] = selectedPlaylist.getSongs();
+          let songsMap: Map<Song, string> = new Map();
+          playlistSongs.forEach((song) => {
+            songsMap.set(song, song.getArtists().getName());
+          });
+          [...songsMap.entries()].sort((a, b) => a[1].localeCompare(b[1]));
+          songsMap.forEach((string, song) => {
+            console.log(song.print());
+          });
+          break;
+        case viewPlaylistCommands.ViewDuration:
+          selectedPlaylist.getSongs().sort((a, b) => b.getLength() - a.getLength());
+          selectedPlaylist.getSongs().forEach((song) => {
+            console.log(song.print());
+          });
+          break;
+        case viewPlaylistCommands.AlphabeticalGenre:
+          selectedPlaylist.getGenres().sort((a, b) => a.getName().localeCompare(b.getName()));
+          selectedPlaylist.getGenres().forEach((genre) => {
+            console.log(genre.print());
+          });
+          break;
+        case viewPlaylistCommands.ViewCount:
+          selectedPlaylist.getSongs().sort((a, b) => b.getPlays() - a.getPlays());
+          selectedPlaylist.getSongs().forEach((song) => {
+            console.log(song.print());
+          });
+          break;
       }
-      resolve();
+    } else {
+      switch (command) {
+        case viewPlaylistCommands.AlphabeticalSong:
+          selectedPlaylist.getSongs().sort((a, b) => a.getName().localeCompare(b.getName())).reverse();
+          selectedPlaylist.getSongs().forEach((song) => {
+            console.log(song.print());
+          });
+          break;
+        case viewPlaylistCommands.AlphabeticalArtist:
+          let playlistSongs: Song[] = selectedPlaylist.getSongs();
+          let songsMap: Map<Song, string> = new Map();
+          playlistSongs.forEach((song) => {
+            songsMap.set(song, song.getArtists().getName());
+          });
+          [...songsMap.entries()].sort((a, b) => a[1].localeCompare(b[1])).reverse();
+          songsMap.forEach((string, song) => {
+            console.log(song.print());
+          });
+          break;
+        case viewPlaylistCommands.ViewDuration:
+          selectedPlaylist.getSongs().sort((a, b) => b.getLength() - a.getLength()).reverse();
+          selectedPlaylist.getSongs().forEach((song) => {
+            console.log(song.print());
+          });
+          break;
+        case viewPlaylistCommands.AlphabeticalGenre:
+          selectedPlaylist.getGenres().sort((a, b) => a.getName().localeCompare(b.getName())).reverse();
+          selectedPlaylist.getGenres().forEach((genre) => {
+            console.log(genre.print());
+          });
+          break;
+        case viewPlaylistCommands.ViewCount:
+          selectedPlaylist.getSongs().sort((a, b) => b.getPlays() - a.getPlays()).reverse();
+          selectedPlaylist.getSongs().forEach((song) => {
+            console.log(song.print());
+          });
+          break;
+      }
+    }
+  }
+
+  public updatePlaylists():void {
+    this.playlists.forEach((playlist) => {
+      playlist.updateDuration();
+      playlist.updateGenres();
     });
   }
 }

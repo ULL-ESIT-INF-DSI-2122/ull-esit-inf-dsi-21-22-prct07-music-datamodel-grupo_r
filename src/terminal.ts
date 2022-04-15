@@ -50,6 +50,19 @@ export class Management {
     return this.database;
   }
 
+
+  private async selectPlaylistPrompt(commands: command.viewCommands | command.viewPlaylistCommands, order: command.orderByCommands): Promise<void> {
+    return new Promise(async (resolve) => {
+      console.clear();
+      console.log('------Musitronic360------ \n');
+      const playlistChoice = new Question('search-list', 'playlistChoice', 'Select playlist', () =>{}, (await (this.database.getFromMemory('$ALL$', 'Playlist'))).map((o) => o.name));
+      await inquirer.prompt(playlistChoice.returnQuestion(false, true)).then(async (answers) => {
+        this.database.printPlaylistBy(commands as command.viewPlaylistCommands, order, answers['playlistChoice']);
+      });
+      resolve();
+    });
+  }
+
   /**
    * Prompt to order the database information.
    * @param {command.viewCommands | command.viewPlaylistCommands} commands commands that display the information
@@ -69,7 +82,7 @@ export class Management {
         switch (answers['command']) {
           case command.orderByCommands.Ascendantly:
             if (type === 'Playlist') {
-              await this.database.printPlaylistBy(commands as command.viewPlaylistCommands, answers['command']);
+              await this.selectPlaylistPrompt(commands as command.viewPlaylistCommands, answers['command']);
               await this.continuePrompt();
               this.promptViewPlaylist();
             } else {
@@ -80,7 +93,7 @@ export class Management {
             break;
           case command.orderByCommands.Descendingly:
             if (type === 'Playlist') {
-              await this.database.printPlaylistBy(commands as command.viewPlaylistCommands, answers['command']);
+              await this.selectPlaylistPrompt(commands as command.viewPlaylistCommands, answers['command']);
               await this.continuePrompt();
               this.promptViewPlaylist();
             } else {
@@ -143,7 +156,8 @@ export class Management {
    * Prompt for the playlists.
    */
   private promptPlaylist(): void {
-    console.log('------Musitronic360------ \n');
+    console.clear();
+    console.log('------Musitronic360------ '+ this.getStatusString() + '\n');
     inquirer.prompt({
       type: 'list',
       name: 'command',
@@ -205,10 +219,29 @@ export class Management {
   }
 
   /**
+   * Returns a formated string with an intuitive status code
+   * @returns String
+   */
+  private getStatusString(): string {
+    let statusString: string = '';
+    if (!this.database.areChangesSaved()) {
+      statusString += 'DB-UP2DATE: ' + '\x1b[31m' + '■ \x1b[0m';
+    } else {
+      statusString += 'DB-UP2DATE: ' + '\x1b[32m' + '■ \x1b[0m';
+    }
+    if (!this.database.isInitialized()) {
+      statusString = 'DB-CHANGES: ' + '\x1b[31m' + '■ \x1b[0m' + 'DB-LOADED: ' + '\x1b[31m' + '■ \x1b[0m';
+    } else {
+      statusString += 'DB-LOADED: ' + '\x1b[32m' + '■ \x1b[0m';
+    }
+    return statusString;
+  }
+  /**
    * Prompt of the start of the sistem.
    */
   public promptStart(): void {
-    console.log('------Musitronic360------ \n');
+    console.clear();
+    console.log('------Musitronic360------ '+ this.getStatusString() + '\n');
     inquirer.prompt({
       type: 'list',
       name: 'command',
@@ -238,14 +271,12 @@ export class Management {
    * @returns {Promise<void>}
    */
   private async continuePrompt(): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      return await inquirer.prompt({
-        name: 'continue',
-        type: 'confirm',
-        message: 'Press enter to continue...',
-      }).then(async (answers) => {
-        resolve();
-      });
+    return await inquirer.prompt({
+      name: 'continue',
+      type: 'confirm',
+      message: 'Press enter to continue...',
+    }).then(async (answers) => {
+
     });
   }
 
@@ -308,120 +339,332 @@ export class Management {
       resolve(result);
     });
   }
+  /**
+   * Function thats used in the Question constructor when its needed to force a choice
+   * @param input String to check
+   * @returns Boolean or string, string in case theres something wrong and true if its correct
+   */
+  private noEmptyChoice(input:string) {
+    if (input === '') {
+      return 'You need to select one';
+    } else {
+      if (JsonDatabase.getJsonDatabaseInstance().searchByName(input, 'author') === undefined) {
+        return 'Doesnt exist, try again';
+      } else return true;
+    }
+  }
+  /**
+   * Function thats used in the Question constructor when its needed to force an input
+   * @param input String to check
+   * @returns Boolean or string, string in case theres something wrong and true if its correct
+   */
+  private noEmptyOption(input:string) {
+    if (input === '') {
+      return 'You need to write something';
+    } else return true;
+  }
+
 
   /**
    * Display information to be add.
    * @returns {Promise<void>}
    */
   private async addPrompt(command: string): Promise<void> {
-    const qName: Question = new Question('input', 'name', 'Write the name/title');
-    const qArtist: Question = new Question('input', 'artist', 'Write the artist name or group');
-    const qMember: Question = new Question('input', 'members', 'Write the members of the group');
-    const qLength: Question = new Question('input', 'length', 'Write the length');
-    const qGenres: Question = new Question('input', 'genres', 'Write the genres');
-    const qReleaseDate: Question = new Question('input', 'date', 'Write the release date');
-    const qSongs: Question = new Question('input', 'songs', 'Write the songs that are part of this item');
-    const qAlbums: Question = new Question('input', 'albums', 'Write the albums that this item is part of');
-    const qListeners: Question = new Question('input', 'listeners', 'Write the ammount of listeners of this artist');
-    const qPlays: Question = new Question('input', 'plays', 'Write the number of plays');
+    const qName: Question = new Question('input', 'name', 'Write the name/title', this.noEmptyOption);
+    const qArtist: Question = new Question('search-list', 'selectedArtist', 'Select the artist name or group', this.noEmptyChoice, (await (this.database.getFromMemory('$ALL$', 'Artist'))).map((o) => o.name));
+    const qMember: Question = new Question('search-list', 'members', 'Write the members of the group', () =>{}, (await (this.database.getFromMemory('$ALL$', 'Artist'))).map((o) => o.name));
+    const qLength: Question = new Question('input', 'length', 'Write the length', this.noEmptyOption);
+    const qGenres: Question = new Question('search-list', 'selectedGenre', 'Select the genre', () =>{}, (await (this.database.getFromMemory('$ALL$', 'Genre'))).map((o) => o.name));
+    const qReleaseDate: Question = new Question('input', 'date', 'Write the release date', this.noEmptyOption);
+    const qSongs: Question = new Question('search-list', 'songs', 'Write the songs that are part of this item', () =>{}, (await (this.database.getFromMemory('$ALL$', 'Song'))).map((o) => o.name));
+    const qAlbums: Question = new Question('search-list', 'albums', 'Write the albums that this item is part of', () =>{}, (await (this.database.getFromMemory('$ALL$', 'Album'))).map((o) => o.name));
+    const qListeners: Question = new Question('input', 'listeners', 'Write the ammount of listeners of this artist', this.noEmptyOption);
+    const qPlays: Question = new Question('input', 'plays', 'Write the number of plays', this.noEmptyOption);
     const qSingle: Object = {
       name: 'isSingle',
       type: 'confirm',
       message: 'It is a single?',
     };
+    const songQuestions = [qName.returnQuestion(true), qArtist.returnQuestion(true, true),
+      qLength.returnQuestion(true), qPlays.returnQuestion(true), qSingle];
 
-    const songQuestions = [qName.returnQuestion(), qArtist.returnQuestion(),
-      qLength.returnQuestion(), qGenres.returnQuestion(), qPlays.returnQuestion(), qSingle];
-    const albumQuestions = [qName.returnQuestion(),
-      qArtist.returnQuestion(), qReleaseDate.returnQuestion(), qGenres.returnQuestion(), qSongs.returnQuestion()];
-    const artistQuestions = [qName.returnQuestion(),
-      qMember.returnQuestion(), qGenres.returnQuestion(),
-      qAlbums.returnQuestion(), qSongs.returnQuestion(), qListeners.returnQuestion()];
-    const groupQuestions = [qName.returnQuestion(), qMember.returnQuestion(),
-      qReleaseDate.returnQuestion(), qGenres.returnQuestion(), qAlbums.returnQuestion(), qListeners.returnQuestion()];
-    const genreQuestions = [qName.returnQuestion(),
-      qArtist.returnQuestion(), qAlbums.returnQuestion(), qSongs.returnQuestion()];
-    const playlistQuestions = [qName.returnQuestion(), qSongs.returnQuestion(),
-      qLength.returnQuestion(), qGenres.returnQuestion()];
-    try {
-      return new Promise(async (resolve, reject) => {
-        console.log('------Musitronic360------ \n');
-        console.log('Adding '+command+'\n');
-        switch (command) {
-          case 'Song':
-            inquirer.prompt(songQuestions).then(async (answers) => {
-              const newSong: Song = new Song(answers['name'], answers['artist'],
-                  answers['length'], answers['genres'], answers['plays'], answers['isSingle']);
-              await this.database.addToMemory([newSong]);
-              newSong.print();
-              await this.continuePrompt();
-              this.promptManagement();
+    return new Promise(async (resolve, reject) => {
+      console.log('------Musitronic360------ \n');
+      console.log('Adding ' + command + '\n');
+      switch (command) {
+        case 'Song':
+          await inquirer.prompt(songQuestions).then(async (answers) => {
+            let inputs: {selectedGenre: string}[];
+            inputs = await this.continueAdding(qGenres);
+            let selectedArtist: Artist | Group = this.database.searchByName(answers['selectedArtist'], 'author') as Artist | Group;
+            let selectedGenres: Genre[] = [];
+            inputs.forEach((genre)=> {
+              let dummy: Genre = (this.database.searchByName(genre.selectedGenre, 'genre') as Genre[])[0];
+              if (!selectedGenres.includes(dummy)) {
+                selectedGenres.push(dummy);
+              }
             });
-            break;
-          case 'Genre':
-            inquirer.prompt(genreQuestions).then(async (answers) => {
-              console.log(answers);
-              const newGenre: Genre = new Genre(answers['name'],
-                  answers['artist'], answers['albums'], answers['songs']);
-              await this.database.addToMemory([newGenre]);
-              await this.continuePrompt();
-              this.promptManagement();
+            let newSong: Song = new Song(answers['name'], selectedArtist, answers['length'], selectedGenres, answers['plays'], answers['isSingle']);
+            selectedGenres.forEach((genre) =>{
+              genre.setSongs(newSong);
             });
-            break;
-          case 'Album':
-            inquirer.prompt(albumQuestions).then(async (answers) => {
-              console.log(answers);
-              const newAlbum: Album = new Album(answers['name'], answers['artist'],
-                  answers['date'], answers['genres'], answers['songs']);
-              await this.database.addToMemory([newAlbum]);
-              newAlbum.print();
-              await this.continuePrompt();
-              this.promptManagement();
+            if (selectedArtist instanceof Artist) {
+              selectedArtist.setSongs(newSong);
+            }
+            this.database.addToMemory([newSong]);
+          });
+          break;
+        case 'Genre':
+          const qArtist: Question = new Question('search-list', 'selectedArtist', 'Select the artist name or group (can be none [#$CONTINUE$#])', () => {}, ['#$CONTINUE$#'].concat((await (this.database.getFromMemory('$ALL$', 'Artist'))).map((o) => o.name)));
+          const qAlbums: Question = new Question('search-list', 'selectedAlbums', 'Select the albums that this item is part of (can be none [#$CONTINUE$#])', () =>{}, ['#$CONTINUE$#'].concat((await (this.database.getFromMemory('$ALL$', 'Album'))).map((o) => o.name)));
+          const qSongs: Question = new Question('search-list', 'selectedSongs', 'Select the songs that are part of this item (can be none [#$CONTINUE$#])', () =>{}, ['#$CONTINUE$#'].concat((await (this.database.getFromMemory('$ALL$', 'Song'))).map((o) => o.name)));
+          await inquirer.prompt(qName.returnQuestion(true)).then(async (answers) => {
+            let artistInputs: {selectedArtist: string}[];
+            let selectedArtists: (Group | Artist)[] = [];
+            artistInputs = await this.continueAdding(qArtist);
+            artistInputs.forEach((artist)=> {
+              if (artist.selectedArtist !== '#$CONTINUE$#') {
+                let dummy: Group | Artist = (this.database.searchByName(artist.selectedArtist, 'author') as (Group | Artist)[])[0];
+                if (!selectedArtists.includes(dummy)) {
+                  selectedArtists.push(dummy);
+                }
+              }
             });
-            break;
-          case 'Artist':
-            inquirer.prompt(artistQuestions).then(async (answers) => {
-              console.log(answers);
-              const newArtist: Artist = new Artist(answers['name'], answers['members'], answers['genres'],
-                  answers['albums'], answers['songs'], parseInt(answers['listeners']));
-              await this.database.addToMemory([newArtist]);
-              await this.continuePrompt();
-              this.promptManagement();
+            let albumsInputs: {selectedAlbums: string}[];
+            let selectedAlbums: Album[] = [];
+            albumsInputs = await this.continueAdding(qAlbums);
+            albumsInputs.forEach((album)=> {
+              if (album.selectedAlbums !== '#$CONTINUE$#') {
+                let dummy: Album = (this.database.searchByName(album.selectedAlbums, 'album') as Album[])[0];
+                if (!selectedAlbums.includes(dummy)) {
+                  selectedAlbums.push(dummy);
+                }
+              }
             });
-            break;
-          case 'Group':
-            inquirer.prompt(groupQuestions).then(async (answers) => {
-              console.log(answers);
-              const newGroup: Group = new Group(answers['name'], answers['members'],
-                  answers['date'], answers['genres'], answers['albums'], answers['listeners']);
-              await this.database.addToMemory([newGroup]);
-              newGroup.print();
-              await this.continuePrompt();
-              this.promptManagement();
+            let songsInputs: {selectedSongs: string}[];
+            let selectedSongs: Song[] = [];
+            songsInputs = await this.continueAdding(qSongs);
+            songsInputs.forEach((song)=> {
+              if (song.selectedSongs !== '#$CONTINUE$#') {
+                let dummy: Song = (this.database.searchByName(song.selectedSongs, 'song') as Song[])[0];
+                if (!selectedSongs.includes(dummy)) {
+                  selectedSongs.push(dummy);
+                }
+              }
             });
-            break;
+            let newGenre: Genre = new Genre(answers['name'], selectedArtists, selectedAlbums, selectedSongs);
+            selectedArtists.forEach((artist)=> {
+              artist.setGenres(newGenre);
+            });
+            selectedAlbums.forEach((album)=> {
+              album.addGenres([newGenre]);
+            });
+            selectedSongs.forEach((song)=> {
+              song.setGenres(newGenre);
+            });
+            this.database.addToMemory([newGenre]);
+            newGenre.print();
+          });
+          await this.continuePrompt();
+          break;
+        case 'Album':
+          const qArtist2: Question = new Question('search-list', 'selectedArtist', 'Select the artist name or group', this.noEmptyChoice, (await (this.database.getFromMemory('$ALL$', 'Artist'))).map((o) => o.name));
+          const qGenres2: Question = new Question('search-list', 'selectedGenres', 'Select the genre', () =>{}, (await (this.database.getFromMemory('$ALL$', 'Genre'))).map((o) => o.name));
+          const qSongs2: Question = new Question('search-list', 'selectedSongs', 'Select the songs that are part of this item', () =>{}, (await (this.database.getFromMemory('$ALL$', 'Song'))).map((o) => o.name));
+          await inquirer.prompt([qName.returnQuestion(true), qArtist2.returnQuestion(false, true), qReleaseDate.returnQuestion(true)]).then(async (answers) => {
+            let selectedArtist: (Group | Artist) = ((this.database.searchByName(answers['selectedArtist'], 'author') as (Group | Artist)));
+            let genresInputs: {selectedGenres: string}[];
+            let selectedGenres: Genre[] = [];
+            genresInputs = await this.continueAdding(qGenres2);
+            genresInputs.forEach((genre)=> {
+              if (genre.selectedGenres !== '#$CONTINUE$#') {
+                let dummy: Genre = (this.database.searchByName(genre.selectedGenres, 'genre') as Genre[])[0];
+                if (!selectedGenres.includes(dummy)) {
+                  selectedGenres.push(dummy);
+                }
+              }
+            });
+            let songsInputs: {selectedSongs: string}[];
+            let selectedSongs: Song[] = [];
+            songsInputs = await this.continueAdding(qSongs2);
+            songsInputs.forEach((song)=> {
+              if (song.selectedSongs !== '#$CONTINUE$#') {
+                let dummy: Song = (this.database.searchByName(song.selectedSongs, 'song') as Song[])[0];
+                if (!selectedSongs.includes(dummy)) {
+                  selectedSongs.push(dummy);
+                }
+              }
+            });
+            let newAlbum: Album = new Album(answers['name'], selectedArtist, answers['date'], selectedGenres, selectedSongs);
 
-          case 'Playlist':
-            inquirer.prompt(playlistQuestions).then(async (answers) => {
-              const newPlaylist: Playlist = new Playlist(answers['name'], answers['songs'],
-                  answers['duration'], answers['genres']);
-              await this.database.addToMemory([newPlaylist]);
-              newPlaylist.print();
-              await this.continuePrompt();
-              this.promptManagement();
+            selectedArtist.setAlbums(newAlbum);
+            selectedGenres.forEach((genre)=> {
+              console.log(genre);
+              genre.setAlbums(newAlbum);
             });
-            break;
-        }
-      });
-    } catch (error) {
-      console.log(error);
-    }
+            this.database.addToMemory([newAlbum]);
+            newAlbum.print();
+            resolve();
+          });
+          await this.continuePrompt();
+          break;
+        case 'Artist':
+          const qGroup3: Question = new Question('search-list', 'selectedGroup', 'Select the group (can be none [#$CONTINUE$#])', () =>{}, ['#$CONTINUE$#'].concat((await (this.database.getFromMemory('$ALL$', 'Group'))).map((o) => o.name)));
+          const qGenres3: Question = new Question('search-list', 'selectedGenre', 'Select the genre', () =>{}, (await (this.database.getFromMemory('$ALL$', 'Genre'))).map((o) => o.name));
+          const qAlbums3: Question = new Question('search-list', 'selectedAlbum', 'Select the albums that this item is part of (can be none [#$CONTINUE$#])', () =>{}, ['#$CONTINUE$#'].concat((await (this.database.getFromMemory('$ALL$', 'Album'))).map((o) => o.name)));
+          const qSongs3: Question = new Question('search-list', 'selectedSong', 'Select the songs that are part of this item (can be none [#$CONTINUE$#])', () =>{}, ['#$CONTINUE$#'].concat((await (this.database.getFromMemory('$ALL$', 'Song'))).map((o) => o.name)));
+          await inquirer.prompt([qName.returnQuestion(true), qListeners.returnQuestion(true)]).then(async (answers) => {
+            let groupsInputs: {selectedGroup: string}[];
+            let selectedGroups: Group[] = [];
+            groupsInputs = await this.continueAdding(qGroup3);
+            let genresInputs: {selectedGenre: string}[];
+            let selectedGenres: Genre[] = [];
+            genresInputs = await this.continueAdding(qGenres3);
+            let albumsInputs: {selectedAlbum: string}[];
+            let selectedAlbums: Album[] = [];
+            albumsInputs = await this.continueAdding(qAlbums3);
+            let songsInputs: {selectedSong: string}[];
+            let selectedSongs: Song[] = [];
+            songsInputs = await this.continueAdding(qSongs3);
+            groupsInputs.forEach((group)=>{
+              if (group.selectedGroup !== '#$CONTINUE$#') {
+                let dummy: Group = (this.database.searchByName(group.selectedGroup, 'group') as Group[])[0];
+                if (!selectedGroups.includes(dummy)) {
+                  selectedGroups.push(dummy);
+                }
+              }
+            });
+            genresInputs.forEach((genre)=> {
+              let dummy: Genre = (this.database.searchByName(genre.selectedGenre, 'genre') as Genre[])[0];
+              if (!selectedGenres.includes(dummy)) {
+                selectedGenres.push(dummy);
+              }
+            });
+            albumsInputs.forEach((album)=>{
+              if (album.selectedAlbum !== '#$CONTINUE$#') {
+                let dummy: Album = (this.database.searchByName(album.selectedAlbum, 'album') as Album[])[0];
+                if (!selectedAlbums.includes(dummy)) {
+                  selectedAlbums.push(dummy);
+                }
+              }
+            });
+            songsInputs.forEach((song)=>{
+              if (song.selectedSong !== '#$CONTINUE$#') {
+                let dummy: Song = (this.database.searchByName(song.selectedSong, 'song') as Song[])[0];
+                if (!selectedSongs.includes(dummy)) {
+                  selectedSongs.push(dummy);
+                }
+              }
+            });
+            let newArtist: Artist = new Artist(answers['name'], selectedGroups, selectedGenres, selectedAlbums, selectedSongs, answers['listeners'] );
+            selectedGroups.forEach((group) =>{
+              group.setMembers(newArtist);
+            });
+            selectedGenres.forEach((genre) =>{
+              genre.setAuthors(newArtist);
+            });
+            selectedAlbums.forEach((album) =>{
+              album.setAuthor(newArtist);
+            });
+            selectedSongs.forEach((song) =>{
+              song.setArtists(newArtist);
+            });
+            this.database.addToMemory([newArtist]);
+          });
+          break;
+        case 'Group':
+          const qMember4: Question = new Question('search-list', 'selectedMember', 'Select the members of the group', () =>{}, (await (this.database.getFromMemory('$ALL$', 'Artist'))).map((o) => o.name));
+          const qGenres4: Question = new Question('search-list', 'selectedGenre', 'Select the genre', () =>{}, (await (this.database.getFromMemory('$ALL$', 'Genre'))).map((o) => o.name));
+          const qAlbums4: Question = new Question('search-list', 'selectedAlbum', 'Select the albums that this item is part of (can be none [#$CONTINUE$#])', () =>{}, ['#$CONTINUE$#'].concat((await (this.database.getFromMemory('$ALL$', 'Album'))).map((o) => o.name)));
+          await inquirer.prompt([qName.returnQuestion(true), qReleaseDate.returnQuestion(true), qListeners.returnQuestion(true)]).then(async (answers) => {
+            let membersInputs: {selectedMember: string}[];
+            let selectedMembers: Artist[] = [];
+            membersInputs = await this.continueAdding(qMember4);
+            let genresInputs: {selectedGenre: string}[];
+            let selectedGenres: Genre[] = [];
+            genresInputs = await this.continueAdding(qGenres4);
+            let albumsInputs: {selectedAlbum: string}[];
+            let selectedAlbums: Album[] = [];
+            albumsInputs = await this.continueAdding(qAlbums4);
+            membersInputs.forEach((artist)=>{
+              let dummy: Artist = (this.database.searchByName(artist.selectedMember, 'artist') as Artist[])[0];
+              if (!selectedMembers.includes(dummy)) {
+                selectedMembers.push(dummy);
+              }
+            });
+            genresInputs.forEach((genre)=> {
+              let dummy: Genre = (this.database.searchByName(genre.selectedGenre, 'genre') as Genre[])[0];
+              if (!selectedGenres.includes(dummy)) {
+                selectedGenres.push(dummy);
+              }
+            });
+            albumsInputs.forEach((album)=>{
+              if (album.selectedAlbum !== '#$CONTINUE$#') {
+                let dummy: Album = (this.database.searchByName(album.selectedAlbum, 'album') as Album[])[0];
+                if (!selectedAlbums.includes(dummy)) {
+                  selectedAlbums.push(dummy);
+                }
+              }
+            });
+            let newGroup: Group = new Group(answers['name'], selectedMembers, answers['date'], selectedGenres, selectedAlbums, answers['listeners'] );
+            selectedMembers.forEach((artist) =>{
+              artist.setGroups(newGroup);
+            });
+            selectedGenres.forEach((genre) =>{
+              genre.setAuthors(newGroup);
+            });
+            selectedAlbums.forEach((album) =>{
+              album.setAuthor(newGroup);
+            });
+            this.database.addToMemory([newGroup]);
+          });
+          break;
+
+        case 'Playlist':
+          await inquirer.prompt(qName.returnQuestion()).then(async (answers) => {
+            const qSongs: Question = new Question('search-list', 'songs', 'Write the songs that are part of this item', () =>{}, (await (this.database.getFromMemory('$ALL$', 'Song'))).map((o) => o.name));
+            let inputs: {songs: string}[];
+            inputs = await this.continueAdding(qSongs);
+            let selectedSongs: Song[] = [];
+            inputs.forEach((song) => {
+              let dummy: Song = (this.database.searchByName(song.songs, 'song') as Song[])[0];
+              if (!selectedSongs.includes(dummy)) {
+                selectedSongs.push(dummy);
+              }
+            });
+            let newPlaylist: Playlist = new Playlist(answers['name'], selectedSongs, 0, []);
+            this.database.addToMemory([newPlaylist]);
+          });
+          break;
+      }
+      this.database.updatePlaylists();
+      if (this.database.isInitialized()) {
+        this.database.setChangesSaved(false);
+      }
+      resolve();
+    });
+  }
+  /**
+   * Function that iterates prompts to get multiple answers
+   * @param question Question class of the type search-list with choices
+   * @param inputs Accumulator of answers
+   * @returns Because this is a "generic object return" async function we return a promise that responds to any
+   */
+  async continueAdding(question:Question, inputs: string[] = []):Promise<any> {
+    const prompts = [
+      question.returnQuestion(false, true),
+      {
+        type: 'confirm',
+        name: 'again',
+        message: 'Enter another input? ',
+        default: true,
+      },
+    ];
+    const { again, ...answers} = await inquirer.prompt(prompts);
+    const newInputs = [...inputs, answers];
+    return again ? this.continueAdding(question, newInputs) : newInputs;
   }
 
-  private continueAddingSongs(value: string) {
-    if (value !== 'continue') {
-    }
-  }
   /**
    * Display information to be modify.
    * @returns {Promise<void>}
@@ -429,7 +672,7 @@ export class Management {
   private async modifyPrompt(command: string): Promise<void> {
     const qName: Question = new Question('input', 'name', 'Write the name/title');
     const qArtist: Question = new Question('search-list', 'selectedArtist', 'Select the artist name or group', () =>{}, (await (this.database.getFromMemory('$ALL$', 'Artist'))).map((o) => o.name));
-    const qMember: Question = new Question('search-list', 'members', 'Write the members of the group', () =>{}, (await (this.database.getFromMemory('$ALL$', 'Artist'))).map((o) => o.name));
+    const qMember: Question = new Question('search-list', 'members', 'Write the members of the group', () =>{}, (await (this.database.getFromMemory('$ALL$', 'Group'))).map((o) => o.name));
     const qLength: Question = new Question('input', 'length', 'Write the length');
     const qGenres: Question = new Question('search-list', 'selectedGenre', 'Select the genre', () =>{}, (await (this.database.getFromMemory('$ALL$', 'Genre'))).map((o) => o.name));
     const qReleaseDate: Question = new Question('input', 'date', 'Write the release date');
@@ -446,13 +689,13 @@ export class Management {
     const songQuestions = [qName.returnQuestion(), qArtist.returnQuestion(false, true),
       qLength.returnQuestion(), qGenres.returnQuestion(false, true), qPlays.returnQuestion(), qSingle];
     const playlistQuestions = [qName.returnQuestion(), qSongs.returnQuestion(true, true),
-      qLength.returnQuestion(), qGenres.returnQuestion()];
+      qLength.returnQuestion(), qGenres.returnQuestion(true, true)];
     const albumQuestions = [qName.returnQuestion(),
-      qArtist.returnQuestion(false, true), qReleaseDate.returnQuestion(), qGenres.returnQuestion(false, true), qSongs.returnQuestion()];
+      qArtist.returnQuestion(false, true), qReleaseDate.returnQuestion(), qGenres.returnQuestion(false, true), qSongs.returnQuestion(false, true)];
     const artistQuestions = [qName.returnQuestion(),
       qMember.returnQuestion(false, true), qGenres.returnQuestion(false, true),
       qAlbums.returnQuestion(false, true), qSongs.returnQuestion(false, true), qListeners.returnQuestion()];
-    const groupQuestions = [qName.returnQuestion(), qMember.returnQuestion(false, true),
+    const groupQuestions = [qName.returnQuestion(), qArtist.returnQuestion(false, true),
       qReleaseDate.returnQuestion(), qGenres.returnQuestion(false, true), qAlbums.returnQuestion(false, true), qListeners.returnQuestion()];
     const genreQuestions = [qName.returnQuestion(),
       qArtist.returnQuestion(false, true), qAlbums.returnQuestion(false, true), qSongs.returnQuestion(false, true)];
@@ -463,7 +706,7 @@ export class Management {
     const artistChoice = new Question('search-list', 'artistChoice', 'Select artist', () =>{}, (await (this.database.getFromMemory('$ALL$', command))).map((o) => o.name));
     const groupChoice = new Question('search-list', 'groupChoice', 'Select group', () =>{}, (await (this.database.getFromMemory('$ALL$', command))).map((o) => o.name));
     const genreChoice = new Question('search-list', 'genreChoice', 'Select genre', () =>{}, (await (this.database.getFromMemory('$ALL$', command))).map((o) => o.name));
-    const playlistChoice = new Question('search-list', 'playlistChoice', 'Select playlist', () =>{}, (await (this.database.getFromMemory('$ONLYNEW$', command))).map((o) => o.name));
+    const playlistChoice = new Question('search-list', 'playlistChoice', 'Select playlist', () =>{}, (await (this.database.getFromMemory('$ALL$', command))).map((o) => o.name));
 
     return new Promise(async (resolve, reject) => {
       console.log('------Musitronic360------ \n');
@@ -482,45 +725,44 @@ export class Management {
                 duplicateSongsString.push(song.getName() + ' by ' + artist);
               });
               await inquirer.prompt(new Question('list', 'discernedSong', 'Select song from duplicates', () => {}, duplicateSongsString).returnQuestion(false, true)).then(async (answers) => {
-
-              });
-            } else {
-              let selectedSong: Song = selectedSongs[0];
-              selectedSong.print();
-              await inquirer.prompt(songQuestions).then(async (answers) => {
-                selectedSong.setName(answers['name']);
-                let artistGroupRemoved: Artist | Group = selectedSong.getArtists();
-                let artistGroupCopy: Artist | Group = this.database.searchByName(answers['selectedArtist'], 'author') as Artist | Group;
-                if (artistGroupRemoved instanceof Artist) {
-                  artistGroupRemoved.getSongs().forEach((song, index) => {
-                    if (selectedSong === song) {
-                      if (artistGroupRemoved instanceof Artist) {
-                        artistGroupRemoved.getSongs().splice(index, 1);
-                      }
-                    }
-                  });
-                }
-                selectedSong.setArtists(this.database.searchByName(answers['selectedArtist'], 'author') as Artist | Group);
-                if (artistGroupCopy instanceof Artist) {
-                  artistGroupCopy.setSongs(selectedSong);
-                }
-                let genresRemoved: Genre[] = selectedSong.getGenres();
-                genresRemoved.forEach((genre)=>{
-                  genre.getSongs().forEach((song, index) => {
-                    if (selectedSong === song) {
-                      genre.getSongs().splice(index, 1);
-                    }
-                  });
-                });
-                selectedSong.replaceGenres(this.database.searchByName(answers['selectedGenre'], 'genre') as Genre[]);
-                selectedSong.getGenres().forEach((genre)=>{
-                  genre.setSongs(selectedSong);
-                });
-                selectedSong.setPlays(answers['plays']);
-                selectedSong.setSingle(answers['isSingle']);
-                resolve();
+                selectedSongs = this.database.searchByName(answers['discernedSong'], 'song') as Song[];
               });
             }
+            let selectedSong: Song = selectedSongs[0];
+            selectedSong.print();
+            await inquirer.prompt(songQuestions).then(async (answers) => {
+              selectedSong.setName(answers['name']);
+              let artistGroupRemoved: Artist | Group = selectedSong.getArtists();
+              let artistGroupCopy: Artist | Group = this.database.searchByName(answers['selectedArtist'], 'author') as Artist | Group;
+              if (artistGroupRemoved instanceof Artist) {
+                artistGroupRemoved.getSongs().forEach((song, index) => {
+                  if (selectedSong === song) {
+                    if (artistGroupRemoved instanceof Artist) {
+                      artistGroupRemoved.getSongs().splice(index, 1);
+                    }
+                  }
+                });
+              }
+              selectedSong.setArtists(this.database.searchByName(answers['selectedArtist'], 'author') as Artist | Group);
+              if (artistGroupCopy instanceof Artist) {
+                artistGroupCopy.setSongs(selectedSong);
+              }
+              let genresRemoved: Genre[] = selectedSong.getGenres();
+              genresRemoved.forEach((genre)=>{
+                genre.getSongs().forEach((song, index) => {
+                  if (selectedSong === song) {
+                    genre.getSongs().splice(index, 1);
+                  }
+                });
+              });
+              selectedSong.replaceGenres(this.database.searchByName(answers['selectedGenre'], 'genre') as Genre[]);
+              selectedSong.getGenres().forEach((genre)=>{
+                genre.setSongs(selectedSong);
+              });
+              selectedSong.setPlays(answers['plays']);
+              selectedSong.setSingle(answers['isSingle']);
+              resolve();
+            });
             resolve();
           });
           break;
@@ -532,7 +774,8 @@ export class Management {
             await inquirer.prompt(genreQuestions).then(async (answers) => {
               selectedGenre.setName(answers['name']);
               let artistsGroupsRemoved: (Group | Artist)[] = selectedGenre.getAuthors();
-              let artistGroupCopy: (Group | Artist)[] = this.database.searchByName(answers['selectedArtist'], 'author') as (Artist | Group)[];
+              let artistGroupCopy: (Group | Artist) = this.database.searchByName(answers['selectedArtist'], 'author') as (Artist | Group);
+              console.log(artistGroupCopy);
               artistsGroupsRemoved.forEach((value) => {
                 if (value instanceof Artist) {
                   value.getGenres().forEach((genre, index)=>{
@@ -549,14 +792,12 @@ export class Management {
                   });
                 }
               });
-              artistGroupCopy.forEach((value) => {
-                if (value instanceof Artist) {
-                  value.setGenres(selectedGenre);
-                }
-                if (value instanceof Group) {
-                  value.addGenres([selectedGenre]);
-                }
-              });
+              if (artistGroupCopy instanceof Artist) {
+                artistGroupCopy.setGenres(selectedGenre);
+              }
+              if (artistGroupCopy instanceof Group) {
+                artistGroupCopy.addGenres([selectedGenre]);
+              }
               selectedGenre.setAuthors(this.database.searchByName(answers['selectedArtist'], 'author') as Artist | Group);
               let albumsRemoved: Album[] = selectedGenre.getAlbums();
               let albumsCopy: Album[] = this.database.searchByName(answers['selectedAlbum'], 'genre') as Album[];
@@ -631,13 +872,15 @@ export class Management {
           break;
         case 'Artist':
           await inquirer.prompt(artistChoice.returnQuestion(false, true)).then(async (answers) => {
-            let selectedArtist: Artist = this.database.searchByName(answers['artistChoice'], 'album') as Artist;
+            let result: Artist[] = this.database.searchByName(answers['artistChoice'], 'artist') as Artist[];
+            let selectedArtist: Artist = result[0];
             selectedArtist.print();
             await inquirer.prompt(artistQuestions).then(async (answers) => {
               selectedArtist.setName(answers['name']);
 
               let groups2Removed: Group[] = selectedArtist.getGroups();
-              let groups2Copy: Group[] = this.database.searchByName(answers['selectedGroup'], 'group') as Group[];
+              let groups2Copy: Group[] = this.database.searchByName(answers['members'], 'group') as Group[];
+              await this.continuePrompt();
               groups2Removed.forEach((group)=>{
                 group.getMembers().forEach((member, index)=>{
                   if (member.getName() === selectedArtist.getName()) {
@@ -648,7 +891,7 @@ export class Management {
               groups2Copy.forEach((group) =>{
                 group.getMembers().push(selectedArtist);
               });
-              selectedArtist.setGroups(this.database.searchByName(answers['selectedGroup'], 'group') as Group);
+              selectedArtist.setGroups(groups2Copy[0]);
               let genres3Removed: Genre[] = selectedArtist.getGenres();
               let genres3Copy: Genre[] = this.database.searchByName(answers['selectedGenre'], 'genre') as Genre[];
               selectedArtist.setGenres((this.database.searchByName(answers['selectedGenre'], 'genre') as Genre[])[0]);
@@ -683,51 +926,51 @@ export class Management {
           break;
         case 'Group':
           await inquirer.prompt(groupChoice.returnQuestion(false, true)).then(async (answers) => {
-            let selectedGroup: Group = this.database.searchByName(answers['groupChoice'], 'group') as Group;
+            let selectedGroup: Group[] = this.database.searchByName(answers['groupChoice'], 'group') as Group[];
             if (selectedGroup instanceof Array) {
               selectedGroup[0].print();
             }
             await inquirer.prompt(groupQuestions).then(async (answers) => {
-              selectedGroup.setName(answers['name']);
+              selectedGroup[0].setName(answers['name']);
 
-              let artist4Removed: Artist[] = selectedGroup.getMembers();
+              let artist4Removed: Artist[] = selectedGroup[0].getMembers();
               let artist4Copy: Artist[] = this.database.searchByName(answers['selectedArtist'], 'artist') as Artist[];
-              selectedGroup.setMembers(this.database.searchByName(answers['selectedArtist'], 'artist') as Artist[]);
+              selectedGroup[0].replaceMembers(this.database.searchByName(answers['selectedArtist'], 'artist') as Artist[]);
               artist4Removed.forEach((artist)=>{
                 artist.getGroups().forEach((group, index)=>{
-                  if (group === selectedGroup) {
+                  if (group === selectedGroup[0]) {
                     group.getMembers().splice(index, 1);
                   }
                 });
               });
               artist4Copy.forEach((artist) =>{
-                artist.getGroups().push(selectedGroup);
+                artist.getGroups().push(selectedGroup[0]);
               });
-              selectedGroup.setDate(answers['date']);
+              selectedGroup[0].setDate(answers['date']);
 
-              let genres4Removed: Genre[] = selectedGroup.getGenres();
+              let genres4Removed: Genre[] = selectedGroup[0].getGenres();
               let genres4Copy: Genre[] = this.database.searchByName(answers['selectedGenre'], 'genre') as Genre[];
-              selectedGroup.setGenres(this.database.searchByName(answers['selectedGenre'], 'genre') as Genre[]);
+              selectedGroup[0].replaceGenres(this.database.searchByName(answers['selectedGenre'], 'genre') as Genre[]);
 
               genres4Removed.forEach((genre) => {
                 genre.getAuthors().forEach((author, index)=>{
-                  if (author === selectedGroup) {
+                  if (author === selectedGroup[0]) {
                     genre.getAuthors().splice(index, 1);
                   }
                 });
               });
               genres4Copy.forEach((genre) => {
-                genre.getAuthors().push(selectedGroup);
+                genre.getAuthors().push(selectedGroup[0]);
               });
 
-              let albums4Removed: Album[] = selectedGroup.getAlbums();
+              let albums4Removed: Album[] = selectedGroup[0].getAlbums();
               let albums4Copy: Album[] = this.database.searchByName(answers['selectedAlbum'], 'album') as Album[];
-              selectedGroup.replaceAlbums((this.database.searchByName(answers['selectedAlbum'], 'album') as Album[]));
+              selectedGroup[0].replaceAlbums((this.database.searchByName(answers['selectedAlbum'], 'album') as Album[]));
 
               albums4Copy.forEach((album) => {
-                album.setAuthor(selectedGroup);
+                album.setAuthor(selectedGroup[0]);
               });
-              selectedGroup.setListeners(answers['listeners']);
+              selectedGroup[0].setListeners(answers['listeners']);
               resolve();
             });
             resolve();
@@ -738,16 +981,42 @@ export class Management {
           await inquirer.prompt(playlistChoice.returnQuestion(false, true)).then(async (answers) => {
             let selectedPlaylist: Playlist = (this.database.searchByName(answers['playlistChoice'], 'playlist') as Playlist[])[0];
             selectedPlaylist.print();
-            await inquirer.prompt(playlistQuestions).then(async (answers) => {
+            await inquirer.prompt(qName.returnQuestion()).then(async (answers) => {
+              selectedPlaylist.setName(answers['name']);
+              const qSongs: Question = new Question('search-list', 'songs', 'Write the songs that are part of this item', () =>{}, (await (this.database.getFromMemory('$ALL$', 'Song'))).map((o) => o.name));
+              let inputs: {songs: string}[];
+              inputs = await this.continueAdding(qSongs);
+              let selectedSongs: Song[] = [];
+              inputs.forEach((song)=>{
+                selectedSongs.push((this.database.searchByName(song.songs, 'song') as Song[])[0]);
+                console.log(song);
+              });
+              selectedPlaylist.getSongs().splice(0, selectedPlaylist.getSongs().length);
+              selectedSongs.forEach((song) => {
+                if (!selectedPlaylist.getSongs().includes(song)) {
+                  selectedPlaylist.setSongs(song);
+                }
+              });
+              selectedPlaylist.updateGenres();
+              selectedPlaylist.updateDuration();
             });
           });
           break;
+      }
+      this.database.updatePlaylists();
+      if (this.database.isInitialized()) {
+        this.database.setChangesSaved(false);
       }
       resolve();
     });
   }
 
-  private promptDelete(command: string): Promise<void> {
+  /**
+   * Prompt used to select an item to remove from memory
+   * @param command Type of item to remove
+   * @returns Promise because its an async function
+   */
+  private async promptDelete(command: string): Promise<void> {
     return new Promise(async (resolve, reject) => {
       console.log('------Musitronic360------ \n');
       console.log('Deleting ' + command+'\n');
@@ -999,6 +1268,10 @@ export class Management {
           });
           break;
       }
+      this.database.updatePlaylists();
+      if (this.database.isInitialized()) {
+        this.database.setChangesSaved(false);
+      }
       resolve();
     });
   }
@@ -1009,7 +1282,7 @@ export class Management {
    */
   private promptManagement(): void {
     console.clear();
-    console.log('------Musitronic360------ \n');
+    console.log('------Musitronic360------ '+ this.getStatusString() + '\n');
     let option: string = '';
     inquirer.prompt({
       type: 'list',
@@ -1017,6 +1290,7 @@ export class Management {
       message: 'Choose option',
       choices: Object.values(command.managementCommands),
     }).then(async (answers) => {
+      console.clear();
       switch (answers['command']) {
         case command.managementCommands.Add:
           option = await this.selectTypePrompt();
@@ -1097,7 +1371,7 @@ export class Management {
    */
   private promptPlaylistManagement(): void {
     console.clear();
-    console.log('------Musitronic360------ \n');
+    console.log('------Musitronic360------ '+ this.getStatusString() + '\n');
     inquirer.prompt({
       type: 'list',
       name: 'command',
@@ -1108,15 +1382,15 @@ export class Management {
         case command.playlistManagementCommands.Add:
           await this.addPrompt('Playlist');
           await this.continuePrompt();
-          this.promptManagement();
+          this.promptPlaylistManagement();
           break;
         case command.playlistManagementCommands.Modify:
-          await this.continuePrompt();
-          this.promptManagement();
+          await this.modifyPrompt('Playlist');
+          this.promptPlaylistManagement();
           break;
         case command.playlistManagementCommands.Delete:
           await this.promptDelete('Playlist');
-          this.promptManagement();
+          this.promptPlaylistManagement();
           break;
         case command.playlistManagementCommands.Save:
           try {
@@ -1125,7 +1399,7 @@ export class Management {
             console.error(error);
             await this.continuePrompt();
           }
-          this.promptManagement();
+          this.promptPlaylistManagement();
           break;
         case command.playlistManagementCommands.Return:
           this.promptStart();
@@ -1135,5 +1409,5 @@ export class Management {
   }
 }
 
-const terminal: Management = new Management('MusicDataBase.json');
+const terminal: Management = new Management('');
 terminal.promptStart();

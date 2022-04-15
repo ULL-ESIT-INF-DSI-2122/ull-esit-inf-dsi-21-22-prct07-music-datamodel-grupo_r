@@ -26,10 +26,13 @@ import { Playlist } from './Playlist';
  */
 export class JsonDatabase extends Database {
   /**
-   * @param {boolean} initialized True if the datbase is initialized or False if it is not
+   * @param {boolean} initialized True if the database is initialized or False if it is not
    */
   private initialized: boolean = false;
-
+  /**
+   * @param {boolean} changesSaved True if the db is up to date, false if there are changes not saved
+   */
+  private changesSaved: boolean = true;
   /**
    * @param {lowdb.LowdbSync<schemaType>} database Databse to be loaded.
    */
@@ -151,7 +154,7 @@ export class JsonDatabase extends Database {
           this.dbPlaylists.push(newPlaylist);
           this.addToMemory([newPlaylist]);
         });
-
+        this.updatePlaylists();
         this.initialized = true;
       }
     } else {
@@ -185,6 +188,22 @@ export class JsonDatabase extends Database {
    */
   public isInitialized(): boolean {
     return JsonDatabase.JsonDatabase.initialized;
+  }
+  /**
+   * Set the changesSaved value.
+   * @param {boolean} value True if the database is up to date, false if there are changes not saved.
+   */
+  public setChangesSaved(value: boolean): void {
+    JsonDatabase.JsonDatabase.changesSaved = value;
+  }
+
+
+  /**
+   * Checks the changesSaved value.
+   * @return {boolean} True if the database is up to date, false if there are changes not saved.
+   */
+  public areChangesSaved(): boolean {
+    return JsonDatabase.JsonDatabase.changesSaved;
   }
 
   /**
@@ -399,6 +418,7 @@ export class JsonDatabase extends Database {
         JsonDatabase.JsonDatabase.database?.set(`playlists`, dummyPlaylist).write();
         JsonDatabase.JsonDatabase.initialized = true;
         resolve('good');
+        JsonDatabase.JsonDatabase.changesSaved = true;
       } else throw new Error('No database loaded');
     });
   }
