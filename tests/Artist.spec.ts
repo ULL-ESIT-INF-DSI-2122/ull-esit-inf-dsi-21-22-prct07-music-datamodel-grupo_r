@@ -1,10 +1,10 @@
 import 'mocha';
 import {expect} from 'chai';
-import { Artist } from '../src/Artist';
-import { Album } from '../src/Album';
-import { Song } from '../src/Song';
-import { Group } from '../src/Group';
-import { Genre } from '../src/Genre';
+import { Artist } from '../src/models/Artist';
+import { Album } from '../src/models/Album';
+import { Song } from '../src/models/Song';
+import { Group } from '../src/models/Group';
+import { Genre } from '../src/models/Genre';
 
 describe('Artist class test', () => {
   const theJackson5 = new Group('The Jackson 5', [], '1968', [], [], 50);
@@ -78,5 +78,19 @@ describe('Artist class test', () => {
       michaelJackson.setSongs(Besos);
       expect(michaelJackson.getSongs()).eql([blameItOnTheBoogie, Besos]);
     });
+
+    it('Checking replaceSongs()', () => {
+      michaelJackson.replaceSongs([blameItOnTheBoogie]);
+      expect(michaelJackson.getSongs()).eql([blameItOnTheBoogie]);
+    });
+
+    it('Checking replaceSongs()', () => {
+      michaelJackson.replaceAlbums([Zapatillas]);
+      expect(michaelJackson.getAlbums()).eql([Zapatillas]);
+    });
+  });
+
+  describe('Print of Artist Class', () => {
+    expect(michaelJackson.print()).to.be.a('string');
   });
 });

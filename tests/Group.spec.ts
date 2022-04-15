@@ -1,8 +1,9 @@
 import 'mocha';
 import {expect} from 'chai';
-import { Artist } from '../src/Artist';
-import { Group } from '../src/Group';
-import { Genre } from '../src/Genre';
+import { Artist } from '../src/models/Artist';
+import { Group } from '../src/models/Group';
+import { Genre } from '../src/models/Genre';
+import { Album } from '../src/models/Album';
 
 describe('Group class test', () => {
   const Funk = new Genre('Funk', [], [], []);
@@ -13,6 +14,11 @@ describe('Group class test', () => {
       [], [], 200);
   const theJackson5 = new Group('The Jackson 5', [michaelJackson], '1968', [Funk], [], 50);
   const marlonJackson = new Artist('Marlon Jackson', [theJackson5], [Funk], [], [], 1290000);
+  const pepe = new Artist('pepe', [theJackson5], [Funk], [], [], 1290000);
+  const Reggea = new Genre('Reggea', [elCantoDelLoco],
+      [], []);
+  const Zapatillas = new Album('Zapatillas', elCantoDelLoco, '2000', [Pop], []);
+  const pepe1 = new Group('pepe1', [michaelJackson], '1968', [Funk], [Zapatillas], 50);
 
   it('Group object creation ', () => {
     expect(new Group('The Jackson 5', [michaelJackson], '1968', [Funk, Pop], [], 50)).not.to.be.eql(null);
@@ -50,8 +56,8 @@ describe('Group class test', () => {
       expect(theJackson5.getName()).to.be.eql('The Jacksons');
     });
 
-    it('Checking setMembers()', () => {
-      theJackson5.setMembers([michaelJackson, marlonJackson]);
+    it('Checking replaceMembers()', () => {
+      theJackson5.replaceMembers([michaelJackson, marlonJackson]);
       expect(theJackson5.getMembers()).to.be.eql([michaelJackson, marlonJackson]);
     });
 
@@ -69,5 +75,39 @@ describe('Group class test', () => {
       theJackson5.incrementListeners();
       expect(theJackson5.getListeners()).eql(51);
     });
+
+    it('Checking setMembers()', () => {
+      theJackson5.setMembers(pepe);
+      expect(theJackson5.getMembers()).to.be.eql([michaelJackson, marlonJackson, pepe]);
+    });
+
+    it('Checking setGenres()', () => {
+      theJackson5.setGenres(Reggea);
+      expect(theJackson5.getGenres()).to.be.eql([Funk, Pop, Reggea]);
+    });
+
+    it('Checking replaceGenres()', () => {
+      theJackson5.replaceGenres([Reggea]);
+      expect(theJackson5.getGenres()).to.be.eql([Reggea]);
+    });
+
+    it('Checking setAlbums()', () => {
+      theJackson5.setAlbums(Zapatillas);
+      expect(theJackson5.getAlbums()).to.be.eql([Zapatillas]);
+    });
+
+    it('Checking setAlbums()', () => {
+      theJackson5.setListeners(200);
+      expect(theJackson5.getListeners()).to.be.eql(200);
+    });
+
+    it('Checking addGenres()', () => {
+      theJackson5.replaceAlbums([Zapatillas]);
+      expect(theJackson5.getAlbums()).to.be.eql([Zapatillas]);
+    });
+  });
+
+  describe('Print of Group Class', () => {
+    expect(pepe1.print()).to.be.a('string');
   });
 });

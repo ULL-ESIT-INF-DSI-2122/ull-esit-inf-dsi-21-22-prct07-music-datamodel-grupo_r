@@ -1,6 +1,17 @@
 {
   "entryPoints": [
-    ""
+    "./src/database/anyDatabase.ts",
+    "./src/database/database.ts",
+    "./src/database/JsonDatabase.ts",
+    "./src/management/Commands.ts/",
+    "./src/management/Question.ts",
+    "./src/management/terminal.ts",
+    "./src/models/Genre.ts",
+    "./src/models/Album.ts",
+    "./src/models/Artist.ts",
+    "./src/models/Playlist.ts",
+    "./src/models/Song.ts",
+    "./src/models/Group.ts"
   ],
   "out": "./docs"
 }

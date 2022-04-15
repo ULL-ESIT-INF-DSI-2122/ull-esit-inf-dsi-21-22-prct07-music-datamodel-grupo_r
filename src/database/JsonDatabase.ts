@@ -1,17 +1,17 @@
 import * as lowdb from 'lowdb';
 import * as FileSync from 'lowdb/adapters/FileSync';
 import { Database } from './database';
-import { Group } from './Group';
-import { Album } from './Album';
-import { Song } from './Song';
-import { Artist } from './Artist';
-import { Genre } from './Genre';
-import { Playlist } from './Playlist';
+import { Group } from '../models/Group';
+import { Album } from '../models/Album';
+import { Song } from '../models/Song';
+import { Artist } from '../models/Artist';
+import { Genre } from '../models/Genre';
+import { Playlist } from '../models/Playlist';
 
 /**
  * @type Data type used to instantiate the lowdb to the required fields
  */
- type schemaType = {
+export type schemaType = {
   genres: Genre[],
   artists: Artist[],
   albums: Album[],
@@ -38,12 +38,12 @@ export class JsonDatabase extends Database {
    */
   private dbName: string = 'none';
   /**
-   * @param {lowdb.LowdbSync<schemaType>} database Databse to be loaded.
+   * @param {lowdb.LowdbSync<schemaType>} database Database to be loaded.
    */
   private database?: lowdb.LowdbSync<schemaType>;
 
   /**
-   * @param {JsonDatabase} JsonDatabase Permit singleton patron to be access databse out of context.
+   * @param {JsonDatabase} JsonDatabase Permit singleton patron to be access database out of context.
    * @static
    */
   private static JsonDatabase: JsonDatabase;
@@ -180,7 +180,7 @@ export class JsonDatabase extends Database {
   }
 
   /**
-   * Set the initialize value.
+   * Set the initialized value.
    * @param {boolean} value True if a json file is loaded or False if it is not.
    */
   public setInitialized(value: boolean): void {
@@ -188,12 +188,13 @@ export class JsonDatabase extends Database {
   }
 
   /**
-   * Checks the initialize value.
+   * Checks the initialized value.
    * @return {boolean} True if a json file is loaded or False if it is not.
    */
   public isInitialized(): boolean {
     return JsonDatabase.JsonDatabase.initialized;
   }
+
   /**
    * Set the changesSaved value.
    * @param {boolean} value True if the database is up to date, false if there are changes not saved.
@@ -201,6 +202,7 @@ export class JsonDatabase extends Database {
   public setChangesSaved(value: boolean): void {
     JsonDatabase.JsonDatabase.changesSaved = value;
   }
+
   /**
   * Get the name of the database (dbdir)
   * @returns string DbName
@@ -218,7 +220,7 @@ export class JsonDatabase extends Database {
   }
 
   /**
-   * Save all changes in the database.
+   * Save all changes from memory to the jsondatabase.
    * @returns
    */
   public saveFromMemToDb(): Promise<unknown> {
@@ -435,7 +437,7 @@ export class JsonDatabase extends Database {
   }
 
   /**
-   * Purges all from the database.
+   * Purges all entries from the database.
    * @returns {Promise<unknown>}
    */
   public purgeDatabase(): Promise<unknown> {

@@ -1,18 +1,18 @@
 import * as inquirer from 'inquirer';
 import * as command from './Commands';
-import { JsonDatabase } from './JsonDatabase';
-import { Group } from './Group';
-import { Album } from './Album';
-import { Song } from './Song';
-import { Artist } from './Artist';
-import { Genre } from './Genre';
-import { Question } from './Question';
-import { Playlist } from './Playlist';
+import { JsonDatabase } from '../database/JsonDatabase';
+import { Group } from '../models/Group';
+import { Album } from '../models/Album';
+import { Song } from '../models/Song';
+import { Artist } from '../models/Artist';
+import { Genre } from '../models/Genre';
+import { Question } from '../management/Question';
+import { Playlist } from '../models/Playlist';
 
 inquirer.registerPrompt('search-list', require('inquirer-search-list'));
 
 /**
- * @clas Allows to manage the advanced treatment of the sistem.
+ * @class Allows to manage the advanced treatment of the sistem.
  */
 export class Management {
   /**
@@ -28,7 +28,7 @@ export class Management {
   }
 
   /**
-   * Loads a databse file.
+   * Loads a database file.
    * @param {string} dbDir Filename.
    * @returns {Promise<JsonDatabase>}
    */
@@ -49,7 +49,12 @@ export class Management {
     return this.database;
   }
 
-
+  /**
+   * Intermediary prompt for selecting a playlist to view in detail
+   * @param {command.viewCommands | command.viewPlaylistCommands} commands commands that display the information
+   * @param order {string} type Type of the display
+   * @returns {Promise<void>}
+   */
   private async selectPlaylistPrompt(commands: command.viewCommands | command.viewPlaylistCommands, order: command.orderByCommands): Promise<void> {
     return new Promise(async (resolve) => {
       console.clear();
@@ -65,7 +70,7 @@ export class Management {
   /**
    * Prompt to order the database information.
    * @param {command.viewCommands | command.viewPlaylistCommands} commands commands that display the information
-   * @param {string} type Tipo of the display
+   * @param {string} type Type of the display
    * @returns {Promise<void>}
    */
   private orderByPrompt(commands: command.viewCommands | command.viewPlaylistCommands, type: string): Promise<void> {
@@ -115,7 +120,7 @@ export class Management {
   }
 
   /**
-   * Prompt for the playlist infomation.
+   * Prompt for the playlist information.
    */
   private promptViewPlaylist(): void {
     console.clear();
@@ -180,7 +185,7 @@ export class Management {
   }
 
   /**
-   * Prompt for the sistem.
+   * Prompt for the system.
    */
   private promptView(): void {
     console.clear();
@@ -218,8 +223,8 @@ export class Management {
   }
 
   /**
-   * Returns a formated string with an intuitive status code
-   * @returns String
+   * Returns a formated string with an intuitive status code.
+   * @returns {string} String result
    */
   private getStatusString(): string {
     let statusString: string = '';
@@ -235,8 +240,9 @@ export class Management {
     }
     return statusString;
   }
+
   /**
-   * Prompt of the start of the sistem.
+   * Prompt of the start of the system.
    */
   public promptStart(): void {
     console.clear();
@@ -266,7 +272,7 @@ export class Management {
   }
 
   /**
-   * Reset the prompt.
+   * Prompt used to force an enter input.
    * @returns {Promise<void>}
    */
   private async continuePrompt(): Promise<void> {
@@ -280,7 +286,7 @@ export class Management {
   }
 
   /**
-   * Load the databse prompt.
+   * Prompt to load the database.
    * @returns {Promise<void>}
    */
   private async loadDbPrompt(): Promise<void> {
@@ -385,6 +391,7 @@ export class Management {
       resolve(result);
     });
   }
+
   /**
    * Function thats used in the Question constructor when its needed to force a choice
    * @param input String to check
@@ -399,6 +406,7 @@ export class Management {
       } else return true;
     }
   }
+
   /**
    * Function thats used in the Question constructor when its needed to force an input
    * @param input String to check
@@ -410,7 +418,6 @@ export class Management {
     } else return true;
   }
 
-
   /**
    * Display information to be add.
    * @returns {Promise<void>}
@@ -418,11 +425,14 @@ export class Management {
   private async addPrompt(command: string): Promise<void> {
     const qName: Question = new Question('input', 'name', 'Write the name/title', this.noEmptyOption);
     const qArtist: Question = new Question('search-list', 'selectedArtist', 'Select the artist name or group', this.noEmptyChoice, (await (this.database.getFromMemory('$ALL$', 'Artist'))).map((o) => o.name));
+    // eslint-disable-next-line no-unused-vars
     const qMember: Question = new Question('search-list', 'members', 'Write the members of the group', () =>{}, (await (this.database.getFromMemory('$ALL$', 'Artist'))).map((o) => o.name));
     const qLength: Question = new Question('input', 'length', 'Write the length', this.noEmptyOption);
     const qGenres: Question = new Question('search-list', 'selectedGenre', 'Select the genre', () =>{}, (await (this.database.getFromMemory('$ALL$', 'Genre'))).map((o) => o.name));
     const qReleaseDate: Question = new Question('input', 'date', 'Write the release date', this.noEmptyOption);
+    // eslint-disable-next-line no-unused-vars
     const qSongs: Question = new Question('search-list', 'songs', 'Write the songs that are part of this item', () =>{}, (await (this.database.getFromMemory('$ALL$', 'Song'))).map((o) => o.name));
+    // eslint-disable-next-line no-unused-vars
     const qAlbums: Question = new Question('search-list', 'albums', 'Write the albums that this item is part of', () =>{}, (await (this.database.getFromMemory('$ALL$', 'Album'))).map((o) => o.name));
     const qListeners: Question = new Question('input', 'listeners', 'Write the ammount of listeners of this artist', this.noEmptyOption);
     const qPlays: Question = new Question('input', 'plays', 'Write the number of plays', this.noEmptyOption);
@@ -690,6 +700,7 @@ export class Management {
       resolve();
     });
   }
+
   /**
    * Function that iterates prompts to get multiple answers
    * @param question Question class of the type search-list with choices
@@ -712,7 +723,7 @@ export class Management {
   }
 
   /**
-   * Display information to be modify.
+   * Display information to be modified.
    * @returns {Promise<void>}
    */
   private async modifyPrompt(command: string): Promise<void> {
@@ -734,6 +745,7 @@ export class Management {
     // QUESTIONS
     const songQuestions = [qName.returnQuestion(), qArtist.returnQuestion(false, true),
       qLength.returnQuestion(), qGenres.returnQuestion(false, true), qPlays.returnQuestion(), qSingle];
+    // eslint-disable-next-line no-unused-vars
     const playlistQuestions = [qName.returnQuestion(), qSongs.returnQuestion(true, true),
       qLength.returnQuestion(), qGenres.returnQuestion(true, true)];
     const albumQuestions = [qName.returnQuestion(),
@@ -970,14 +982,14 @@ export class Management {
                 genres3Copy.forEach((genre) => {
                   genre.getAuthors().push(selectedArtist);
                 });
-
+                // eslint-disable-next-line no-unused-vars
                 let albums3Removed: Album[] = selectedArtist.getAlbums();
                 let albums3Copy: Album[] = this.database.searchByName(answers['selectedAlbum'], 'album') as Album[];
                 selectedArtist.replaceAlbums(this.database.searchByName(answers['selectedAlbum'], 'album') as Album[]);
                 albums3Copy.forEach((album) => {
                   album.setAuthor(selectedArtist);
                 });
-
+                // eslint-disable-next-line no-unused-vars
                 let songs3Removed: Song[] = selectedArtist.getSongs();
                 let songs3Copy: Song[] = this.database.searchByName(answers['selectedSong'], 'song') as Song[];
                 selectedArtist.replaceSongs(this.database.searchByName(answers['selectedSong'], 'song') as Song[]);
@@ -1032,7 +1044,7 @@ export class Management {
                 genres4Copy.forEach((genre) => {
                   genre.getAuthors().push(selectedGroup[0]);
                 });
-
+                // eslint-disable-next-line no-unused-vars
                 let albums4Removed: Album[] = selectedGroup[0].getAlbums();
                 let albums4Copy: Album[] = this.database.searchByName(answers['selectedAlbum'], 'album') as Album[];
                 selectedGroup[0].replaceAlbums((this.database.searchByName(answers['selectedAlbum'], 'album') as Album[]));
@@ -1383,7 +1395,7 @@ export class Management {
   }
 
   /**
-   * Display information to be manage.
+   * Display information to be managed.
    * @returns {void}
    */
   private promptManagement(): void {
@@ -1476,7 +1488,7 @@ export class Management {
   }
 
   /**
-   * Display playlist information to be manage.
+   * Display playlist information to be managed.
    * @returns {void}
    */
   private promptPlaylistManagement(): void {

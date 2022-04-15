@@ -1,15 +1,18 @@
 import 'mocha';
 import {expect} from 'chai';
-import { Artist } from '../src/Artist';
-import { Album } from '../src/Album';
-import { Song } from '../src/Song';
-import { Group } from '../src/Group';
-import { Genre } from '../src/Genre';
+import { Artist } from '../src/models/Artist';
+import { Album } from '../src/models/Album';
+import { Song } from '../src/models/Song';
+import { Group } from '../src/models/Group';
+import { Genre } from '../src/models/Genre';
 
 describe('Album class test', () => {
   const Funk = new Genre('Funk', [], [], []);
   const elCantoDelLoco = new Group('El Canto Del Loco', [], '2001', [], [], 200);
   const Pop = new Genre('Pop', [elCantoDelLoco],
+      [], []);
+
+  const Reaggea = new Genre('Pop', [elCantoDelLoco],
       [], []);
   const Zapatillas = new Album('Zapatillas', elCantoDelLoco, '2000', [Pop], []);
   const eresTonto = new Song('Eres Tonto', elCantoDelLoco, 4, [], 350, true);
@@ -50,6 +53,11 @@ describe('Album class test', () => {
       expect(personas.getName()).to.be.eql('Personas!');
     });
 
+    it('Checking addGenres()', () => {
+      personas.addGenres([Reaggea]);
+      expect(personas.getGenres()).to.be.eql([Pop, Reaggea]);
+    });
+
     it('Checking setAuthor()', () => {
       personas.setAuthor(daniMartin);
       expect(personas.getAuthor()).to.be.eql(daniMartin);
@@ -69,5 +77,9 @@ describe('Album class test', () => {
       personas.setSongs([Besos, eresTonto]);
       expect(personas.getSongs()).eql([Besos, eresTonto]);
     });
+  });
+
+  describe('Print of Album Class', () => {
+    expect(personas.print()).to.be.a('string');
   });
 });

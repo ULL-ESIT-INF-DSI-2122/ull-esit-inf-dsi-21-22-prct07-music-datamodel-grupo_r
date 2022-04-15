@@ -1,10 +1,10 @@
 import 'mocha';
 import {expect} from 'chai';
-import { Artist } from '../src/Artist';
-import { Album } from '../src/Album';
-import { Song } from '../src/Song';
-import { Group } from '../src/Group';
-import { Genre } from '../src/Genre';
+import { Artist } from '../src/models/Artist';
+import { Album } from '../src/models/Album';
+import { Song } from '../src/models/Song';
+import { Group } from '../src/models/Group';
+import { Genre } from '../src/models/Genre';
 
 describe('Song class test', () => {
   const elCantoDelLoco = new Group('El Canto Del Loco', [], '2001', [], [], 200);
@@ -78,5 +78,16 @@ describe('Song class test', () => {
       Besos.setSingle(false);
       expect(Besos.getSingle()).to.be.eql(false);
     });
+
+    it('Checking replaceGenres()', () => {
+      Besos.replaceGenres([Rock]);
+      expect(Besos.getGenres()).to.be.eql([Rock]);
+    });
+  });
+
+  describe('Print of Song Class', () => {
+    expect(Besos.print()).to.be.a('string');
+    expect(Anitos.print()).to.be.a('string');
+    expect(Anitos.printLength(31231412)).to.be.a('string');
   });
 });

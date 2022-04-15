@@ -1,6 +1,6 @@
-import { Genre } from './Genre';
-import { Artist } from './Artist';
-import { Group } from './Group';
+import { Genre } from '../models/Genre';
+import { Artist } from '../models/Artist';
+import { Group } from '../models/Group';
 
 /**
  * @class Represents an artist.
@@ -84,7 +84,7 @@ export class Song {
    * @param {number} seconds Duration of the playlist in seconds
    * @returns {string} Converted to the usual notation for expressing hours.
    */
-  private printLength(seconds: number): string {
+  public printLength(seconds: number): string {
     let minute: number | string = Math.floor((seconds / 60) % 60);
     minute = (minute < 10)? '0' + minute : minute;
 

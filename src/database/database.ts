@@ -1,12 +1,12 @@
-import { Group } from './Group';
-import { Artist } from './Artist';
-import { Genre } from './Genre';
-import { Song } from './Song';
-import { Album } from './Album';
-import { Playlist } from './Playlist';
-import { viewCommands } from './Commands';
-import { viewPlaylistCommands } from './Commands';
-import { orderByCommands } from './Commands';
+import { Group } from '../models/Group';
+import { Artist } from '../models/Artist';
+import { Genre } from '../models/Genre';
+import { Song } from '../models/Song';
+import { Album } from '../models/Album';
+import { Playlist } from '../models/Playlist';
+import { viewCommands } from '../management/Commands';
+import { viewPlaylistCommands } from '../management/Commands';
+import { orderByCommands } from '../management/Commands';
 import { anyDatabase } from './anyDatabase';
 
 /**

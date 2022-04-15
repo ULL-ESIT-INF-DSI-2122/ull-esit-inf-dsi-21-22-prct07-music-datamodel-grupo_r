@@ -1,5 +1,5 @@
-import { Genre } from './Genre';
-import { Song } from './Song';
+import { Genre } from '../models/Genre';
+import { Song } from '../models/Song';
 
 /**
  * @class Music playlist.
@@ -64,8 +64,10 @@ export class Playlist {
     return this.duration;
   }
 
-
-  public updateDuration():void {
+  /**
+   * Method to update the duration attribute of the playlist based on the songs.
+   */
+  public updateDuration(): void {
     let totalDuration:number = 0;
     this.songs.forEach((song) => {
       totalDuration += song.getLength();
@@ -78,7 +80,7 @@ export class Playlist {
    * @param {number} seconds Duration of the playlist in seconds
    * @returns {string} Converted to the usual notation for expressing hours.
    */
-  private printDuration(seconds: number): string {
+  public printDuration(seconds: number): string {
     let hour: number | string = Math.floor(seconds / 3600);
     hour = (hour < 10)? '0' + hour : hour;
 
@@ -99,7 +101,9 @@ export class Playlist {
     return this.genres;
   }
 
-
+  /**
+   * Method that updates the genres attribute of the playlist based on the songs.
+   */
   public updateGenres(): void {
     this.getGenres().splice(0, this.getGenres().length);
     this.songs.forEach((song) => {

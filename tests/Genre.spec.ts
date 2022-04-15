@@ -1,9 +1,9 @@
 import 'mocha';
 import {expect} from 'chai';
-import { Album } from '../src/Album';
-import { Song } from '../src/Song';
-import { Group } from '../src/Group';
-import { Genre } from '../src/Genre';
+import { Album } from '../src/models/Album';
+import { Song } from '../src/models/Song';
+import { Group } from '../src/models/Group';
+import { Genre } from '../src/models/Genre';
 
 describe('Genre class test', () => {
   const theJackson5 = new Group('The Jackson 5', [], '1968', [], [], 50);
@@ -13,6 +13,7 @@ describe('Genre class test', () => {
       theJackson5, '1969', [Funk], [blameItOnTheBoogie]);
   const elCantoDelLoco = new Group('El Canto Del Loco', [], '2001', [], [], 200);
   const Besos = new Song('Besos', elCantoDelLoco, 4, [], 150, true);
+  const Reggea = new Genre('Reggea', [theJackson5], [dianaRossPresentsTheJackson5], [blameItOnTheBoogie]);
 
   describe('Genre Class', () => {
     it('Genre object creation ', () => {
@@ -58,5 +59,19 @@ describe('Genre class test', () => {
       Funk.setSongs(Besos);
       expect(Funk.getSongs()).eql([blameItOnTheBoogie, Besos]);
     });
+
+    it('Checking replaceAlbums()', () => {
+      Funk.replaceAlbums([dianaRossPresentsTheJackson5]);
+      expect(Funk.getAlbums()).eql([dianaRossPresentsTheJackson5]);
+    });
+
+    it('Checking replaceAlbums()', () => {
+      Funk.replaceSongs([Besos]);
+      expect(Funk.getSongs()).eql([Besos]);
+    });
+  });
+
+  describe('Print of Genre Class', () => {
+    expect(Reggea.print()).to.be.a('string');
   });
 });

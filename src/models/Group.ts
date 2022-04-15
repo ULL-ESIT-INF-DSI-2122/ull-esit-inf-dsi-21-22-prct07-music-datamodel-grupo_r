@@ -1,6 +1,6 @@
-import { Album } from './Album';
-import { Genre } from './Genre';
-import { Artist } from './Artist';
+import { Album } from '../models/Album';
+import { Genre } from '../models/Genre';
+import { Artist } from '../models/Artist';
 
 /**
  * @class Represents a group.
@@ -63,7 +63,7 @@ export class Group {
     this.members.push(member);
   }
   /**
-   * Set the group author.
+   * Set the group members.
    * @param {Artist[]} members Group members
    */
   public replaceMembers(members: Artist[]): void {
@@ -95,24 +95,25 @@ export class Group {
   }
 
   /**
- * Set the related musical genres.
- * @param {Genres[]} genres Relate genres
- */
+   * Replace the related musical genres.
+   * @param {Genres[]} genres Relate genres
+   */
   public replaceGenres(genres: Genre[]): void {
     this.genres = genres;
   }
+
   /**
    * Set the related musical genres.
-   * @param {Genres[]} genres Relate genres
+   * @param {Genre} genre Relate genre
    */
   public setGenres(genre: Genre): void {
     this.genres.push(genre);
   }
 
   /**
- * Add related musical genre(s).
- * @param {Genres[]} genres Relate genre(s)
- */
+   * Add related musical genre(s).
+   * @param {Genres[]} genres Relate genre(s)
+   */
   public addGenres(genres: Genre[]): void {
     for (let i: number = 0; i < genres.length; i++) {
       this.genres.push(genres[i]);

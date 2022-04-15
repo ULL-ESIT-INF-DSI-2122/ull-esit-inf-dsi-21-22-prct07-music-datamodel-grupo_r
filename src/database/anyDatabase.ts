@@ -1,9 +1,9 @@
-import { Group } from './Group';
-import { Album } from './Album';
-import { Song } from './Song';
-import { Artist } from './Artist';
-import { Genre } from './Genre';
-import { Playlist } from './Playlist';
+import { Group } from '../models/Group';
+import { Album } from '../models/Album';
+import { Song } from '../models/Song';
+import { Artist } from '../models/Artist';
+import { Genre } from '../models/Genre';
+import { Playlist } from '../models/Playlist';
 
 /**
  * @interface anyDatabase Defines a generic music library system.

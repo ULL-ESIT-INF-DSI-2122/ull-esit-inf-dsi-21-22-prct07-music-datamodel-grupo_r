@@ -1,7 +1,7 @@
-import { Group } from './Group';
-import { Genre } from './Genre';
-import { Artist } from './Artist';
-import { Song } from './Song';
+import { Group } from '../models/Group';
+import { Genre } from '../models/Genre';
+import { Artist } from '../models/Artist';
+import { Song } from '../models/Song';
 
 /**
  * @class Represents an album.
@@ -118,10 +118,11 @@ export class Album {
   public setSongs(songs: Song[]) {
     this.songs = songs;
   }
+
   /**
- * Print the album information.
- * @return {string} Album information
- */
+   * Print the album information.
+   * @return {string} Album information
+   */
   public print(): string {
     let output: string = `\x1b[32mAlbum -\x1b[0m ${this.name} \n\x1b[32mAuthor: \x1b[0m${this.author.name} \n\x1b[32mDate: \x1b[0m${this.date}`;
 

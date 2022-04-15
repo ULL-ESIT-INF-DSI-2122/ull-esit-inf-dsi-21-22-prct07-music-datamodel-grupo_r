@@ -1,7 +1,7 @@
-import { Group } from './Group';
-import { Album } from './Album';
-import { Song } from './Song';
-import { Artist } from './Artist';
+import { Group } from '../models/Group';
+import { Album } from '../models/Album';
+import { Song } from '../models/Song';
+import { Artist } from '../models/Artist';
 
 /**
  * @class Represents a genre.
